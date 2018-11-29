@@ -1,0 +1,49 @@
+<html>
+<head>
+    <meta charset = 'utf-8'>
+    <meta name= author content= "Alyssa Rivera"
+    <title>{{title}}</title>
+    <link type="text/css" rel="alystylesheet" href= {{url_for('static', filename ='stylesheet.css')}}
+</head> 
+
+<body>
+
+    
+    <!-- Donor and donation form -->
+    <form method="POST" action="" >
+        <!-- Donor -->
+        <h2> Donor: </h2>
+            <!-- dropdown: create new donor -->
+            <select name="donor">
+                <option value="new"> Create New Donor </option>
+            </select>
+            <br>
+            <!-- name -->
+            Name: <input type="text" name="donor-name">
+            <br>
+            <!-- phone # -->
+            <!-- way to ensure formatting correct? and digestible? -->
+            Phone: <input type="text" name="donor-phone">
+            <br>
+            <!-- email -->
+            Email: <input type="text" name="donor-email"
+            <br>
+            <!-- description -->
+            Description: <input type ="text" name = "donor-description" >
+            <br>
+        
+        
+        <!-- Donation-->
+        <h2> Donation: </h2>
+            <!-- Item type text field -->
+            Donation Type: <input type="text" name="item-type">
+            <br>
+            <!-- Amount text field -->
+            Amount: <input type="text" name="item-amount">
+            <br>
+        <p><input type="submit" value="donor-form"></p>
+    </form>
+    
+</body>
+    
+<html>

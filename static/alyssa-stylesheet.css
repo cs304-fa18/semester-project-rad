@@ -1,0 +1,31 @@
+body{
+    background-color: rgb(235,244,246);
+    color: rgb(94,86,86);
+    margin-left: 80px;
+    margin-right: 80px;
+    margin-top: 30px;
+}
+
+h1{
+    color: rgb(118,180,189);
+}
+
+h2{
+    color: rgb(88,102,139);
+    border: rgb(88,102,139);
+}
+
+h3{
+    text-align: center;
+    color: rgb(101,30,62);
+    border: double rgb(101,30,62);
+    padding: 10px;
+    margin-left: 275px;
+    margin-right: 275px;
+}
+
+.error{
+    border: 2px solid rgb(88,102,139);
+    padding: 3px;
+    text-align: center;
+}
