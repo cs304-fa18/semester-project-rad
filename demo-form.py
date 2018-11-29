@@ -1,5 +1,7 @@
+from datetime import date
 from flask import (Flask, url_for, redirect, request, render_template,
     flash, session, jsonify)
+import donationDBOps
     
 app = Flask("__name__")
 app.secret_key = "replyall"
@@ -9,7 +11,7 @@ def home():
     if request.method == 'GET':
         return render_template('donation_form.html')
     else:
-        # collect data
+        # collect donor data
         donor = {
             "name": request.form['donor-name'],
             'type': request.form['donor-type'],
@@ -18,15 +20,27 @@ def home():
             'address': request.form['donor-address'],
             'description': request.form['donor-description']
         }
+        
+        #validate donor data
+        
+        #add donor to db, collect donorID
+        donor_id = donationDBOps.add_donor(donor)
+        
+        #collect donation data
         donation = {
-            'item': request.form['item-type'],
-            'amount': request.form['item-amount']
+            'donor_id': donor_id,
+            'submit_date': date.today(), 
+            'description': request.form['donation-description'],
+            'amount': request.form['amount'],
+            'type': request.form['donation-category']
         }
         
         # validate data
         
         # send data to db
-        return(str(request.form))
+        donation_id = donationDBOps.add_donation(donation)
+        flash('Donor ID: ' + str(donor_id) + '\nDonation ID: '+ str(donation_id))
+        return render_template('donation_form.html')
         
     
 if __name__ == '__main__':

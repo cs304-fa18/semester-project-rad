@@ -1,4 +1,3 @@
-import MySQL
 import MySQLdb
 
 def get_conn(db):
@@ -24,3 +23,21 @@ def add_donor(donor_dict):
             donor_dict['email'],
             donor_dict['address']
         ])
+    curs.execute('''SELECT max(donorID) FROM donor;''')
+    result =curs.fetchall()
+    return(result[0][0])
+
+def add_donation(donation_dict):
+    conn = get_conn('c9')
+    curs = conn.cursor()
+    curs.execute('''INSERT INTO donation(donorID, submitDate, description, amount, type)
+        VALUES(%s, %s, %s, %s, %s);''', [
+                donation_dict['donor_id'],
+                donation_dict['submit_date'],
+                donation_dict['description'],
+                donation_dict['amount'],
+                donation_dict['type'],
+            ])
+    curs.execute('''SELECT max(donationID) FROM donation;''')
+    result =curs.fetchall()
+    return(result[0][0])

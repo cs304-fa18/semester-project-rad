@@ -7,7 +7,10 @@
 </head> 
 
 <body>
-
+    {% for msg in get_flashed_messages() %}
+        <h3> {{msg}}</h3>
+        <br>
+    {% endfor %}
     
     <!-- Donor and donation form -->
     <form method="POST" action="" >
@@ -45,10 +48,23 @@
         <!-- Donation-->
         <h2> Donation: </h2>
             <!-- Item type text field -->
-            Donation Type: <input type="text" name="item-type">
+            Donation Description: <input type="text" name="donation-description">
             <br>
             <!-- Amount text field -->
-            Amount: <input type="text" name="item-amount">
+            Amount: <input type="text" name="amount">
+            <br>
+            <!-- dropdown: donation category -->
+            Select donation category:
+            <select name="donation-category">
+                <option value="food"> Food </option>
+                <option value="medical"> Medical </option>
+                <option value="clothing"> Clothing </option>
+                <option value="supplies"> Supplies </option>
+                <option value="money"> Monetary </option>
+                <option value="other"> Other </option>
+
+
+            </select>
             <br>
         <p><input type="submit" value="Submit"></p>
     </form>
