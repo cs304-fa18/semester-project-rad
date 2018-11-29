@@ -3,7 +3,7 @@
     <meta charset = 'utf-8'>
     <meta name= author content= "Alyssa Rivera"
     <title>{{title}}</title>
-    <link type="text/css" rel="alystylesheet" href= {{url_for('static', filename ='stylesheet.css')}}
+    <link type="text/css" rel="stylesheet" href= {{url_for('static', filename ='alyssa-stylesheet.css')}}
 </head> 
 
 <body>
@@ -17,6 +17,12 @@
             <select name="donor">
                 <option value="new"> Create New Donor </option>
             </select>
+            <br>    
+            <!-- dropdown: create new donor -->
+            <select name="donor-type">
+                <option value="individual"> Individual </option>
+                <option value="organization"> Organization </option>
+            </select>
             <br>
             <!-- name -->
             Name: <input type="text" name="donor-name">
@@ -26,10 +32,13 @@
             Phone: <input type="text" name="donor-phone">
             <br>
             <!-- email -->
-            Email: <input type="text" name="donor-email"
+            Email: <input type="text" name="donor-email">
+            <br>
+            <!-- address -->
+            Address: <textarea name="donor-address" rows=5 cols=30></textarea>
             <br>
             <!-- description -->
-            Description: <input type ="text" name = "donor-description" >
+            Description: <textarea name = "donor-description" rows=2 cols=30></textarea>
             <br>
         
         
@@ -41,7 +50,7 @@
             <!-- Amount text field -->
             Amount: <input type="text" name="item-amount">
             <br>
-        <p><input type="submit" value="donor-form"></p>
+        <p><input type="submit" value="Submit"></p>
     </form>
     
 </body>
