@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang='en'>
+<head>
+    <meta charset='utf-8'>
+    <meta name=author content="Hannah Weissman">
+    <title>Donation Search Application</title>
+    </head>
+    <body>
+        </div>
+            <h1>List of Donations</h1>
+
+            <table id="donation-list">
+    
+                <tr>
+                    <th>DonationID</th>
+                    <th>Date of Submission</th>
+                    <th>Amount</th>
+                    <th>Type</th>
+                </tr>
+    
+    <!-- Fills out donation history table --> 
+    {% for donation in history %}
+        <tr data-tt={{donation.donationID}}>
+        <td class="date">{{donation.submitDate}}</td>
+        <td class="amount">{{donation.amount}}</td>
+        <td class="type">{{donation.type}}</td>
+    </tr>
+    {% endfor %}
+    
+</table>
+ 
+    </body>
+</html>
