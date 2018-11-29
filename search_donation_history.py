@@ -34,7 +34,7 @@ def getAllDonationHistoryInfo(conn, rowType='dictionary'):
     return curs.fetchall()
     
 #Not sure if this will be used in the frontend, but maybe in the backend 
-def getDonationByDonorID(conn, donationID, rowType='dictionary'):
+def getDonationByDonorID(conn, donorID, rowType='dictionary'):
     """Returns all donations given by a specific donorID."""
     if rowType == "tuple":
         curs = conn.cursor()
@@ -42,7 +42,7 @@ def getDonationByDonorID(conn, donationID, rowType='dictionary'):
         # results as Dictionaries
         curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''select donationID, submitDate, 
-    amount, type from donation where donationID = %s''', (donationID))
+    amount, type from donation where donorID = %s''', (donorID))
     return curs.fetchall()
 
 
@@ -57,7 +57,7 @@ def getDonationByDonorName(conn, donorName, rowType='dictionary'):
     amount, type from donation where donationID = %s''', ["%"+donorName+"%"])
     return curs.fetchall()
     
-def getDonationByType(conn, `type`, rowType='dictionary'):
+def getDonationByType(conn, itemType, rowType='dictionary'):
     """Returns all donations of a specific type."""
     if rowType == "tuple":
         curs = conn.cursor()
@@ -65,7 +65,7 @@ def getDonationByType(conn, `type`, rowType='dictionary'):
         # results as Dictionaries
         curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''select donationID, submitDate,
-    amount, type from donation where type = %s''', (`type`))
+    amount, type from donation where type = %s''', (itemType))
     return curs.fetchall()
 
 
