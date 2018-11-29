@@ -71,5 +71,9 @@ def getDonationByType(conn, itemType, rowType='dictionary'):
 
 
 if __name__ == '__main__':
-    conn = getConn('wmdb')
+    conn = getConn('c9')
+    allDonations = getAllDonationHistoryInfo(conn)
+    print allDonations
+    allTypes = getAllTypes(conn)
+    print allTypes
     
