@@ -25,6 +25,7 @@ def home():
         
         #add donor to db, collect donorID
         donor_id = donationDBOps.add_donor(donor)
+        flash('Donor ID: ' + str(donor_id) )
         
         #collect donation data
         donation = {
@@ -39,10 +40,11 @@ def home():
         
         # send data to db
         donation_id = donationDBOps.add_donation(donation)
-        flash('Donor ID: ' + str(donor_id) + '\nDonation ID: '+ str(donation_id))
+        flash('Donation ID: '+ str(donation_id))
         
         #add donation to inventory
-        donationDBOps.add_to_inventory(donation)
+        inventory_id = donationDBOps.add_to_inventory(donation)
+        flash('Inventory ID: ' + str(inventory_id))
         
         return render_template('donation_form.html')
             

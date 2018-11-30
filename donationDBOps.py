@@ -47,9 +47,9 @@ def add_to_inventory(donation_dict): #surely there is a better way to do this? s
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''SELECT count(*) FROM inventory WHERE description like %s''', [ donation_dict['description']])
     match = curs.fetchall()
-    print(match)
+    # print(match)
     match = match[0]['count(*)']
-    print(match)
+    # print(match)
     # item not in inventory
     if (match==0):
         curs.execute('''INSERT INTO inventory(description, status, type)
@@ -58,13 +58,21 @@ def add_to_inventory(donation_dict): #surely there is a better way to do this? s
                     donation_dict['amount'],
                     donation_dict['type']
                 ])
+        curs.execute('''SELECT max(item_id) FROM inventory;''')
+        result =curs.fetchall()
+        # print(result)
+        return(result[0][0])
+    
     else:
         curs.execute('''SELECT item_id, status FROM inventory WHERE description like %s LIMIT 1;''',[ donation_dict['description']])
         match_row = curs.fetchall()
-        print(match_row)
+        # print(match_row)
         update_id = match_row[0]['item_id']
-        new_status = match_row[0]['status'] + donation_dict['amount']
+        new_status = int(match_row[0]['status']) + int(donation_dict['amount'])
         curs.execute('''UPDATE inventory SET status=%s WHERE item_id=%s''', [new_status, update_id] )
+        # print(update_id)
+        return(update_id)
+
 
 #testing driver
 if __name__ == '__main__':
