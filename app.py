@@ -4,7 +4,7 @@ from datetime import date
 from flask import (Flask, render_template, request, url_for, redirect, flash)
 import sys
 import search_donation_history
-# import search_inventory_history
+import search_inventory_history
 import donationDBOps
 
 app = Flask(__name__)
@@ -63,40 +63,13 @@ def displayDonations():
     conn = search_donation_history.getConn('c9')
     allDonations = search_donation_history.getAllDonationHistoryInfo(conn, rowType='dictionary')
     return render_template('donations.html',allDonations= allDonations )
-
-# Tried combining the functionality of displaying table with filtering by type 
-# Might not be sustainable for other filtering criteria 
-# Just tried this to see if it would work, and it didn't
-# Gave this error: not all arguments converted during string formatting
-
-# @app.route('/donations/', methods=["GET", "POST"])
-# def displayDonations():
-#     conn = search_donation_history.getConn('c9')
-#     selectedType = request.form.get("menu-tt")
-#     if selectedType == "Choose One":
-#         allDonations = search_donation_history.getAllDonationHistoryInfo(conn, rowType='dictionary')
-#     else:
-#         allDonations = search_donation_history.getDonationByType(conn, selectedType)
-#     return render_template('donations.html',allDonations= allDonations )
     
 @app.route('/filterDonationType/', methods=["GET", "POST"])
 def filterDonationType():
-    conn = search_inventory_history.getConn('c9')
+    conn = search_donation_history.getConn('c9')
     selectedType = request.form.get("menu-tt")
-    allDonations = search_donation_history.getDonationByType(conn, selectedType)
-    #return redirect(url_for('displayDonations', allDonations = allDonations))
-    return render_template('donations.html',allDonations = allDonations)
-    # This one below I saw for Ajax?
-    #return redirect(request.referrer) 
-    
-# Alternative is to use some Ajax like function I tried below, though unsure what to put in jsonify    
-# @app.route('/filterDonationType/', methods=["POST"])
-# def filterDonationType():
-#     if request.method=="POST":
-#         conn = search_inventory_history.getConn('c9')
-#         selectedType = request.form.get("menu-tt")
-#         allDonations = search_donation_history.getDonationByType(conn, selectedType)
-#         return jsonify({'menu-tt':selectedType,??})
+    donationByType = search_donation_history.getDonationByType(conn, selectedType)
+    return render_template('donations.html',allDonations = donationByType)
 
 @app.route('/inventory/', methods=["GET", "POST"])
 def displayInventory():
@@ -107,13 +80,10 @@ def displayInventory():
 # Gives error: not all arguments converted during string formatting
 @app.route('/filterInventoryType/', methods=["GET", "POST"])
 def filterInventoryType():
-    conn = search_donation_history.getConn('c9')
+    conn = search_inventory_history.getConn('c9')
     selectedType = request.form.get("menu-tt")
-    allInventory = search_inventory_history.getInventoryByType(conn, selectedType) 
-    #return redirect(url_for('displayInventory', allInventory = allInventory))
-    return render_template('inventory.html',allInventory = allInventory)
-    # This one below I saw for Ajax?
-    #return redirect(request.referrer)
+    inventoryByType = search_inventory_history.getInventoryByType(conn, selectedType) 
+    return render_template('inventory.html',allInventory = inventoryByType)
 
 
 if __name__ == '__main__':

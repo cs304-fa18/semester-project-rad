@@ -4,11 +4,12 @@
     <meta charset='utf-8'>
     <meta name=author content="Angela Wang">
     <title>Inventory Search Application</title>
+    <link rel="stylesheet" type="text/css" href="../static/stylesheet.css">
     </head>
     
     <h1>Search Inventory Table:</h1>
 
-    <form method=POST action="{{url_for('filterInventoryType')}}">
+    <form method=POST action="/filterInventoryType/">
         <label for="menu-tt">Filter by Type:</label>
         <select name="menu-tt">
         <option value="none">Choose One</option>
@@ -32,16 +33,14 @@
             <table id="inventory-list">
     
                 <tr>
-                    <th>ItemID</th>
-                    <th>Description</th>
+                    <th>Item Name</th>
                     <th>Type</th>
                     <th>Status</th>
-                    <th>Relevance</th>
                 </tr>
     
     <!-- Fills out donation history table --> 
     {% for inventory in allInventory %}
-        <tr data-tt="{{item_id}}">
+        <tr data-tt="{{inventory.item_id}}">
         <td class="description">{{inventory.description}}</td>
         <td class="type">{{inventory.type}}</td>
         <td class="status">{{inventory.status}}</td>
