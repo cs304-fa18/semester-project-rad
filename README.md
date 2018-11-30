@@ -8,13 +8,16 @@ data about resources and expenditures.
 
 ## Donation Form
 
-URL: `/donation-form`
+<Draft Version>
 
- <draft version> This feature allows users to add new donations and donors to
+ This feature allows users to add new donations and donors to
  the database tables. Upon successful submission, it flashes the IDs of the new
  table rows as confirmation.
  
- Inputs: 
+ Run:
+ `python demo-form.py`
+ 
+ Inputs: Donor and Donation sections
  
  Donor:
 - Type: Select between individual or organization, whichever is a more
