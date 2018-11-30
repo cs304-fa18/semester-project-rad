@@ -4,12 +4,12 @@
     <meta charset='utf-8'>
     <meta name=author content="Hannah Weissman">
     <title>Donation Search Application</title>
+    <link rel="stylesheet" type="text/css" href="../static/stylesheet.css">
     </head>
     
     <h1>Search Donations Table:</h1>
 
-    <!-- {{url_for('filterDonationType')}}-->
-    <form method=POST action="/donations/">
+    <form method=POST action="/filterDonationType/">
         <label for="menu-tt">Filter by donation type:</label>
         <select name="menu-tt">
           <option value="none">Choose One</option>
@@ -31,7 +31,6 @@
         <table id="donation-list">
     
             <tr>
-                <th>Donation ID</th>
                 <th>Date of Submission</th>
                 <th>Amount</th>
                 <th>Type</th>
@@ -39,7 +38,7 @@
     
             <!-- Fills out donation history table --> 
             {% for donation in allDonations %}
-            <tr data-tt="{{donationID}}">
+            <tr data-tt="{{donation.donationID}}">
                 <td class="date">{{donation.submitDate}}</td>
                 <td class="amount">{{donation.amount}}</td>
                 <td class="type">{{donation.type}}</td>
