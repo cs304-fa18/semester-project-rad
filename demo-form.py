@@ -35,13 +35,17 @@ def home():
             'type': request.form['donation-category']
         }
         
-        # validate data
+        # validate donation data
         
         # send data to db
         donation_id = donationDBOps.add_donation(donation)
         flash('Donor ID: ' + str(donor_id) + '\nDonation ID: '+ str(donation_id))
-        return render_template('donation_form.html')
         
+        #add donation to inventory
+        donationDBOps.add_to_inventory(donation)
+        
+        return render_template('donation_form.html')
+            
     
 if __name__ == '__main__':
     app.debug = True

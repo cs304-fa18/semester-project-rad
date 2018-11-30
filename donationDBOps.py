@@ -41,3 +41,32 @@ def add_donation(donation_dict):
     curs.execute('''SELECT max(donationID) FROM donation;''')
     result =curs.fetchall()
     return(result[0][0])
+
+def add_to_inventory(donation_dict): #surely there is a better way to do this? standardize caps?
+    conn = get_conn('c9')
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''SELECT count(*) FROM inventory WHERE description like %s''', [ donation_dict['description']])
+    match = curs.fetchall()
+    print(match)
+    match = match[0]['count(*)']
+    print(match)
+    # item not in inventory
+    if (match==0):
+        curs.execute('''INSERT INTO inventory(description, status, type)
+            VALUES (%s,%s,%s)''', [
+                    donation_dict['description'],
+                    donation_dict['amount'],
+                    donation_dict['type']
+                ])
+    else:
+        curs.execute('''SELECT item_id, status FROM inventory WHERE description like %s LIMIT 1;''',[ donation_dict['description']])
+        match_row = curs.fetchall()
+        print(match_row)
+        update_id = match_row[0]['item_id']
+        new_status = match_row[0]['status'] + donation_dict['amount']
+        curs.execute('''UPDATE inventory SET status=%s WHERE item_id=%s''', [new_status, update_id] )
+
+#testing driver
+if __name__ == '__main__':
+    add_to_inventory({'description': 'pile of sticks', 'amount': 1, 'type': 'other'})
+    add_to_inventory({'description': 'unknown donation', 'amount': 2, 'type': 'supplies'})
