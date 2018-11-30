@@ -1,5 +1,6 @@
 #!/usr/bin/python2.7
 
+from datetime import date
 from flask import (Flask, render_template, request, url_for, redirect, flash)
 import sys
 import search_donation_history
@@ -33,6 +34,7 @@ def donationForm():
         
         #add donor to db, collect donorID
         donor_id = donationDBOps.add_donor(donor)
+        flash('Donor ID: ' + str(donor_id))
         
         #collect donation data
         donation = {
@@ -47,11 +49,13 @@ def donationForm():
         
         # send data to db
         donation_id = donationDBOps.add_donation(donation)
-        flash('Donor ID: ' + str(donor_id) + '\nDonation ID: '+ str(donation_id))
+        flash('Donation ID: '+ str(donation_id))
         
         #add donation to inventory
-        donationDBOps.add_to_inventory(donation)
+        inventory_id = donationDBOps.add_to_inventory(donation)
+        flash('Inventory ID: ' + str(inventory_id))
         
+        # render template
         return render_template('donation_form.html')
 
 @app.route('/donations/', methods=["GET", "POST"])
