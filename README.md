@@ -15,7 +15,11 @@ data about resources and expenditures.
  table rows as confirmation.
  
  Run:
- `python demo-form.py`
+ `python app.py`
+ 
+ URL:
+ `/donationForm/`
+ Home page --> Donate Here! 
  
  Inputs: Donor and Donation sections
  
