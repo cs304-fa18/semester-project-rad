@@ -65,8 +65,8 @@ def add_to_inventory(donation_dict): #surely there is a better way to do this? s
                 ])
         curs.execute('''SELECT max(item_id) FROM inventory;''')
         result = curs.fetchall()
-        # print(result)
-        return(result[0][0])
+        print(str(result))
+        return(result[0]['max(item_id)'])
     
     # item found in inventory previously
     else:

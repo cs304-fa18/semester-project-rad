@@ -4,7 +4,7 @@ from datetime import date
 from flask import (Flask, render_template, request, url_for, redirect, flash)
 import sys
 import search_donation_history
-import search_inventory_history
+# import search_inventory_history
 import donationDBOps
 
 app = Flask(__name__)
