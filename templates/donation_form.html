@@ -1,0 +1,106 @@
+<html>
+<head>
+    <meta charset = 'utf-8'>
+    <meta name= author content= "Alyssa Rivera"
+    <title>{{title}}</title>
+    <link type="text/css" rel="stylesheet" href= {{url_for('static', filename ='stylesheet.css')}}>
+</head> 
+
+<body>
+    {% for msg in get_flashed_messages() %}
+        <h3> {{msg}}</h3>
+        <br>
+    {% endfor %}
+    
+    <!-- Donor and donation form -->
+    <form method="POST" action="" >
+        <!-- Donor -->
+        <h2> Donor: </h2>
+        <table id='donor-table'>
+            <tr>
+            <!-- dropdown: create new donor -->
+            <td></td>
+            <td>
+            <select name="donor">
+                <option value="new"> Create New Donor </option>
+            </select>
+            </td>
+            </tr>   
+            <!-- dropdown: create new donor -->
+            <tr>
+                <td> Type: </td>
+                <td>
+                    <select name="donor-type">
+                        <option value="individual"> Individual </option>
+                        <option value="organization"> Organization </option>
+                    </select>
+                </td>
+            </tr>
+            <!-- name -->
+            <tr>
+                <td>Name: </td>
+                <td> <input type="text" name="donor-name"> </td>
+            </tr>
+            <!-- phone # -->
+            <!-- way to ensure formatting correct? and digestible? -->
+            <tr>
+                <td> Phone: </td>
+                <td><input type="text" name="donor-phone"> </td>
+            </tr>
+            <!-- email -->
+            <tr>
+                <td> Email: </td>
+                <td> <input type="text" name="donor-email"> </td>
+            </tr>
+            
+            <!-- address -->
+            <tr>
+                <td> Address: </td>
+                <td> <textarea name="donor-address" rows=5 cols=30></textarea> </td>
+            </tr>
+
+            <!-- description -->
+            <tr>
+                <td> Description: </td>
+                <td> <textarea name = "donor-description" rows=2 cols=30></textarea> </td>
+            </tr>
+        </table>
+        
+        <!-- Donation-->
+        <h2> Donation: </h2>
+        <table id='donation-table'>
+            <!-- Item description text field -->
+            <tr>
+                <td> Donation Description: </td>
+                <td> <input type="text" name="donation-description"> </td>
+            </tr>
+            
+            <!-- Amount text field -->
+            <tr>
+                <td> Amount: </td>
+                <td> <input type="text" name="amount"> </td>
+            </tr>
+            
+            <!-- dropdown: donation category -->
+            <tr>
+                <td> Select donation category: </td>
+                <td>
+                   <select name="donation-category">
+                        <option value="food"> Food </option>
+                        <option value="medical"> Medical </option>
+                        <option value="clothing"> Clothing </option>
+                        <option value="supplies"> Supplies </option>
+                        <option value="money"> Monetary </option>
+                        <option value="other"> Other </option>
+                    </select> 
+                </td>
+            </tr>
+        </table>
+        <br>
+        <input type="submit" value="Submit Donation"></p>
+
+    </form>
+    
+</body>
+    
+<html>

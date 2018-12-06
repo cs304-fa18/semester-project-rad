@@ -2,7 +2,6 @@
 
 """
 Searches for the movie by title.
-
 ----------------------------------------------------------------
 CS 304 - Databases 
 Assignment 5
@@ -16,7 +15,7 @@ def getConn(db):
     """A function that opens a connection with the database
     """
     return MySQLdb.connect(host='localhost',
-                           user='hweissma',
+                           user='cotequotey',
                            passwd='',
                            db=db)
                     
@@ -42,7 +41,7 @@ def getDonationByDonorID(conn, donorID, rowType='dictionary'):
         # results as Dictionaries
         curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''select donationID, submitDate, 
-    amount, type from donation where donorID = %s''', (donorID))
+    amount, type from donation where donorID = %s''', [donorID])
     return curs.fetchall()
 
 
@@ -57,23 +56,15 @@ def getDonationByDonorName(conn, donorName, rowType='dictionary'):
     amount, type from donation where donationID = %s''', ["%"+donorName+"%"])
     return curs.fetchall()
     
-def getDonationByType(conn, itemType, rowType='dictionary'):
+def getDonationByType(conn, itemType):
     """Returns all donations of a specific type."""
-    if rowType == "tuple":
-        curs = conn.cursor()
-    elif rowType == "dictionary":
-        # results as Dictionaries
-        curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''select donationID, submitDate,
-    amount, type from donation where type = %s''', (itemType))
-    return curs.fetchall()
-
-
+    amount, `type` from donation where `type` = %s''', [itemType])
+    return curs.fetchall()   
 
 if __name__ == '__main__':
     conn = getConn('c9')
-    allDonations = getAllDonationHistoryInfo(conn)
+    allDonations = getDonationByType(conn, 'food')
     print allDonations
-    allTypes = getAllTypes(conn)
-    print allTypes
     

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang='en'>
+<head>
+    <meta charset='utf-8'>
+    <meta name=author content="Hannah Weissman">
+    <title>Donation Search Application</title>
+    <link rel="stylesheet" type="text/css" href="../static/stylesheet.css">
+    </head>
+    
+    <h1>Search Donations Table:</h1>
+
+    <form method=POST action="/filterDonationType/">
+        <label for="menu-tt">Filter by donation type:</label>
+        <select name="menu-tt">
+          <option value="none">Choose One</option>
+          <!--Fills out the drop down menu with donation types;
+              Hard coded because we have a set of predefined donation types -->
+            <option value = "food" > food </option>
+            <option value = "medical" > medical </option>
+            <option value = "clothes" > clothes </option>
+            <option value = "supplies" > supplies </option>
+            <option value = "money" > money </option>
+            <option value = "other" > other </option>
+         </select>
+        <input type="submit" name="submit-btn" value="Choose">
+    </form>
+    
+    <body>
+        <h1>List of Donations</h1>
+
+        <table id="donation-list">
+    
+            <tr>
+                <th>Date of Submission</th>
+                <th>Amount</th>
+                <th>Type</th>
+            </tr>
+    
+            <!-- Fills out donation history table --> 
+            {% for donation in allDonations %}
+            <tr data-tt="{{donation.donationID}}">
+                <td class="date">{{donation.submitDate}}</td>
+                <td class="amount">{{donation.amount}}</td>
+                <td class="type">{{donation.type}}</td>
+            </tr>
+            {% endfor %}
+    
+        </table>
+ 
+    </body>
+</html>
