@@ -37,7 +37,7 @@ data about resources and expenditures.
 
 
 ## 3.  Donation Table Page
- This page displays all the donations in the donation table. By selecting a donation type on the drop down menu, users can filter donations by type.
+ This page displays all the donations in the donation table. By selecting a donation type on the drop down menu, users can filter donations by type.    
  
  Run: `python search_donation_history.py`
  URL: /donations/
@@ -100,5 +100,5 @@ which will automatically populate the known fields
 - Respond with more useful feedback after updates
 
 - Validate data entered by user (amount must be an integer, validity of
-    phone number, email, XSS safety, etc.)
+    phone number, email, XSS safety, etc...)
 
