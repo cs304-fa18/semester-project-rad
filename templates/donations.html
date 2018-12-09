@@ -9,29 +9,47 @@
     
     <h1>Search Donations Table:</h1>
 
-    <form method=POST action="/filterDonationType/">
-        <label for="menu-tt">Filter by donation type:</label>
-        <select name="menu-tt">
-          <option value="none">Choose One</option>
-          <!--Fills out the drop down menu with donation types;
-              Hard coded because we have a set of predefined donation types -->
-            <option value = "food" > food </option>
-            <option value = "medical" > medical </option>
-            <option value = "clothes" > clothes </option>
-            <option value = "supplies" > supplies </option>
-            <option value = "money" > money </option>
-            <option value = "other" > other </option>
-         </select>
-        <input type="submit" name="submit-btn" value="Choose">
+    
+    
+    
+    <form method=POST action="/reset/">
+        <input type="submit" name="submit-btn" value="Reset">
     </form>
+    
+    
+    <form method=POST action="/sortBy/">
+        <label for="menu-tt">Order By:</label>
+        <select name="menu-tt">
+          <option value="none">Select</option>
+            <option value = "Most Recent Donation" > Most Recent</option>
+            <option value = "Oldest Donation First" > Oldest Donation</option>
+            <option value = "Type" > Type Descending </option>
+         </select>
+        <input type="submit" name="submit-btn" value="Sort">
+    </form>
+    
+    
     
     <body>
         <h1>List of Donations</h1>
+        
+        <div style="color:red;font-weight:bold" id="flashes">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div id="messages">
+                {% for msg in messages %}
+                    <p>{{msg}}</p>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
 
         <table id="donation-list">
     
             <tr>
                 <th>Date of Submission</th>
+                <th>Description</th>
                 <th>Amount</th>
                 <th>Type</th>
             </tr>
@@ -40,6 +58,7 @@
             {% for donation in allDonations %}
             <tr data-tt="{{donation.donationID}}">
                 <td class="date">{{donation.submitDate}}</td>
+                <td class="description">{{donation.description}}</td>
                 <td class="amount">{{donation.amount}}</td>
                 <td class="type">{{donation.type}}</td>
             </tr>
