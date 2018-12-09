@@ -9,23 +9,23 @@ insert into donor (name, `type`, email)
 
 
 -- donation values
-insert into donation (submitDate, description, amount, `type`, donorID) 
+insert into donation (submitDate, description, amount, units,`type`, donorID) 
     values
-        ('2018-11-07', 'Winter Sleeping Bags', 4, 'supplies', 1),
-        ('2018-02-24', 'carrots (bushels)', 4, 'food', 1),
-        ('2018-10-07', 'blankets', 20, 'supplies', 2),
-        ('2018-10-31', 'arts and crafts supplies', 4, 'supplies', 2),
-        ('2018-11-07', 'flour (pounds)', 20, 'food', 2),
-        ('2018-11-07', 'eggs', 48, 'food', 3);
+        ('2018-11-07', 'Winter Sleeping Bags', 4, 'bags', 'supplies', 1),
+        ('2018-02-24', 'carrots', 4, 'bushels','food', 1),
+        ('2018-10-07', 'blankets', 20, 'pairs','supplies', 2),
+        ('2018-10-31', 'arts and crafts supplies', 4, 'bags', 'supplies', 2),
+        ('2018-11-07', 'flour', 20, 'food', 2, 'pounds', 2),
+        ('2018-11-07', 'eggs', 48, 'food', 3, 'cartons', 1);
 
 -- inventory
-insert into inventory (description, `type`, status, relevance) 
+insert into inventory (description, `type`, amount, units) 
     values 
-        ('carrots (bushels)', 'food', 3, true),
-        ('Winter Sleeping Bags', 'supplies', 2, true),
-        ('blankets', 'supplies', 12, true),
-        ('eggs', 'food', 24, true),
-        ('flour (pounds)', 'food', 1, true);
+        ('carrots', 'food', 3, 'bushels'),
+        ('Winter sleeping bags', 'supplies', 2, 'bags'),
+        ('blankets', 'supplies', 12, 'pairs'),
+        ('eggs', 'food', 24, 'cartons'),
+        ('flour', 'food', 1, 'pounds');
 
 -- expenditure, 
 insert into expenditure (description, `type`, `date`, amount) 
@@ -34,4 +34,3 @@ insert into expenditure (description, `type`, `date`, amount)
         ('bandages', 'medical', '2018-11-06', 75),
         ('eggs', 'food', '2018-11-02', 50),
         ('blankets', 'supplies', '2018-11-06', 100);
-    
