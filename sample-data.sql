@@ -15,17 +15,17 @@ insert into donation (submitDate, description, amount, units,`type`, donorID)
         ('2018-02-24', 'carrots', 4, 'bushels','food', 1),
         ('2018-10-07', 'blankets', 20, 'pairs','supplies', 2),
         ('2018-10-31', 'arts and crafts supplies', 4, 'bags', 'supplies', 2),
-        ('2018-11-07', 'flour', 20, 'food', 2, 'pounds', 2),
-        ('2018-11-07', 'eggs', 48, 'food', 3, 'cartons', 1);
+        ('2018-11-07', 'flour', 20, 'pounds', 'food', 2),
+        ('2018-11-07', 'eggs', 48, 'cartons', 'food', 1);
 
 -- inventory
-insert into inventory (description, `type`, amount, units) 
+insert into inventory (description, `type`, amount) 
     values 
-        ('carrots', 'food', 3, 'bushels'),
-        ('Winter sleeping bags', 'supplies', 2, 'bags'),
-        ('blankets', 'supplies', 12, 'pairs'),
-        ('eggs', 'food', 24, 'cartons'),
-        ('flour', 'food', 1, 'pounds');
+        ('carrots', 'food', 3),
+        ('Winter sleeping bags', 'supplies', 2),
+        ('blankets', 'supplies', 12),
+        ('eggs', 'food', 24),
+        ('flour', 'food', 1);
 
 -- expenditure, 
 insert into expenditure (description, `type`, `date`, amount) 
@@ -34,3 +34,12 @@ insert into expenditure (description, `type`, `date`, amount)
         ('bandages', 'medical', '2018-11-06', 75),
         ('eggs', 'food', '2018-11-02', 50),
         ('blankets', 'supplies', '2018-11-06', 100);
+        
+-- setStatus
+insert into setStatus (item_id, thresholdLow, thresholdHigh)
+    values
+        (1, 5, 20),
+        (2, 10, 50),
+        (3, 5, 15),
+        (4, 6, 18);
+        

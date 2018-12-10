@@ -6,7 +6,7 @@ drop table if exists donor;
 create table donor (
     `donorID` int auto_increment,
     `name` varchar(30),
-    `description` varchar(30),
+    `description` varchar(50),
     `type` enum('individual', 'organization'),
     `phoneNum` varchar(10),
     `email` varchar(30),
@@ -22,8 +22,9 @@ create table donation (
     `donationID` int auto_increment,
     `donorID` int,
     `submitDate` date,
-    `description` varchar(30),
+    `description` varchar(50),
     `amount` int,
+    `units` varchar(30),
     `type` set ('food', 'medical', 'clothing', 'supplies', 'money', 'other'),
     primary key (donationID),
     foreign key (donorID) references donor(donorID) on delete cascade on update cascade
@@ -36,11 +37,12 @@ create table donation (
 drop table if exists inventory;
 CREATE TABLE inventory(
     `item_id` int auto_increment,
-    `description` varchar(30),
-    `status` int,
-    `relevance` bit,
+    `description` varchar(50),
+    `amount` int,
+    `units` varchar(30),
+    `status` set('high','medium','low') default 'medium',
     `type` set('food', 'medical', 'clothing', 'supplies', 'other'),
-    primary key (item_id)
+    primary key (item_id, status)
     )ENGINE=InnoDB;
 
 -- Expenditure Table
@@ -50,8 +52,17 @@ CREATE TABLE expenditure(
     `description` varchar(30),
     `type` set('food', 'medical', 'clothing', 'supplies', 'in house', 'other'),
     `date` date,
-    amount  int,
+    `amount`  int,
     primary key (expend_id)
+    )ENGINE=InnoDB;
+
+-- Setting Status for all Items
+drop table if exists setStatus;
+CREATE TABLE setStatus(
+    `item_id` int,
+    `thresholdLow` int, -- if amount is equal to or less than this threshold status is low
+    `thresholdHigh` int, -- if amount is equal to or greater than this threshold status is high
+    primary key(item_id)
     )ENGINE=InnoDB;
     
 
