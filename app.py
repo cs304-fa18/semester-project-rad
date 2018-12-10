@@ -22,9 +22,9 @@ def donationForm():
     else:
         # collect donor data
         donor = {
-            "name": request.form['donor-name'],
+            'name': request.form['donor-name'],
             'type': request.form['donor-type'],
-            "phone": request.form['donor-phone'],
+            'phone': request.form['donor-phone'],
             'email': request.form['donor-email'],
             'address': request.form['donor-address'],
             'description': request.form['donor-description']

@@ -2,7 +2,7 @@ import MySQLdb
 
 def get_conn(db):
     c = MySQLdb.connect(host='localhost',
-                           user='cotequotey',
+                           user='arivera4',
                            passwd='',
                            db=db)
     c.autocommit(True)
