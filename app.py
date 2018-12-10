@@ -22,9 +22,9 @@ def donationForm():
     else:
         # collect donor data
         donor = {
-            "name": request.form['donor-name'],
+            'name': request.form['donor-name'],
             'type': request.form['donor-type'],
-            "phone": request.form['donor-phone'],
+            'phone': request.form['donor-phone'],
             'email': request.form['donor-email'],
             'address': request.form['donor-address'],
             'description': request.form['donor-description']
@@ -64,12 +64,34 @@ def displayDonations():
     allDonations = search_donation_history.getAllDonationHistoryInfo(conn, rowType='dictionary')
     return render_template('donations.html',allDonations= allDonations )
     
+@app.route('/reset/', methods=['GET', 'POST'])
+def restDonationPage():
+    return redirect('donations')
+    
+@app.route('/sortBy/', methods=["GET", "POST"])
+def sortDonations():
+    conn = search_donation_history.getConn('c9')
+    selectedType = request.form.get("menu-tt")
+    if (selectedType == "Most Recent Donation"):
+        donationsOrdered = search_donation_history.sortDonationByDateDescending(conn)
+        return render_template('donations.html',allDonations = donationsOrdered)
+    elif (selectedType == "Oldest Donation First"):
+        donationsOrdered = search_donation_history.sortDonationByDateAscending(conn)
+        return render_template('donations.html',allDonations = donationsOrdered)
+    else:
+        donationsOrdered = search_donation_history.sortDonationType(conn)
+        return render_template('donations.html',allDonations = donationsOrdered)
+    
 @app.route('/filterDonationType/', methods=["GET", "POST"])
 def filterDonationType():
     conn = search_donation_history.getConn('c9')
     selectedType = request.form.get("menu-tt")
     donationByType = search_donation_history.getDonationByType(conn, selectedType)
-    return render_template('donations.html',allDonations = donationByType)
+    if (len(donationByType) == 0):
+        flash("There have been no donations of type: " + selectedType)
+        return render_template('donations.html',allDonations = donationByType)
+    else:
+        return render_template('donations.html',allDonations = donationByType)
 
 @app.route('/inventory/', methods=["GET", "POST"])
 def displayInventory():
@@ -82,7 +104,7 @@ def displayInventory():
 def filterInventoryType():
     conn = search_inventory_history.getConn('c9')
     selectedType = request.form.get("menu-tt")
-    inventoryByType = search_inventory_history.getInventoryByType(conn, selectedType) 
+    inventoryByType = search_inventory_history.getInventoryByType(conn, selectedType)
     return render_template('inventory.html',allInventory = inventoryByType)
 
 
