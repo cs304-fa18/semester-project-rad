@@ -57,6 +57,7 @@ CREATE TABLE expenditure(
     )ENGINE=InnoDB;
 
 -- Setting Status for all Items
+-- Currently this table is not linked to inventory, this will need to be done
 drop table if exists setStatus;
 CREATE TABLE setStatus(
     `item_id` int,
