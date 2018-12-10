@@ -1,0 +1,36 @@
+<html>
+<head>
+    <meta charset = 'utf-8'>
+    <meta name= author content= "Alyssa Rivera, Angela Wang, Hannah Weissman"
+    <title>{{title}}</title>
+    <link type="text/css" rel="stylesheet" href= {{url_for('static', filename ='stylesheet.css')}}
+</head> 
+
+<body>
+    <!-- change hard links to url_for -->
+    <nav>
+        <a id='nav-link' href="/index"> Home </a>
+        <a id='nav-link' href="/donationForm/"> Submit Donation </a>
+        <a id='nav-link' href='/inventory/'> View Inventory</a>  
+        <a id='nav-link' href='/donations/'> View Donations</a>
+        <a id='nav-link' href='cs.wellesley.edu'> Submit Expenditure </a>
+    </nav>
+
+    <br>
+    
+    <main_body>
+    {% block title %}
+    {% endblock %}
+    <br>    
+    {% for msg in get_flashed_messages() %}
+    <class="error"> {{msg}} </class>
+    <br>
+    {% endfor %}
+    
+    {% block content %}
+    {% endblock %}
+    </main_body>
+
+</body>
+    
+<html>

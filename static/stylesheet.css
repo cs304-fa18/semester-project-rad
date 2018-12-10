@@ -1,12 +1,16 @@
 body{
     background-color: rgb(235,244,246);
     color: rgb(94,86,86);
+}
+
+main_body{
     margin-left: 80px;
     margin-right: 80px;
     margin-top: 30px;
 }
 
 h1{
+    text-align: center; 
     color: rgb(118,180,189);
 }
 
@@ -28,4 +32,28 @@ h3{
     border: 2px solid rgb(88,102,139);
     padding: 3px;
     text-align: center;
+}
+
+nav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: rgb(118,180,189);
+    font-size: 110% ;
+}
+
+
+nav a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 20px 30px;
+    text-decoration: none;
+    float: left;
+}
+
+nav a:hover {
+    background-color: #bdeaee;
+    color: #5e5656;
 }
