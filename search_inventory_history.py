@@ -76,6 +76,31 @@ def getInventoryByRelevance(conn, relevance, rowType='dictionary'):
     where status = %s''', [relevance])
     return curs.fetchall()
 
+def setStatusforInventory(conn, item_id):
+    '''Updates status for an item based on pre-defined values in setStatus table'''
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    
+    
+    itemAmountDictionary = curs.execute('''select amount
+    from inventory where item_id = %s''', [item_id])
+    itemAmount = curs.fetchall()[0]['amount'] #extracts amount corresponding to item
+
+    thresholdForItem = curs.execute('''select thresholdLow, thresholdHigh
+    from setStatus where item_id = %s''', [item_id])
+    
+    boththresholds = curs.fetchall()[0] #extracts dictionary containing thresholdHigh and threshLow
+    thresholdLow = boththresholds['thresholdLow'] #extracts threshLow value for item
+    thresholdHigh = boththresholds['thresholdHigh'] #extracts threshHigh value for item
+    
+    #set status depending on amount of item 
+    if itemAmount <= thresholdLow:
+        curs.execute('''update inventory set status = %s where item_id = %s''',
+        ['low', item_id])
+    elif itemAmount >= thresholdHigh:
+        curs.execute('''update inventory set status = %s where item_id = %s''',
+        ['high', item_id])
+  
+
 
 
 if __name__ == '__main__':
