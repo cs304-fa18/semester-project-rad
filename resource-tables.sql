@@ -65,5 +65,7 @@ CREATE TABLE setStatus(
     `thresholdHigh` int, -- if amount is equal to or greater than this threshold status is high
     primary key(item_id)
     )ENGINE=InnoDB;
+
+    
     
 
