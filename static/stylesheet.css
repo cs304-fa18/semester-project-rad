@@ -67,3 +67,19 @@ nav a:hover {
     background-color: #bdeaee;
     color: #5e5656;
 }
+
+
+
+nav a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 20px 30px;
+    text-decoration: none;
+    float: left;
+}
+
+nav a:hover {
+    background-color: #bdeaee;
+    color: #5e5656;
+}
