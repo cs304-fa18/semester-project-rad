@@ -8,10 +8,12 @@
     </head>
     
     <h1>Search Donations Table:</h1>
+    
+    <h1>List of Donations</h1>
 
     
     
-    
+    <div id="sort">
     <form method=POST action="/reset/">
         <input type="submit" name="submit-btn" value="Reset">
     </form>
@@ -27,12 +29,13 @@
          </select>
         <input type="submit" name="submit-btn" value="Sort">
     </form>
+    </div>
     
     
     
-    <body>
-        <h1>List of Donations</h1>
+
         
+        <body>
         <div style="color:red;font-weight:bold" id="flashes">
         {% with messages = get_flashed_messages() %}
             {% if messages %}
@@ -65,6 +68,7 @@
             {% endfor %}
     
         </table>
+
  
     </body>
 </html>
