@@ -16,26 +16,29 @@
     <input type="submit" name="submit-btn" value="Choose">
 </form>
 
+ <div id="sort">
+    <form method=POST action="/reset/">
+        <input type="submit" name="submit-btn" value="Reset">
+    </form>
+    
+    
+    <form method=POST action="/sortBy/">
+        <label for="menu-tt">Order By:</label>
+        <select name="menu-tt">
+          <option value="none">Select</option>
+            <option value = "Most Recent Donation" > Most Recent</option>
+            <option value = "Oldest Donation First" > Oldest Donation</option>
+            <option value = "Type" > Type Descending </option>
+         </select>
+        <input type="submit" name="submit-btn" value="Sort">
+    </form>
+    </div>
 
-    <!--<form method=POST action="/filterInventoryType/">-->
-    <!--    <label>Filter by Type:</label>-->
-    <!--    <option value="none">Choose One</option>-->
-          <!--Fills out the drop down menu with donation types;
-    <!--          Hard coded because we have a set of predefined donation types-->
-    <!--          Similar types as donation table, except for money type which -->
-    <!--          is accounted for in expenditures table-->-->
-    <!--        <option value = "food" > food </option>-->
-    <!--        <option value = "medical" > medical </option>-->
-    <!--        <option value = "clothes" > clothes </option>-->
-    <!--        <option value = "supplies" > supplies </option>-->
-    <!--        <option value = "other" > other </option>-->
-    <!--     </select>-->
-    <!--    <input type="submit" name="submit-btn" value="Choose">-->
-    <!--</form>-->
+
+   
     
     <body>
         </div>
-            <h1>Current Inventory</h1>
 
             <table id="inventory-list">
     
