@@ -14,7 +14,7 @@ def getConn(db):
     """A function that opens a connection with the database
     """
     return MySQLdb.connect(host='localhost',
-                           user='cotequotey',
+                           user='hweissma',
                            passwd='',
                            db=db)
                     
