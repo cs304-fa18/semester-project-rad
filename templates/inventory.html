@@ -1,64 +1,82 @@
 {% extends "base.html" %} 
 
 {% block title %}    
-    <h1>Search Inventory Table:</h1>
+    <h1>Search Inventory Table</h1>
 {% endblock %}
 
 {% block content %}
-<form name="FilterForm" id="FilterForm" action="" method="POST">
-    <label>Filter by Type:</label>
-    <input type="checkbox" name="type" value="food" />food</label>
-    <input type="checkbox" name="type"  value="medical" />medical</label>
-    <input type="checkbox" name="type"  value="clothes" />clothes</label>
-    <input type="checkbox" name="type"  value="supplies" />supplies</label>
-    <input type="checkbox" name="type"  value="money" />money</label>
-    <input type="checkbox" name="type" value="other" />other</label>
-    <input type="submit" name="submit-btn" value="Choose">
-</form>
 
+        <form method=POST action="/reset/">
+            <input type="submit" name="submit-btn" value="Reset Inventory">
+        </form>
+        
+        
+        <form method=POST action="/sortBy/">
+            <label for="menu-tt">Order By:</label>
+            <select name="menu-tt">
+              <option value="none">Select</option>
+                <option value = "Most Recent Item" > Most Recent</option>
+                <option value = "Oldest Item First" > Oldest Donation</option>
+                <option value = "Type" > Type Descending </option>
+             </select>
+            <input type="submit" name="submit-btn" value="Sort">
+        </form>
 
-    <!--<form method=POST action="/filterInventoryType/">-->
-    <!--    <label>Filter by Type:</label>-->
-    <!--    <option value="none">Choose One</option>-->
-          <!--Fills out the drop down menu with donation types;
-    <!--          Hard coded because we have a set of predefined donation types-->
-    <!--          Similar types as donation table, except for money type which -->
-    <!--          is accounted for in expenditures table-->-->
-    <!--        <option value = "food" > food </option>-->
-    <!--        <option value = "medical" > medical </option>-->
-    <!--        <option value = "clothes" > clothes </option>-->
-    <!--        <option value = "supplies" > supplies </option>-->
-    <!--        <option value = "other" > other </option>-->
-    <!--     </select>-->
-    <!--    <input type="submit" name="submit-btn" value="Choose">-->
-    <!--</form>-->
-    
-    <body>
-        </div>
-            <h1>Current Inventory</h1>
-
-            <table id="inventory-list">
+<table id="inventory-list" border =1>
     
                 <tr>
+                    <th>Date of Submission</th>
                     <th>Item Name</th>
                     <th>Type</th>
+                    <th>Amount</th>
+                    <th>Units</th>
                     <th>Status</th>
                 </tr>
     
-    <!-- Fills out donation history table --> 
-    {% for inventory in allInventory %}
-        <tr data-tt="{{inventory.item_id}}">
-        <td class="description">{{inventory.description}}</td>
-        <td class="type">{{inventory.type}}</td>
-        <td class="status">{{inventory.status}}</td>
-        <td class="relevance">{{inventory.relevance}}</td>
-    </tr>
-    {% endfor %}
+                <!-- Fills out inventory history table --> 
+                {% for inventory in allInventory %}
+                    <tr data-tt="{{inventory.item_id}}">
+                    <td class="date">{{inventory.submitDate}}</td>
+                    <td class="description">{{inventory.description}}</td>
+                    <td class="type">{{inventory.type}}</td>
+                    <td class="type">{{inventory.amount}}</td>
+                    <td class="type">{{inventory.units}}</td>
+                    <td class="status">{{inventory.status}}</td>
+                </tr>
+                {% endfor %}
     
+            </table>
     
+    <div class = "sort">
+        <form name="FilterForm" id="FilterForm" action="/filterInventoryType/" method="POST">
+            <label>Filter by Type:</label>
+            <ul>
+                <li><input type="checkbox" name="type" value="food" />food</label></li>
+                <li><input type="checkbox" name="type"  value="medical" />medical</label></li>
+                <li><input type="checkbox" name="type"  value="clothes" />clothes</label></li>
+                <li><input type="checkbox" name="type"  value="supplies" />supplies</label></li>
+                <li><input type="checkbox" name="type"  value="money" />money</label></li>
+                <li><input type="checkbox" name="type" value="other" />other</label></li>
+                <li><input type="submit" name="submit-btn" value="Choose">
+            </ul>
+        </form>
+    </div>
 
-    
-</table>
+
+    <body>
+        <div style="color:red;font-weight:bold" id="flashes">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div id="messages">
+                {% for msg in messages %}
+                    <p>{{msg}}</p>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        </div>
+
+
  
     </body>
 {% endblock %}

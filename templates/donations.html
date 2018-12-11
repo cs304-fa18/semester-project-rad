@@ -1,33 +1,67 @@
 {% extends "base.html" %} 
 
 {% block title %} 
-    <h1>Search Donations Table:</h1>
+    <h1>Search Donations Table</h1>
     
-    <h1>List of Donations!</h1>
 {% endblock %}
 
 {% block content %}
+
+        <form method=POST action="/reset/">
+            <input type="submit" name="submit-btn" value="Reset Donations">
+        </form>
+        
+        
+        <form method=POST action="/sortBy/">
+            <label for="menu-tt">Order By:</label>
+            <select name="menu-tt">
+              <option value="none">Select</option>
+                <option value = "Most Recent Donation" > Most Recent</option>
+                <option value = "Oldest Donation First" > Oldest Donation</option>
+                <option value = "Donation Type" > Type Descending </option>
+             </select>
+            <input type="submit" name="submit-btn" value="Sort">
+        </form>
+        
+            <table id="donation-list" border=1>
     
-    <div id="sort">
-    <form method=POST action="/reset/">
-        <input type="submit" name="submit-btn" value="Reset">
-    </form>
+            <tr>
+                <th>Date of Submission</th>
+                <th>Donation Name</th>
+                <th>Amount</th>
+                <th>Units</th>
+                <th>Type</th>
+            </tr>
     
+            <!-- Fills out donation history table --> 
+            {% for donation in allDonations %}
+            <tr data-tt="{{donation.donationID}}">
+                <td class="date">{{donation.submitDate}}</td>
+                <td class="description">{{donation.description}}</td>
+                <td class="amount">{{donation.amount}}</td>
+                <td class="units">{{donation.units}}</td>
+                <td class="type">{{donation.type}}</td>
+            </tr>
+            {% endfor %}
     
-    <form method=POST action="/sortBy/">
-        <label for="menu-tt">Order By:</label>
-        <select name="menu-tt">
-          <option value="none">Select</option>
-            <option value = "Most Recent Donation" > Most Recent</option>
-            <option value = "Oldest Donation First" > Oldest Donation</option>
-            <option value = "Type" > Type Descending </option>
-         </select>
-        <input type="submit" name="submit-btn" value="Sort">
-    </form>
+        </table>
+    
+    <div class = "sort">
+        <form name="FilterForm" id="FilterForm" action="/filterDonationType/" method="POST">
+            <label>Filter by Type:</label>
+            <input type="checkbox" name="type" value="food" />food</label>
+            <input type="checkbox" name="type"  value="medical" />medical</label>
+            <input type="checkbox" name="type"  value="clothes" />clothes</label>
+            <input type="checkbox" name="type"  value="supplies" />supplies</label>
+            <input type="checkbox" name="type"  value="money" />money</label>
+            <input type="checkbox" name="type" value="other" />other</label>
+            <input type="submit" name="submit-btn" value="Choose">
+        </form>
+
     </div>
     
 
-        <body>
+    <body>
         <div style="color:red;font-weight:bold" id="flashes">
         {% with messages = get_flashed_messages() %}
             {% if messages %}
@@ -38,57 +72,10 @@
                 </div>
             {% endif %}
         {% endwith %}
-    </div>
+        </div>
 
-        <table id="donation-list">
-    
-            <tr>
-                <th>Date of Submission</th>
-                <th>Description</th>
-                <th>Amount</th>
-                <th>Type</th>
-            </tr>
-    
-            <!-- Fills out donation history table --> 
-            {% for donation in allDonations %}
-            <tr data-tt="{{donation.donationID}}">
-                <td class="date">{{donation.submitDate}}</td>
-                <td class="description">{{donation.description}}</td>
-                <td class="amount">{{donation.amount}}</td>
-                <td class="type">{{donation.type}}</td>
-            </tr>
-            {% endfor %}
-    
-        </table>
 
  
     </body>
-</html>
-
-    </div>
-
-        <table id="donation-list">
-    
-            <tr>
-                <th>Date of Submission</th>
-                <th>Description</th>
-                <th>Amount</th>
-                <th>Type</th>
-            </tr>
-    
-            <!-- Fills out donation history table --> 
-            {% for donation in allDonations %}
-            <tr data-tt="{{donation.donationID}}">
-                <td class="date">{{donation.submitDate}}</td>
-                <td class="description">{{donation.description}}</td>
-                <td class="amount">{{donation.amount}}</td>
-                <td class="type">{{donation.type}}</td>
-            </tr>
-            {% endfor %}
-    
-        </table>
- 
-    </body>
-</html>
 
 {% endblock %}

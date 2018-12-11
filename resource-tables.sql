@@ -1,15 +1,20 @@
 use c9;
+drop table if exists setStatus;
+drop table if exists expenditure;
+drop table if exists inventory;
+drop table if exists donation;
+drop table if exists donor;
+
 
 -- Donor table
 -- Holds contact information and donor ID 
-drop table if exists donor;
 create table donor (
     `donorID` int auto_increment,
     `name` varchar(30),
     `description` varchar(50),
-    `type` enum('individual', 'organization'),
+    `type` enum ('individual', 'organization'),
     `phoneNum` varchar(10),
-    `email` varchar(30),
+    `email` varchar(50),
     `address` varchar(30),
     primary key (donorID)
     )ENGINE = InnoDB;
@@ -17,7 +22,6 @@ create table donor (
 -- Define donation table
 -- Primary key as donationID
 -- Foreign key references "donorID" from donor table
-drop table if exists donation;
 create table donation (
     `donationID` int auto_increment,
     `donorID` int,
@@ -34,10 +38,10 @@ create table donation (
 -- Inventory Table
 -- status is the amount left
 -- relevance is a flag of whether we need more
-drop table if exists inventory;
 CREATE TABLE inventory(
     `item_id` int auto_increment,
     `description` varchar(50),
+    `submitDate` date,
     `amount` int,
     `units` varchar(30),
     `status` set('high','medium','low') default 'medium',
@@ -46,7 +50,6 @@ CREATE TABLE inventory(
     )ENGINE=InnoDB;
 
 -- Expenditure Table
-drop table if exists expenditure;
 CREATE TABLE expenditure(
     `expend_id` int auto_increment,
     `description` varchar(30),
@@ -58,7 +61,6 @@ CREATE TABLE expenditure(
 
 -- Setting Status for all Items
 -- Currently this table is not linked to inventory, this will need to be done
-drop table if exists setStatus;
 CREATE TABLE setStatus(
     `item_id` int,
     `thresholdLow` int, -- if amount is equal to or less than this threshold status is low
@@ -66,5 +68,3 @@ CREATE TABLE setStatus(
     primary key(item_id)
     )ENGINE=InnoDB;
     
-    
-
