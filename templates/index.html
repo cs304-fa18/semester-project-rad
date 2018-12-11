@@ -6,17 +6,21 @@
 
 {% block content %}
   <body>
-    <div id="navigation">
-      <ul>
-        <li><a href="/donationForm/">Donate here!</a>
-        <li><a href="/donations/">Search through donations</a>
-        <li><a href="/inventory/">Check out inventory</a>
-      </ul>
-    </div>
-    <div id="content">
-      
 
-    </div>
+<div class = "sort">
+          <div style="color:red;font-weight:bold" id="flashes">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div id="messages">
+                {% for msg in messages %}
+                    <p>{{msg}}</p>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        </div>
+</div>
+    <img src = "../static/donate.png">
 
     <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
     

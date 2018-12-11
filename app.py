@@ -14,6 +14,9 @@ app.secret_key = 'stringy string'
     
 @app.route('/')
 def index():
+    conn = search_donation_history.getConn('c9')
+    total = search_inventory_history.countInventoryTotal(conn)
+    flash("Total Number of Inventory Items: " + str(total))
     return render_template('index.html')
     
 @app.route("/donationForm/", methods=['GET', 'POST'])
@@ -81,6 +84,23 @@ def expenditureForm():
         expend_id = expenditureBackend.add_expend(expenditure, conn)
         flash('Expenditure ID: ' + str(expend_id))
         return render_template('expenditures.html')
+    
+#is not hooked up to the back end yet
+@app.route('/updateInventory/', methods = ['GET', 'POST'])
+def updateInventoryForm():
+    conn = search_inventory_history.getConn('c9')
+    allItemTypes = search_inventory_history.getInventoryItemTypes(conn)
+    if request.method == 'GET':
+        return render_template('updateInventory.html', inventory = allItemTypes)
+        
+    else:
+        updatedItem = {
+            'item_id' : request.form['item-type'],
+            'amount' : request.form['item-amount'],
+            'units' : request.form['item-units'],
+            'date' : date.today()
+        }
+        return render_template('updateInventory.html', inventory = allItemTypes)
 
 
 @app.route('/donations/', methods=["GET", "POST"])
@@ -89,23 +109,12 @@ def displayDonations():
     allDonations = search_donation_history.getAllDonationHistoryInfo(conn, rowType='dictionary')
     return render_template('donations.html',allDonations= allDonations )
     
-@app.route('/reset/', methods=['GET', 'POST'])
-def restDonationPage():
-    return redirect('donations')
-    
-@app.route('/sortBy/', methods=["GET", "POST"])
-def sortDonations():
-    conn = search_donation_history.getConn('c9')
-    selectedType = request.form.get("menu-tt")
-    if (selectedType == "Most Recent Donation"):
-        donationsOrdered = search_donation_history.sortDonationByDateDescending(conn)
-        return render_template('donations.html',allDonations = donationsOrdered)
-    elif (selectedType == "Oldest Donation First"):
-        donationsOrdered = search_donation_history.sortDonationByDateAscending(conn)
-        return render_template('donations.html',allDonations = donationsOrdered)
-    else:
-        donationsOrdered = search_donation_history.sortDonationType(conn)
-        return render_template('donations.html',allDonations = donationsOrdered)
+
+@app.route('/inventory/', methods=["GET", "POST"])
+def displayInventory():
+    conn = search_inventory_history.getConn('c9')
+    allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn) 
+    return render_template('inventory.html', allInventory = allInventory)
     
 @app.route('/filterDonationType/', methods=["GET", "POST"])
 def filterDonationType():
@@ -118,19 +127,47 @@ def filterDonationType():
     else:
         return render_template('donations.html',allDonations = donationByType)
 
-@app.route('/inventory/', methods=["GET", "POST"])
-def displayInventory():
-    conn = search_inventory_history.getConn('c9')
-    allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn) 
-    return render_template('inventory.html', allInventory = allInventory)
-
-# Gives error: not all arguments converted during string formatting
 @app.route('/filterInventoryType/', methods=["GET", "POST"])
 def filterInventoryType():
     conn = search_inventory_history.getConn('c9')
     selectedType = request.form.get("type")
     inventoryByType = search_inventory_history.getInventoryByType(conn, selectedType)
+    if (len(inventoryByType) == 0):
+        flash("There are no inventory items of type: " + selectedType)
     return render_template('inventory.html',allInventory = inventoryByType)
+
+@app.route('/reset/', methods=['GET', 'POST'])
+def reset():
+    resetType = request.form.get("submit-btn")
+    if (resetType == "Reset Inventory"):
+        return redirect('inventory')
+    else: 
+        return redirect('donations')
+    
+@app.route('/sortBy/', methods=["GET", "POST"])
+def sortBy():
+    conn = search_donation_history.getConn('c9')
+    selectedType = request.form.get("menu-tt")
+    if (selectedType == "Most Recent Donation"):
+        donationsOrdered = search_donation_history.sortDonationByDateDescending(conn)
+        return render_template('donations.html',allDonations = donationsOrdered)
+    elif (selectedType == "Oldest Donation First"):
+        donationsOrdered = search_donation_history.sortDonationByDateAscending(conn)
+        return render_template('donations.html',allDonations = donationsOrdered)
+    elif (selectedType == "Donation Type"):
+        donationsOrdered = search_donation_history.sortDonationType(conn)
+        return render_template('donations.html',allDonations = donationsOrdered)
+    # If selectedType is within inventory page:
+    elif (selectedType == "Most Recent Item"):
+        inventoryOrdered = search_inventory_history.sortInventoryByDateDescending(conn)
+        return render_template('inventory.html',allInventory = inventoryOrdered)
+    elif (selectedType == "Oldest Item First"):
+        inventoryOrdered = search_inventory_history.sortInventoryByDateAscending(conn)
+        return render_template('inventory.html',allInventory = inventoryOrdered)
+    #If selectedType == "Item Type"....
+    else: 
+        inventoryOrdered = search_inventory_history.sortInventoryType(conn)
+        return render_template('inventory.html',allInventory = inventoryOrdered)
 
 
 if __name__ == '__main__':

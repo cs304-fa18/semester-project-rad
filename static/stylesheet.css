@@ -34,10 +34,46 @@ h3{
     text-align: center;
 }
 
-#sort {
-    float: right;
-    padding-right: 125px;
-    
+flash {
+   margin: 30px auto 20px auto; /* top right bottom left */
+   width: 960px;
+   height: 331px;
+   z-index: 0;
+}
+
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 40%;
+}
+
+input{
+    /*width:20px;*/
+
+    /*position:relative;*/
+    /*left: 200px; */
+
+    vertical-align:middle; 
+}
+
+/*label{  */
+/*    width:200px;       */
+
+/*    position:relative;*/
+/*    left: -20px;*/
+
+/*    display:inline-block;    */
+/*    vertical-align:middle; */
+/*}*/
+
+.sort{
+  display: block;
+  width: 250px;
+  height: 70px;
+  padding: 5px;
+  border: 1px solid blue;    
+  background-color: #e8e4da; 
 }
 
 table {
