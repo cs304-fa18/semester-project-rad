@@ -1,0 +1,45 @@
+{% extends "base.html" %} 
+ 
+{% block title %}
+    <h1> Expenditure Submission </h1>
+{% endblock %}
+
+{% block content %}
+    <!-- Expenditure Form -->
+    <form method="POST" action="" >
+        <h2> Expenditure: </h2>
+        <table id='expenditure-table'>
+            <!-- Item description text field -->
+            <tr>
+                <td> Expenditure Description: </td>
+                <td> <input type="text" name="expenditure-description"> </td>
+            </tr>
+            
+            <!-- Amount text field -->
+            <tr>
+                <td> Amount Spent: </td>
+                <td> <input type="number" name="expenditure-amount"> </td>
+            </tr>
+            
+            <!-- dropdown: donation category -->
+            <tr>
+                <td> Select expenditure category: </td>
+                <td>
+                   <select name="expenditure-category">
+                        <option value="food"> Food </option>
+                        <option value="medical"> Medical </option>
+                        <option value="clothing"> Clothing </option>
+                        <option value="supplies"> Supplies </option>
+                        <option value="in house"> In House </option>
+                        <option value="other"> Other </option>
+                    </select> 
+                </td>
+            </tr>
+            <br>
+        </table>
+        
+        <input type="submit" value="Submit Expenditure"></p>
+    </form>
+    
+</body>
+{% endblock %}

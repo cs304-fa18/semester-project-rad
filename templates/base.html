@@ -7,13 +7,12 @@
 </head> 
 
 <body>
-    <!-- change hard links to url_for -->
     <nav>
-        <a id='nav-link' href="/index"> Home </a>
-        <a id='nav-link' href="/donationForm/"> Submit Donation </a>
-        <a id='nav-link' href='/inventory/'> View Inventory</a>  
-        <a id='nav-link' href='/donations/'> View Donations</a>
-        <a id='nav-link' href='cs.wellesley.edu'> Submit Expenditure </a>
+        <a id='nav-link' href="{{ url_for('index') }}"> Home </a>
+        <a id='nav-link' href="{{ url_for('donationForm') }}"> Submit Donation </a>
+        <a id='nav-link' href="{{ url_for('displayInventory') }}"> View Inventory</a>  
+        <a id='nav-link' href="{{ url_for('displayDonations') }}"> View Donations</a>
+        <a id='nav-link' href="{{ url_for('expenditureForm') }}"> Submit Expenditure </a>
     </nav>
 
     <br>

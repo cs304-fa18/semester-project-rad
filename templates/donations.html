@@ -1,17 +1,12 @@
-<!doctype html>
-<html lang='en'>
-<head>
-    <meta charset='utf-8'>
-    <meta name=author content="Hannah Weissman">
-    <title>Donation Search Application</title>
-    <link rel="stylesheet" type="text/css" href="../static/stylesheet.css">
-    </head>
-    
+{% extends "base.html" %} 
+
+{% block title %} 
     <h1>Search Donations Table:</h1>
     
     <h1>List of Donations!</h1>
+{% endblock %}
 
-    
+{% block content %}
     
     <div id="sort">
     <form method=POST action="/reset/">
@@ -31,10 +26,7 @@
     </form>
     </div>
     
-    
-    
 
-        
         <body>
         <div style="color:red;font-weight:bold" id="flashes">
         {% with messages = get_flashed_messages() %}
@@ -73,3 +65,5 @@
  
     </body>
 </html>
+
+{% endblock %}

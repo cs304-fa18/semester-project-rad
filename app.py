@@ -6,6 +6,7 @@ import sys
 import search_donation_history
 import search_inventory_history
 import donationDBOps
+import expenditureBackend
 
 app = Flask(__name__)
 app.secret_key = 'stringy string'
@@ -57,6 +58,30 @@ def donationForm():
         
         # render template
         return render_template('donation_form.html')
+
+
+@app.route('/expenditureForm/', methods = ['GET', 'POST'])
+def expenditureForm():
+    if request.method == 'GET':
+        return render_template('expenditures.html')
+        
+    else:
+    # Collect Expenditure Data
+        expenditure = {
+            'expenditure-category' : request.form['expenditure-category'],
+            'amount' : request.form['expenditure-amount'],
+            'expenditure-description' : request.form['expenditure-description'],
+            'date' : date.today()
+        }
+        
+        # Validate Expenditure Data
+        
+        # Submit to Expenditure DB
+        conn = donationDBOps.get_conn('c9')
+        expend_id = expenditureBackend.add_expend(expenditure, conn)
+        flash('Expenditure ID: ' + str(expend_id))
+        return render_template('expenditures.html')
+
 
 @app.route('/donations/', methods=["GET", "POST"])
 def displayDonations():
