@@ -11,7 +11,6 @@ import expenditureBackend
 app = Flask(__name__)
 app.secret_key = 'stringy string'
 
-    
 @app.route('/')
 def index():
     conn = search_donation_history.getConn('c9')
@@ -21,6 +20,12 @@ def index():
     
 @app.route("/donationForm/", methods=['GET', 'POST'])
 def donationForm():
+    '''
+    Route for donation form page. 
+    On GET, renders blank form.
+    On POST, collects and validates data and if valid, adds to database. 
+       Renders form again with submission confirmation flashed.
+    '''
     if request.method == 'GET':
         return render_template('donation_form.html')
     else:
@@ -75,6 +80,13 @@ def donationForm():
 
 @app.route('/expenditureForm/', methods = ['GET', 'POST'])
 def expenditureForm():
+    '''
+    Route for exenditure form page. 
+    On GET, renders blank form.
+    On POST, collects and validates data and if valid, adds to database. 
+       Renders form again with submission confirmation flashed.
+    '''
+    
     if request.method == 'GET':
         return render_template('expenditures.html')
         
@@ -99,6 +111,7 @@ def expenditureForm():
         expend_id = expenditureBackend.add_expend(expenditure, conn)
         flash('Expenditure ID: ' + str(expend_id))
         return render_template('expenditures.html')
+ 
     
 #is not hooked up to the back end yet
 @app.route('/updateInventory/', methods = ['GET', 'POST'])
@@ -130,6 +143,7 @@ def displayInventory():
     conn = search_inventory_history.getConn('c9')
     allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn) 
     return render_template('inventory.html', allInventory = allInventory)
+
     
 @app.route('/filterDonationType/', methods=["GET", "POST"])
 def filterDonationType():
@@ -142,6 +156,7 @@ def filterDonationType():
     else:
         return render_template('donations.html',allDonations = donationByType)
 
+
 @app.route('/filterInventoryType/', methods=["GET", "POST"])
 def filterInventoryType():
     conn = search_inventory_history.getConn('c9')
@@ -151,6 +166,7 @@ def filterInventoryType():
         flash("There are no inventory items of type: " + selectedType)
     return render_template('inventory.html',allInventory = inventoryByType)
 
+
 @app.route('/reset/', methods=['GET', 'POST'])
 def reset():
     resetType = request.form.get("submit-btn")
@@ -158,6 +174,7 @@ def reset():
         return redirect('inventory')
     else: 
         return redirect('donations')
+
     
 @app.route('/sortBy/', methods=["GET", "POST"])
 def sortBy():

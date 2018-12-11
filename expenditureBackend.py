@@ -2,6 +2,15 @@ import donationDBOps
 import MySQLdb
 
 def add_expend(expenditure, conn):
+    '''
+    Adds expenditure row to database
+    Inputs:
+       expenditure -- dictionary containing keys date, expenditure-description,
+                      amount, expenditure-category
+        conn -- database connection
+    Return value: id of newly added row in expenditure table
+    '''
+    
     curs = conn.cursor()
     curs.execute('''INSERT INTO 
         expenditure(date, description, amount, type)
@@ -18,8 +27,11 @@ def add_expend(expenditure, conn):
 
 def validate_expenditure(expend_dict):
     '''
-        Input: dict with keys: expenditure-category, amount, expenditure-description, date
-        output: messages list with errors to flash. If list empty, green light
+        Validates expenditure data according to expectations
+        Inputs: 
+           expend_dict - dictionary with keys: expenditure-category, amount,
+                         expenditure-description, date
+        Returns: messages list with errors. If list empty, data is valid.
     '''
     messages = []
     # check expenditure-category in list of valid values
@@ -35,6 +47,9 @@ def validate_expenditure(expend_dict):
     
 
 def test_validate_expenditure():
+    '''
+    testing cases
+    '''
     good_set = {
         'expenditure-category' : 'food',
         'amount' : 42,
