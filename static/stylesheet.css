@@ -34,6 +34,16 @@ h3{
     text-align: center;
 }
 
+#sort {
+    float: right;
+    padding-right: 125px;
+    
+}
+
+table {
+    margin: 0 auto;
+}
+
 nav {
     list-style-type: none;
     margin: 0;
@@ -42,6 +52,22 @@ nav {
     background-color: rgb(118,180,189);
     font-size: 110% ;
 }
+
+
+nav a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 20px 30px;
+    text-decoration: none;
+    float: left;
+}
+
+nav a:hover {
+    background-color: #bdeaee;
+    color: #5e5656;
+}
+
 
 
 nav a {

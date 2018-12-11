@@ -9,22 +9,33 @@
     
     <h1>Search Inventory Table:</h1>
 
-    <form method=POST action="/filterInventoryType/">
-        <label for="menu-tt">Filter by Type:</label>
-        <select name="menu-tt">
-        <option value="none">Choose One</option>
+<form name="FilterForm" id="FilterForm" action="" method="POST">
+    <label>Filter by Type:</label>
+    <input type="checkbox" name="type" value="food" />food</label>
+    <input type="checkbox" name="type"  value="medical" />medical</label>
+    <input type="checkbox" name="type"  value="clothes" />clothes</label>
+    <input type="checkbox" name="type"  value="supplies" />supplies</label>
+    <input type="checkbox" name="type"  value="money" />money</label>
+    <input type="checkbox" name="type" value="other" />other</label>
+    <input type="submit" name="submit-btn" value="Choose">
+</form>
+
+
+    <!--<form method=POST action="/filterInventoryType/">-->
+    <!--    <label>Filter by Type:</label>-->
+    <!--    <option value="none">Choose One</option>-->
           <!--Fills out the drop down menu with donation types;
-              Hard coded because we have a set of predefined donation types
-              Similar types as donation table, except for money type which 
-              is accounted for in expenditures table-->
-            <option value = "food" > food </option>
-            <option value = "medical" > medical </option>
-            <option value = "clothes" > clothes </option>
-            <option value = "supplies" > supplies </option>
-            <option value = "other" > other </option>
-         </select>
-        <input type="submit" name="submit-btn" value="Choose">
-    </form>
+    <!--          Hard coded because we have a set of predefined donation types-->
+    <!--          Similar types as donation table, except for money type which -->
+    <!--          is accounted for in expenditures table-->-->
+    <!--        <option value = "food" > food </option>-->
+    <!--        <option value = "medical" > medical </option>-->
+    <!--        <option value = "clothes" > clothes </option>-->
+    <!--        <option value = "supplies" > supplies </option>-->
+    <!--        <option value = "other" > other </option>-->
+    <!--     </select>-->
+    <!--    <input type="submit" name="submit-btn" value="Choose">-->
+    <!--</form>-->
     
     <body>
         </div>

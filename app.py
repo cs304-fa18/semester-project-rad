@@ -96,14 +96,14 @@ def filterDonationType():
 @app.route('/inventory/', methods=["GET", "POST"])
 def displayInventory():
     conn = search_inventory_history.getConn('c9')
-    allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn, rowType='dictionary') 
+    allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn) 
     return render_template('inventory.html', allInventory = allInventory)
 
 # Gives error: not all arguments converted during string formatting
 @app.route('/filterInventoryType/', methods=["GET", "POST"])
 def filterInventoryType():
     conn = search_inventory_history.getConn('c9')
-    selectedType = request.form.get("menu-tt")
+    selectedType = request.form.get("type")
     inventoryByType = search_inventory_history.getInventoryByType(conn, selectedType)
     return render_template('inventory.html',allInventory = inventoryByType)
 
