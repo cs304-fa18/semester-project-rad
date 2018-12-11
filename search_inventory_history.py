@@ -83,6 +83,12 @@ def getAllInventoryDescription(conn):
     curs.execute(
         '''select item_id, submitDate, description, status, amount, units,`type` from inventory''')
     return curs.fetchall()
+
+def getInventoryItemTypes(conn):
+    '''Returns all inventory types, used in update inventory form'''
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''select description, item_id from inventory''')
+    return curs.fetchall()
     
                                
 def getInventoryByStatus(conn, status):
