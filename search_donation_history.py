@@ -15,7 +15,7 @@ def getConn(db):
     """A function that opens a connection with the database
     """
     return MySQLdb.connect(host='localhost',
-                           user='hweissma',
+                           user='cotequotey',
                            passwd='',
                            db=db)
                     
@@ -29,7 +29,7 @@ def getAllDonationHistoryInfo(conn, rowType='dictionary'):
         # results as Dictionaries
         curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute(
-        '''select description, donationID, submitDate, amount, type from donation''')
+        '''select description, donationID, submitDate, amount, units, type from donation''')
     return curs.fetchall()
     
 def sortDonationByDateAscending(conn, rowType='dictionary'):
@@ -41,7 +41,7 @@ def sortDonationByDateAscending(conn, rowType='dictionary'):
         # results as Dictionaries
         curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute(
-        '''select description, donationID, submitDate, amount, type 
+        '''select description, donationID, submitDate, amount, units, type 
         from donation order by submitDate asc''')
     return curs.fetchall()
 
@@ -54,7 +54,7 @@ def sortDonationByDateDescending(conn, rowType='dictionary'):
         # results as Dictionaries
         curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute(
-        '''select description, donationID, submitDate, amount, type 
+        '''select description, donationID, submitDate, amount, units, type 
         from donation order by submitDate desc''')
     return curs.fetchall()
     
@@ -67,7 +67,7 @@ def sortDonationType(conn, rowType='dictionary'):
         # results as Dictionaries
         curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute(
-        '''select description, donationID, submitDate, amount, type 
+        '''select description, donationID, submitDate, amount, units, type 
         from donation order by type''')
     return curs.fetchall()
     

@@ -5,63 +5,75 @@
 {% endblock %}
 
 {% block content %}
-<form name="FilterForm" id="FilterForm" action="" method="POST">
-    <label>Filter by Type:</label>
-    <input type="checkbox" name="type" value="food" />food</label>
-    <input type="checkbox" name="type"  value="medical" />medical</label>
-    <input type="checkbox" name="type"  value="clothes" />clothes</label>
-    <input type="checkbox" name="type"  value="supplies" />supplies</label>
-    <input type="checkbox" name="type"  value="money" />money</label>
-    <input type="checkbox" name="type" value="other" />other</label>
-    <input type="submit" name="submit-btn" value="Choose">
-</form>
 
- <div id="sort">
-    <form method=POST action="/reset/">
-        <input type="submit" name="submit-btn" value="Reset">
-    </form>
+        <form method=POST action="/reset/">
+            <input type="submit" name="submit-btn" value="Reset Inventory">
+        </form>
+        
+        
+        <form method=POST action="/sortBy/">
+            <label for="menu-tt">Order By:</label>
+            <select name="menu-tt">
+              <option value="none">Select</option>
+                <option value = "Most Recent Item" > Most Recent</option>
+                <option value = "Oldest Item First" > Oldest Donation</option>
+                <option value = "Type" > Type Descending </option>
+             </select>
+            <input type="submit" name="submit-btn" value="Sort">
+        </form>
+
     
-    
-    <form method=POST action="/sortBy/">
-        <label for="menu-tt">Order By:</label>
-        <select name="menu-tt">
-          <option value="none">Select</option>
-            <option value = "Most Recent Donation" > Most Recent</option>
-            <option value = "Oldest Donation First" > Oldest Donation</option>
-            <option value = "Type" > Type Descending </option>
-         </select>
-        <input type="submit" name="submit-btn" value="Sort">
-    </form>
+    <div class = "sort">
+        <form name="FilterForm" id="FilterForm" action="/filterInventoryType/" method="POST">
+            <label>Filter by Type:</label>
+            <input type="checkbox" name="type" value="food" />food</label>
+            <input type="checkbox" name="type"  value="medical" />medical</label>
+            <input type="checkbox" name="type"  value="clothes" />clothes</label>
+            <input type="checkbox" name="type"  value="supplies" />supplies</label>
+            <input type="checkbox" name="type"  value="money" />money</label>
+            <input type="checkbox" name="type" value="other" />other</label>
+            <input type="submit" name="submit-btn" value="Choose">
+        </form>
     </div>
 
 
-   
-    
     <body>
+        <div style="color:red;font-weight:bold" id="flashes">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div id="messages">
+                {% for msg in messages %}
+                    <p>{{msg}}</p>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
         </div>
 
-            <table id="inventory-list">
+            <table id="inventory-list" border =1>
     
                 <tr>
+                    <th>Date of Submission</th>
                     <th>Item Name</th>
                     <th>Type</th>
+                    <th>Amount</th>
+                    <th>Units</th>
                     <th>Status</th>
                 </tr>
     
-    <!-- Fills out donation history table --> 
-    {% for inventory in allInventory %}
-        <tr data-tt="{{inventory.item_id}}">
-        <td class="description">{{inventory.description}}</td>
-        <td class="type">{{inventory.type}}</td>
-        <td class="status">{{inventory.status}}</td>
-        <td class="relevance">{{inventory.relevance}}</td>
-    </tr>
-    {% endfor %}
+                <!-- Fills out inventory history table --> 
+                {% for inventory in allInventory %}
+                    <tr data-tt="{{inventory.item_id}}">
+                    <td class="date">{{inventory.submitDate}}</td>
+                    <td class="description">{{inventory.description}}</td>
+                    <td class="type">{{inventory.type}}</td>
+                    <td class="type">{{inventory.amount}}</td>
+                    <td class="type">{{inventory.units}}</td>
+                    <td class="status">{{inventory.status}}</td>
+                </tr>
+                {% endfor %}
     
-    
-
-    
-</table>
+            </table>
  
     </body>
 {% endblock %}
