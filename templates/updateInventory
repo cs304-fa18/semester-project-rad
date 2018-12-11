@@ -1,0 +1,73 @@
+{% extends "base.html" %} 
+ 
+{% block title %}
+    <h1> Update Inventory </h1>
+{% endblock %}
+
+{% block content %}
+    <!-- Update Inventory Form -->
+    <form method="POST" action="" >
+        <table id='inventory-table'>
+            <!-- Item description text field -->
+            <!--<tr>-->
+            <!--    <td> Item: </td>-->
+            <!--    <td> <input type="text" name="item-description"> </td>-->
+            <!--</tr>-->
+            
+            
+            <label for="item_ID">Items:</label>
+            <select name="item_ID">
+                
+                
+            <option value="none">Choose One</option>
+            {% for description in items %}
+                <option value={{m.tt}}>{{m.title}}</option>
+            {% endfor %}
+            
+              <tr>
+                <td> Select Item Type: </td>
+                <td>
+                   <select name="item-type">
+                    {% for item in inventory %}
+                        <option value={{item_id}}>{{item.description}}</option>
+                    {% endfor %}
+                    </select> 
+                </td>
+            </tr>
+        
+        
+            
+            <!-- Amount text field -->
+            <tr>
+                <td> Updated Amount: </td>
+                <td> <input type="number" name="item-amount"> </td>
+            </tr>
+            
+            <!-- Units text field -->
+            <tr>
+                <td> Units: </td>
+                <td> <input type="text" name="item-units"> </td>
+            </tr>
+            
+            <!-- dropdown: donation category -->
+            <!--<tr>-->
+            <!--    <td> Select expenditure category: </td>-->
+            <!--    <td>-->
+            <!--       <select name="item-category">-->
+            <!--            <option value="food"> Food </option>-->
+            <!--            <option value="medical"> Medical </option>-->
+            <!--            <option value="clothing"> Clothing </option>-->
+            <!--            <option value="supplies"> Supplies </option>-->
+            <!--            <option value="in house"> In House </option>-->
+            <!--            <option value="other"> Other </option>-->
+            <!--        </select> -->
+            <!--    </td>-->
+            <!--</tr>-->
+            <br>
+        </table>
+        
+        <input type="submit" value="Submit Updated Inventory"></p>
+    </form>
+    
+</body>
+{% endblock %}
