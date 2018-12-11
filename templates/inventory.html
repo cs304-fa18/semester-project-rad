@@ -1,14 +1,10 @@
-<!doctype html>
-<html lang='en'>
-<head>
-    <meta charset='utf-8'>
-    <meta name=author content="Angela Wang">
-    <title>Inventory Search Application</title>
-    <link rel="stylesheet" type="text/css" href="../static/stylesheet.css">
-    </head>
-    
-    <h1>Search Inventory Table:</h1>
+{% extends "base.html" %} 
 
+{% block title %}    
+    <h1>Search Inventory Table:</h1>
+{% endblock %}
+
+{% block content %}
 <form name="FilterForm" id="FilterForm" action="" method="POST">
     <label>Filter by Type:</label>
     <input type="checkbox" name="type" value="food" />food</label>
@@ -65,4 +61,4 @@
 </table>
  
     </body>
-</html>
+{% endblock %}
