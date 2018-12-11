@@ -9,6 +9,10 @@ main_body{
     margin-top: 30px;
 }
 
+ul{
+list-style: none
+}
+
 h1{
     text-align: center; 
     color: rgb(118,180,189);
@@ -68,9 +72,10 @@ input{
 /*}*/
 
 .sort{
+  margin-bottom: auto;
   display: block;
-  width: 250px;
-  height: 70px;
+  width: 175px;
+  height: 200px;
   padding: 5px;
   border: 1px solid blue;    
   background-color: #e8e4da; 

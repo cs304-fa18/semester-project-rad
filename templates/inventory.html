@@ -22,35 +22,7 @@
             <input type="submit" name="submit-btn" value="Sort">
         </form>
 
-    
-    <div class = "sort">
-        <form name="FilterForm" id="FilterForm" action="/filterInventoryType/" method="POST">
-            <label>Filter by Type:</label>
-            <input type="checkbox" name="type" value="food" />food</label>
-            <input type="checkbox" name="type"  value="medical" />medical</label>
-            <input type="checkbox" name="type"  value="clothes" />clothes</label>
-            <input type="checkbox" name="type"  value="supplies" />supplies</label>
-            <input type="checkbox" name="type"  value="money" />money</label>
-            <input type="checkbox" name="type" value="other" />other</label>
-            <input type="submit" name="submit-btn" value="Choose">
-        </form>
-    </div>
-
-
-    <body>
-        <div style="color:red;font-weight:bold" id="flashes">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div id="messages">
-                {% for msg in messages %}
-                    <p>{{msg}}</p>
-                {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
-        </div>
-
-            <table id="inventory-list" border =1>
+<table id="inventory-list" border =1>
     
                 <tr>
                     <th>Date of Submission</th>
@@ -74,6 +46,37 @@
                 {% endfor %}
     
             </table>
+    
+    <div class = "sort">
+        <form name="FilterForm" id="FilterForm" action="/filterInventoryType/" method="POST">
+            <label>Filter by Type:</label>
+            <ul>
+                <li><input type="checkbox" name="type" value="food" />food</label></li>
+                <li><input type="checkbox" name="type"  value="medical" />medical</label></li>
+                <li><input type="checkbox" name="type"  value="clothes" />clothes</label></li>
+                <li><input type="checkbox" name="type"  value="supplies" />supplies</label></li>
+                <li><input type="checkbox" name="type"  value="money" />money</label></li>
+                <li><input type="checkbox" name="type" value="other" />other</label></li>
+                <li><input type="submit" name="submit-btn" value="Choose">
+            </ul>
+        </form>
+    </div>
+
+
+    <body>
+        <div style="color:red;font-weight:bold" id="flashes">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div id="messages">
+                {% for msg in messages %}
+                    <p>{{msg}}</p>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        </div>
+
+
  
     </body>
 {% endblock %}
