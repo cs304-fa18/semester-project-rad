@@ -110,7 +110,7 @@ def sortDonations():
 @app.route('/filterDonationType/', methods=["GET", "POST"])
 def filterDonationType():
     conn = search_donation_history.getConn('c9')
-    selectedType = request.form.get("menu-tt")
+    selectedType = request.form.get("type")
     donationByType = search_donation_history.getDonationByType(conn, selectedType)
     if (len(donationByType) == 0):
         flash("There have been no donations of type: " + selectedType)

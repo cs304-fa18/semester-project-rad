@@ -15,7 +15,7 @@ def getConn(db):
     """A function that opens a connection with the database
     """
     return MySQLdb.connect(host='localhost',
-                           user='cotequotey',
+                           user='hweissma',
                            passwd='',
                            db=db)
                     
@@ -98,8 +98,8 @@ def getDonationByDonorName(conn, donorName, rowType='dictionary'):
 def getDonationByType(conn, itemType):
     """Returns all donations of a specific type."""
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('''select donationID, submitDate,
-    amount, `type` from donation where `type` = %s''', [itemType])
+    curs.execute('''select description, donationID, submitDate, 
+    amount, type  from donation where `type` = %s''', [itemType])
     return curs.fetchall()   
 
 if __name__ == '__main__':
