@@ -13,10 +13,12 @@ import MySQLdb
 def getConn(db):
     """A function that opens a connection with the database
     """
-    return MySQLdb.connect(host='localhost',
-                           user='cotequotey',
+    conn = MySQLdb.connect(host='localhost',
+                           user='hweissma',
                            passwd='',
                            db=db)
+    conn.autocommit(True)
+    return conn
                     
 def countInventoryTotal(conn):
     """Returns all inventory, in order of last modified.
@@ -106,35 +108,33 @@ def getInventoryByType(conn, itemType):
     where `type` = %s''', [itemType])
     return curs.fetchall()
 
+def setStatus(conn, item_id, newStatus):
+    '''Sets status to newStatus, helper function for updateStatus'''
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''update inventory set status = %s where item_id = %s''',
+        [newStatus, item_id])
+    
 
-def setStatusforInventory(conn, item_id):
+def updateStatus(conn, item_id):
     '''Updates status for an item based on pre-defined values in setStatus table'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    
     
     itemAmountDictionary = curs.execute('''select amount
     from inventory where item_id = %s''', [item_id])
     itemAmount = curs.fetchall()[0]['amount'] #extracts amount corresponding to item
 
-    thresholdForItem = curs.execute('''select thresholdLow, thresholdHigh
+    thresholdForItemDictionary = curs.execute('''select threshold
     from setStatus where item_id = %s''', [item_id])
     
-    boththresholds = curs.fetchall()[0] #extracts dictionary containing thresholdHigh and threshLow
-    thresholdLow = boththresholds['thresholdLow'] #extracts threshLow value for item
-    thresholdHigh = boththresholds['thresholdHigh'] #extracts threshHigh value for item
+    thresholdForItem = curs.fetchall()[0]['threshold'] #extracts dictionary containing thresholdHigh and threshLow
     
     #set status depending on amount of item 
-    if itemAmount <= thresholdLow:
-        curs.execute('''update inventory set status = %s where item_id = %s''',
-        ['low', item_id])
-    elif itemAmount >= thresholdHigh:
-        curs.execute('''update inventory set status = %s where item_id = %s''',
-        ['high', item_id])
-  
-
-
-
+    if itemAmount <= thresholdForItem:
+        setStatus(conn, item_id, 'low')
+    else:
+        setStatus(conn, item_id, 'high')
+        
+    
 if __name__ == '__main__':
     conn = getConn('c9')
-    allInventory = getAllInventoryHistoryInfo(conn) 
-    print allInventory
+    

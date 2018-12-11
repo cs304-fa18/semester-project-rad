@@ -44,7 +44,7 @@ CREATE TABLE inventory(
     `submitDate` date,
     `amount` int,
     `units` varchar(30),
-    `status` set('high','medium','low') default 'medium',
+    `status` set('high','low', 'null') default 'null',
     `type` set('food', 'medical', 'clothing', 'supplies', 'other'),
     primary key (item_id, status)
     )ENGINE=InnoDB;
@@ -63,9 +63,9 @@ CREATE TABLE expenditure(
 -- Currently this table is not linked to inventory, this will need to be done
 CREATE TABLE setStatus(
     `item_id` int,
-    `thresholdLow` int, -- if amount is equal to or less than this threshold status is low
-    `thresholdHigh` int, -- if amount is equal to or greater than this threshold status is high
-    primary key(item_id)
+    `threshold` int, -- if amount is equal to or less than this threshold status is low otherwise high
+    primary key(item_id),
+    foreign key (item_id) references inventory(item_id) on delete cascade on update cascade
     )ENGINE=InnoDB;
 
     
