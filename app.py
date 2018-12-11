@@ -84,6 +84,23 @@ def expenditureForm():
         expend_id = expenditureBackend.add_expend(expenditure, conn)
         flash('Expenditure ID: ' + str(expend_id))
         return render_template('expenditures.html')
+    
+#is not hooked up to the back end yet
+@app.route('/updateInventory/', methods = ['GET', 'POST'])
+def updateInventoryForm():
+    conn = search_inventory_history.getConn('c9')
+    allItemTypes = search_inventory_history.getInventoryItemTypes(conn)
+    if request.method == 'GET':
+        return render_template('updateInventory.html', inventory = allItemTypes)
+        
+    else:
+        updatedItem = {
+            'item_id' : request.form['item-type'],
+            'amount' : request.form['item-amount'],
+            'units' : request.form['item-units'],
+            'date' : date.today()
+        }
+        return render_template('updateInventory.html', inventory = allItemTypes)
 
 
 @app.route('/donations/', methods=["GET", "POST"])
