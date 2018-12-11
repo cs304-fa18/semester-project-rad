@@ -72,6 +72,5 @@ insert into setStatus (item_id, thresholdLow, thresholdHigh)
         (1, 5, 20),
         (2, 10, 50),
         (3, 5, 15),
-        (4, 6, 18)
-        (5, 1, 10);
+        (4, 6, 18);
         
