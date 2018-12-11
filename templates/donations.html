@@ -1,7 +1,7 @@
 {% extends "base.html" %} 
 
 {% block title %} 
-    <h1>Search Donations Table:</h1>
+    <h1>Search Donations Table</h1>
     
 {% endblock %}
 
@@ -22,6 +22,29 @@
              </select>
             <input type="submit" name="submit-btn" value="Sort">
         </form>
+        
+            <table id="donation-list" border=1>
+    
+            <tr>
+                <th>Date of Submission</th>
+                <th>Donation Name</th>
+                <th>Amount</th>
+                <th>Units</th>
+                <th>Type</th>
+            </tr>
+    
+            <!-- Fills out donation history table --> 
+            {% for donation in allDonations %}
+            <tr data-tt="{{donation.donationID}}">
+                <td class="date">{{donation.submitDate}}</td>
+                <td class="description">{{donation.description}}</td>
+                <td class="amount">{{donation.amount}}</td>
+                <td class="units">{{donation.units}}</td>
+                <td class="type">{{donation.type}}</td>
+            </tr>
+            {% endfor %}
+    
+        </table>
     
     <div class = "sort">
         <form name="FilterForm" id="FilterForm" action="/filterDonationType/" method="POST">
@@ -50,29 +73,6 @@
             {% endif %}
         {% endwith %}
         </div>
-
-        <table id="donation-list" border=1>
-    
-            <tr>
-                <th>Date of Submission</th>
-                <th>Donation Name</th>
-                <th>Amount</th>
-                <th>Units</th>
-                <th>Type</th>
-            </tr>
-    
-            <!-- Fills out donation history table --> 
-            {% for donation in allDonations %}
-            <tr data-tt="{{donation.donationID}}">
-                <td class="date">{{donation.submitDate}}</td>
-                <td class="description">{{donation.description}}</td>
-                <td class="amount">{{donation.amount}}</td>
-                <td class="units">{{donation.units}}</td>
-                <td class="type">{{donation.type}}</td>
-            </tr>
-            {% endfor %}
-    
-        </table>
 
 
  

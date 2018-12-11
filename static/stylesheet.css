@@ -9,6 +9,10 @@ main_body{
     margin-top: 30px;
 }
 
+ul{
+list-style: none
+}
+
 h1{
     text-align: center; 
     color: rgb(118,180,189);
@@ -34,43 +38,96 @@ h3{
     text-align: center;
 }
 
-flash {
-   margin: 30px auto 20px auto; /* top right bottom left */
-   width: 960px;
-   height: 331px;
-   z-index: 0;
+#sort {
+    float: right;
+    padding-right: 125px;
+    
 }
 
-img {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 40%;
+table {
+    margin: 0 auto;
 }
 
-input{
-    /*width:20px;*/
-
-    /*position:relative;*/
-    /*left: 200px; */
-
-    vertical-align:middle; 
+nav {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: rgb(118,180,189);
+    font-size: 110% ;
 }
 
-/*label{  */
-/*    width:200px;       */
 
-/*    position:relative;*/
-/*    left: -20px;*/
+nav a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 20px 30px;
+    text-decoration: none;
+    float: left;
+}
 
-/*    display:inline-block;    */
-/*    vertical-align:middle; */
-/*}*/
+nav a:hover {
+    background-color: #bdeaee;
+    color: #5e5656;
+}
+
+
+
+nav a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 20px 30px;
+    text-decoration: none;
+    float: left;
+}
+
+nav a:hover {
+    background-color: #bdeaee;
+    color: #5e5656;
+}
+body{
+    background-color: rgb(235,244,246);
+    color: rgb(94,86,86);
+}
+
+main_body{
+    margin-left: 80px;
+    margin-right: 80px;
+    margin-top: 30px;
+}
+
+h1{
+    text-align: center; 
+    color: rgb(118,180,189);
+}
+
+h2{
+    color: rgb(88,102,139);
+    border: rgb(88,102,139);
+}
+
+h3{
+    text-align: center;
+    color: rgb(101,30,62);
+    border: double rgb(101,30,62);
+    padding: 10px;
+    margin-left: 275px;
+    margin-right: 275px;
+}
+
+.error{
+    border: 2px solid rgb(88,102,139);
+    padding: 3px;
+    text-align: center;
+}
 
 .sort{
+  margin-bottom: auto;
   display: block;
-  width: 250px;
-  height: 70px;
+  width: 175px;
+  height: 200px;
   padding: 5px;
   border: 1px solid blue;    
   background-color: #e8e4da; 

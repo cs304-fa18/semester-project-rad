@@ -14,7 +14,7 @@ def getConn(db):
     """A function that opens a connection with the database
     """
     return MySQLdb.connect(host='localhost',
-                           user='cotequotey',
+                           user='hweissma',
                            passwd='',
                            db=db)
                     
@@ -82,12 +82,6 @@ def getAllInventoryDescription(conn):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute(
         '''select item_id, submitDate, description, status, amount, units,`type` from inventory''')
-    return curs.fetchall()
-
-def getInventoryItemTypes(conn):
-    '''Returns all inventory types, used in update inventory form'''
-    curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('''select description, item_id from inventory''')
     return curs.fetchall()
     
                                
