@@ -5,7 +5,7 @@ from flask import (Flask, render_template, request, url_for, redirect, flash)
 import sys
 import search_donation_history
 import search_inventory_history
-import donationDBOps
+import donationBackend
 import expenditureBackend
 
 app = Flask(__name__)
@@ -32,9 +32,14 @@ def donationForm():
         }
         
         #validate donor data
+        validation_result = donationBackend.validate_donor(donor)
+        if len(validation_result) != 0:
+            for msg in val_result:
+                flash(msg)
+            return(redirect(url_for('donationForm')))
         
         #add donor to db, collect donorID
-        donor_id = donationDBOps.add_donor(donor)
+        donor_id = donationBackend.add_donor(donor)
         flash('Donor ID: ' + str(donor_id))
         
         #collect donation data
@@ -47,13 +52,18 @@ def donationForm():
         }
         
         # validate donation data
+        validation_result = donationBackend.validate_donation(donation)
+        if len(validation_result) != 0:
+            for msg in val_result:
+                flash(msg)
+            return(redirect(url_for('donationForm')))
         
         # send data to db
-        donation_id = donationDBOps.add_donation(donation)
+        donation_id = donationBackend.add_donation(donation)
         flash('Donation ID: '+ str(donation_id))
         
         #add donation to inventory
-        inventory_id = donationDBOps.add_to_inventory(donation)
+        inventory_id = donationBackend.add_to_inventory(donation)
         flash('Inventory ID: ' + str(inventory_id))
         
         # render template
@@ -75,9 +85,14 @@ def expenditureForm():
         }
         
         # Validate Expenditure Data
-        
+        val_result = expenditureBackend.validate_expenditure(expenditure)
+        if len(val_result) != 0:
+            for msg in val_result:
+                flash(msg)
+            return(redirect(url_for('expenditureForm')))
+           
         # Submit to Expenditure DB
-        conn = donationDBOps.get_conn('c9')
+        conn = donationBackend.get_conn('c9')
         expend_id = expenditureBackend.add_expend(expenditure, conn)
         flash('Expenditure ID: ' + str(expend_id))
         return render_template('expenditures.html')
@@ -91,7 +106,7 @@ def displayDonations():
     
 @app.route('/reset/', methods=['GET', 'POST'])
 def restDonationPage():
-    return redirect('donations')
+    return redirect('donations')   # supposed to be rest or reset?
     
 @app.route('/sortBy/', methods=["GET", "POST"])
 def sortDonations():
