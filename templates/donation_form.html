@@ -16,7 +16,7 @@
             <td>Select Existing Donor: </td>
             <td>
             <select name="existing-donor">
-                <option value=''> Select... </option>
+                <option value="create-new-donor"> Select... </option>
                 {% for dict in donor_list %}
                     <option value={{dict.id}}> {{dict.name}} </option>
                 {% endfor %}
@@ -76,9 +76,10 @@
                 <td> Select Previously Given Donation:</td>
                 <td>
                     <select name="existing-donation">
-                        <option value=''> Select... </option>
+                        <option value='create-new-donation'> Select... </option>
                         {% for dict in donation_list %}
-                            <option value={{dict.id}}> {{dict.description}} </option>
+                            <option value={{dict.description}}> {{dict.description}} </option>
+                            <!-- Future fix: use dict.id as value, leverage it-->
                         {% endfor %}
                     </select> 
                 </td>

@@ -44,9 +44,9 @@ def donationForm():
         return render_template('donation_form.html', donor_list=donor_list, donation_list=donation_list)
     else:
         existing_id = request.form['existing-donor']
-        if existing_id is not '':
+        if existing_id != "create-new-donor":
             donor_id = existing_id
-            print(existing_id)
+            print('***********Existing ID: ' + existing_id)
             
         else:
             # collect donor data
@@ -68,13 +68,16 @@ def donationForm():
             
             #add donor to db, collect donorID
             donor_id = donationBackend.add_donor(conn, donor)
+            print("*************DONOR ID: " + str(donor_id))
             flash('Donor ID: ' + str(donor_id))
         
         
         #collect donation data
+        
         description = request.form['existing-donation']
-        if request.form['existing-donation'] is '':
+        if request.form['existing-donation'] == 'create-new-donation':
             description = request.form['donation-description']
+        
             
         donation = {
             'donor_id': donor_id,

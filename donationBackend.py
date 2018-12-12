@@ -165,14 +165,14 @@ def validate_donor(donor_dict):
     return messages
  
 
-def get_donations(conn):
+def get_donations(conn):    # TODO: rename
     '''
     Inputs:
         conn -- database connection
     Returns: list of all donations (id and name) from database
     '''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('''SELECT donationID as id, description FROM donation;''')
+    curs.execute('''SELECT item_id as id, description FROM inventory;''')
     result = curs.fetchall()
     # print(result)
     return(result)
