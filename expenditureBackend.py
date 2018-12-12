@@ -1,7 +1,8 @@
 import donationDBOps
 import MySQLdb
+from connection import get_conn
 
-def add_expend(expenditure, conn):
+def add_expend(conn, expenditure):
     '''
     Adds expenditure row to database
     Inputs:

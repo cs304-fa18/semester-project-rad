@@ -5,15 +5,16 @@ from connection import get_conn
 # curs = conn.cursor(MySQLdb.cursors.DictCursor)
 
 
-def add_donor(donor_dict):
+def add_donor(conn, donor_dict):
     '''
     Adds donor row to database
     Inputs:
-       donor_dict -- dictionary with keys: name, description, type, phone,
+        conn -- database connection
+        donor_dict -- dictionary with keys: name, description, type, phone,
                      email, address
     Returns: id of newly added row in donor table
     '''
-    conn = get_conn('c9')
+
     curs = conn.cursor()
     curs.execute(
         '''INSERT INTO donor(name, description, type, phoneNum, email, address)
@@ -26,21 +27,21 @@ def add_donor(donor_dict):
             donor_dict['address']
         ]
     )
-    curs.execute('''SELECT max(donorID) FROM donor;''')
+    curs.execute('''SELECT last_insert_id() FROM donor;''')
     result =curs.fetchall()
     return(result[0][0])
 
 
-def add_donation(donation_dict):
+def add_donation(conn, donation_dict):
     '''
     Adds donation row to database
     Inputs:
+       conn -- database connection
        donation_dict -- dictionary with keys: donor_id, submit_date, type, 
                         description, amount, units
     Returns: id of newly added row in donation table
     '''
     
-    conn = get_conn('c9')
     curs = conn.cursor()
     curs.execute('''INSERT INTO 
         donation(donorID, submitDate, description, amount, units, type)
@@ -52,22 +53,22 @@ def add_donation(donation_dict):
                 donation_dict['units'],
                 donation_dict['type']
             ])
-    curs.execute('''SELECT max(donationID) FROM donation;''')
+    curs.execute('''SELECT last_insert_id() FROM donation;''')
     result =curs.fetchall()
     return(result[0][0])
 
 
-def add_to_inventory(donation_dict): 
+def add_to_inventory(conn, donation_dict): 
     '''
     Checks if item already exists in inventory. In this case increments its
     amount in its database entry. If it doesn't exist, adds it to inventory
     Inputs:
-       donation_dict -- dictionary with keys: donor_id, submit_date, type, 
+        conn -- database connection
+        donation_dict -- dictionary with keys: donor_id, submit_date, type, 
                         description, amount, units
     Returns: id of newly added/updated row in inventory table
     '''
-    
-    conn = get_conn('c9')
+
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''SELECT count(*) FROM inventory 
         WHERE description like %s''', [ donation_dict['description']])
@@ -86,7 +87,7 @@ def add_to_inventory(donation_dict):
                     "NULL",
                     donation_dict['type']
                 ])
-        curs.execute('''SELECT max(item_id) FROM inventory;''')
+        curs.execute('''SELECT last_insert_id() FROM inventory;''')
         result = curs.fetchall()
         print(str(result))
         return(result[0]['max(item_id)'])
