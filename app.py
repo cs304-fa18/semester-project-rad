@@ -116,27 +116,33 @@ def expenditureForm():
         return render_template('expenditures.html')
  
     
-#is not hooked up to the back end yet
 @app.route('/updateInventory/', methods = ['GET', 'POST'])
 def updateInventoryForm():
+    '''Collects information from update inventory form
+    passes this information to backend to update inventory table'''
+    
     conn = get_conn()
     allItemTypes = search_inventory_history.getInventoryItemTypes(conn)
+    
     if request.method == 'GET':
         return render_template('updateInventory.html', inventory = allItemTypes)
         
     else:
         updatedItem = {
-            'item_id' : request.form['item-type'],
+            'item_id' : request.form['inventoryItem'],
             'amount' : request.form['item-amount'],
             'date' : date.today()
         }
-    conn = search_inventory_history.getConn('c9')
+
+    conn = search_inventory_history.get_conn('c9')
     search_inventory_history.updateInventory(conn, updatedItem['item_id'], updatedItem['amount'])
+    #flash("Updated Inventory")
     return render_template('updateInventory.html', inventory = allItemTypes)
 
 
 @app.route('/donations/', methods=["GET", "POST"])
 def displayDonations():
+    '''displays all donations in donationHistory table'''
     conn = get_conn()
     allDonations = search_donation_history.getAllDonationHistoryInfo(conn, rowType='dictionary')
     return render_template('donations.html',allDonations= allDonations )
@@ -144,13 +150,14 @@ def displayDonations():
 
 @app.route('/inventory/', methods=["GET", "POST"])
 def displayInventory():
+    '''displays all donations in inventory table'''
     conn = get_conn()
     allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn) 
     return render_template('inventory.html', allInventory = allInventory)
 
 @app.route('/filterDonations/sortBy', methods=["GET", "POST"])
 def filterDonationType():
-    conn = search_donation_history.getConn('c9')
+    conn = search_donation_history.get_conn('c9')
     checkboxType = request.form.get("type")
     donationByType = search_donation_history.getDonationByType(conn, checkboxType)
     
@@ -175,7 +182,7 @@ def filterDonationType():
 
 @app.route('/filterInventory/sortBy/', methods=["GET", "POST"])
 def filterInventoryType():
-    conn = search_inventory_history.getConn('c9')
+    conn = search_inventory_history.get_conn('c9')
     selectedType = request.form.get("menu-tt")
     checkboxType = request.form.get("type")
     inventoryByType = search_inventory_history.getInventoryByType(conn, checkboxType)
@@ -233,6 +240,7 @@ def filterInventoryType():
 
 @app.route('/reset/', methods=['GET', 'POST'])
 def reset():
+    '''resets inventory/donation page after sorting/filering'''
     resetType = request.form.get("submit-reset")
     if (resetType == "Reset Inventory"):
         return redirect('inventory')

@@ -15,8 +15,7 @@
             <!--</tr>-->
             
             
-            <label for="item_ID">Items:</label>
-            <select name="item_ID">
+    
                 
                 
             <option value="none">Choose One</option>
@@ -25,11 +24,11 @@
             {% endfor %}
             
               <tr>
-                <td> Select Item Type: </td>
+                <td> Select Item to Update: </td>
                 <td>
-                   <select name="item-type">
+                   <select name="inventoryItem">
                     {% for item in inventory %}
-                        <option value={{item_id}}>{{item.description}} ({{item.units}})</option>
+                        <option value={{item.item_id}}>{{item.description}} ({{item.units}})</option>
                     {% endfor %}
                     </select> 
                 </td>
