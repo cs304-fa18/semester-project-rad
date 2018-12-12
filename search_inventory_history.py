@@ -14,7 +14,7 @@ def getConn(db):
     """A function that opens a connection with the database
     """
     conn = MySQLdb.connect(host='localhost',
-                           user='hweissma',
+                           user='cotequotey',
                            passwd='',
                            db=db)
     conn.autocommit(True)
@@ -27,6 +27,13 @@ def countInventoryTotal(conn):
         '''select count(*) from inventory''')
     return curs.fetchall()[0]['count(*)']
     
+def statusCount(conn, status):
+    """Returns the number of items in inventory"""
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute(
+        '''select count(*) from inventory where status = %s''',[status])
+    return curs.fetchall()[0]['count(*)']
+    
 def getAllInventoryHistoryInfo(conn):
     """Returns all inventory, in order of last modified.
     since there could be none of an item, but then more added, 
@@ -35,32 +42,14 @@ def getAllInventoryHistoryInfo(conn):
     curs.execute(
         '''select item_id, submitDate, description, status, amount, units, `type` from inventory''')
     return curs.fetchall()
-    
-def sortInventoryByDateAscending(conn, rowType='dictionary'):
-    """Returns all inventory, in the order they were 
-    entered in the database."""
-    if rowType == "tuple":
-        curs = conn.cursor()
-    elif rowType == "dictionary":
-        # results as Dictionaries
-        curs = conn.cursor(MySQLdb.cursors.DictCursor)
-        curs.execute(
-        '''select item_id, submitDate, description, status, amount, units, `type` from inventory
-        order by submitDate asc''')
-    return curs.fetchall()
 
-def sortInventoryByDateDescending(conn, rowType='dictionary'):
-    """Returns all donations, in the order they were 
-    entered in the database."""
-    if rowType == "tuple":
-        curs = conn.cursor()
-    elif rowType == "dictionary":
-        # results as Dictionaries
-        curs = conn.cursor(MySQLdb.cursors.DictCursor)
-        curs.execute(
+def combineFilters(conn, filter, sort):
+    """Returns the inventory after filtering and then sorting"""
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute(
         '''select item_id, submitDate, description, status, amount, units, `type` from inventory
-        order by submitDate desc''')
-    return curs.fetchall()
+        where `type` = %s order by %s''' ,[filter,sort])
+    return curs.fetchall()  
     
 def sortInventoryType(conn, rowType='dictionary'):
     """Returns all donations, in the order they were 
@@ -70,7 +59,7 @@ def sortInventoryType(conn, rowType='dictionary'):
     elif rowType == "dictionary":
         # results as Dictionaries
         curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute(
+        curs.execute(
         '''select item_id, submitDate, description, status, amount, units, `type` from inventory
         order by type''')
     return curs.fetchall()
@@ -135,4 +124,3 @@ def updateStatus(conn, item_id):
     
 if __name__ == '__main__':
     conn = getConn('c9')
-    
