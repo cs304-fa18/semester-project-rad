@@ -11,7 +11,7 @@
             <input type="submit" name="submit-btn" value="Reset Donations">
         </form>
         
-        
+    <div class = "sort">
         <form method=POST action="/sortBy/">
             <label for="menu-tt">Order By:</label>
             <select name="menu-tt">
@@ -22,6 +22,21 @@
              </select>
             <input type="submit" name="submit-btn" value="Sort">
         </form>
+    
+        <form name="FilterForm" id="FilterForm" action="/filterDonationType/" method="POST">
+            <label>Filter by Type:</label>
+            <ul>
+            <li><input type="checkbox" name="type" value="food" />food</label></li>
+            <li><input type="checkbox" name="type"  value="medical" />medical</label></li>
+            <li><input type="checkbox" name="type"  value="clothes" />clothes</label></li>
+            <li><input type="checkbox" name="type"  value="supplies" />supplies</label></li>
+            <li><input type="checkbox" name="type"  value="money" />money</label></li>
+            <li><input type="checkbox" name="type" value="other" />other</label></li>
+            </ul>
+            <input type="submit" name="submit-btn" value="Choose">
+        </form>
+
+    </div>
         
             <table id="donation-list" border=1>
     
@@ -46,20 +61,6 @@
     
         </table>
     
-    <div class = "sort">
-        <form name="FilterForm" id="FilterForm" action="/filterDonationType/" method="POST">
-            <label>Filter by Type:</label>
-            <input type="checkbox" name="type" value="food" />food</label>
-            <input type="checkbox" name="type"  value="medical" />medical</label>
-            <input type="checkbox" name="type"  value="clothes" />clothes</label>
-            <input type="checkbox" name="type"  value="supplies" />supplies</label>
-            <input type="checkbox" name="type"  value="money" />money</label>
-            <input type="checkbox" name="type" value="other" />other</label>
-            <input type="submit" name="submit-btn" value="Choose">
-        </form>
-
-    </div>
-    
 
     <body>
         <div style="color:red;font-weight:bold" id="flashes">
@@ -79,3 +80,4 @@
     </body>
 
 {% endblock %}
+
