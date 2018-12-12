@@ -3,7 +3,7 @@ import re
 
 def get_conn(db):
     c = MySQLdb.connect(host='localhost',
-                           user='hweissma',
+                           user='arivera4',
                            passwd='',
                            db=db)
     c.autocommit(True)
@@ -56,8 +56,8 @@ def add_donation(donation_dict):
                 donation_dict['submit_date'],
                 donation_dict['description'],
                 donation_dict['amount'],
-                donation_dict['units']
-                donation_dict['type'],
+                donation_dict['units'],
+                donation_dict['type']
             ])
     curs.execute('''SELECT max(donationID) FROM donation;''')
     result =curs.fetchall()
@@ -128,9 +128,9 @@ def validate_donation(donation_dict):
         messages.append('Invalid donation category')
     
     if not isinstance(donation_dict['amount'], int):
-        messages.append("Invalid input: Amount spent must be integer.")
+        messages.append("Invalid input: Amount donated must be integer.")
     elif donation_dict['amount'] <= 0:
-        messages.append("Invalid input: Amount spent must be positive nonzero number.")
+        messages.append("Invalid input: Amount donated must be positive nonzero number.")
     
     return messages
     
