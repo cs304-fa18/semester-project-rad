@@ -1,13 +1,6 @@
 import MySQLdb
 import re
-
-def get_conn(db):
-    c = MySQLdb.connect(host='localhost',
-                           user='arivera4',
-                           passwd='',
-                           db=db)
-    c.autocommit(True)
-    return c
+from connection import get_conn
 
 # curs = conn.cursor(MySQLdb.cursors.DictCursor)
 

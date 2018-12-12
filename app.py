@@ -7,13 +7,14 @@ import search_donation_history
 import search_inventory_history
 import donationBackend
 import expenditureBackend
+from connection import get_conn
 
 app = Flask(__name__)
 app.secret_key = 'stringy string'
 
 @app.route('/')
 def index():
-    conn = search_donation_history.getConn('c9')
+    conn = get_conn()
     total = search_inventory_history.countInventoryTotal(conn)
     flash("Total Number of Inventory Items: " + str(total))
     return render_template('index.html')
@@ -47,6 +48,7 @@ def donationForm():
             return(redirect(url_for('donationForm')))
         
         #add donor to db, collect donorID
+        conn = get_conn()
         donor_id = donationBackend.add_donor(donor)
         flash('Donor ID: ' + str(donor_id))
         
@@ -108,7 +110,7 @@ def expenditureForm():
             return(redirect(url_for('expenditureForm')))
            
         # Submit to Expenditure DB
-        conn = donationBackend.get_conn('c9')
+        conn = get_conn()
         expend_id = expenditureBackend.add_expend(expenditure, conn)
         flash('Expenditure ID: ' + str(expend_id))
         return render_template('expenditures.html')
@@ -117,7 +119,7 @@ def expenditureForm():
 #is not hooked up to the back end yet
 @app.route('/updateInventory/', methods = ['GET', 'POST'])
 def updateInventoryForm():
-    conn = search_inventory_history.getConn('c9')
+    conn = get_conn()
     allItemTypes = search_inventory_history.getInventoryItemTypes(conn)
     if request.method == 'GET':
         return render_template('updateInventory.html', inventory = allItemTypes)
@@ -134,21 +136,21 @@ def updateInventoryForm():
 
 @app.route('/donations/', methods=["GET", "POST"])
 def displayDonations():
-    conn = search_donation_history.getConn('c9')
+    conn = get_conn()
     allDonations = search_donation_history.getAllDonationHistoryInfo(conn, rowType='dictionary')
     return render_template('donations.html',allDonations= allDonations )
     
 
 @app.route('/inventory/', methods=["GET", "POST"])
 def displayInventory():
-    conn = search_inventory_history.getConn('c9')
+    conn = get_conn()
     allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn) 
     return render_template('inventory.html', allInventory = allInventory)
 
     
 @app.route('/filterDonationType/', methods=["GET", "POST"])
 def filterDonationType():
-    conn = search_donation_history.getConn('c9')
+    conn = get_conn()
     selectedType = request.form.get("type")
     donationByType = search_donation_history.getDonationByType(conn, selectedType)
     if (len(donationByType) == 0):
@@ -160,7 +162,7 @@ def filterDonationType():
 
 @app.route('/filterInventoryType/', methods=["GET", "POST"])
 def filterInventoryType():
-    conn = search_inventory_history.getConn('c9')
+    conn = get_conn()
     selectedType = request.form.get("type")
     inventoryByType = search_inventory_history.getInventoryByType(conn, selectedType)
     if (len(inventoryByType) == 0):
@@ -179,7 +181,7 @@ def reset():
     
 @app.route('/sortBy/', methods=["GET", "POST"])
 def sortBy():
-    conn = search_donation_history.getConn('c9')
+    conn = get_conn()
     selectedType = request.form.get("menu-tt")
     if (selectedType == "Most Recent Donation"):
         donationsOrdered = search_donation_history.sortDonationByDateDescending(conn)
