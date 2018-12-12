@@ -43,19 +43,20 @@ def add_donation(donation_dict):
     Adds donation row to database
     Inputs:
        donation_dict -- dictionary with keys: donor_id, submit_date, type, 
-                        description, amount
+                        description, amount, units
     Returns: id of newly added row in donation table
     '''
     
     conn = get_conn('c9')
     curs = conn.cursor()
     curs.execute('''INSERT INTO 
-        donation(donorID, submitDate, description, amount, type)
-        VALUES(%s, %s, %s, %s, %s);''', [
+        donation(donorID, submitDate, description, amount, units, type)
+        VALUES(%s, %s, %s, %s, %s, %s);''', [
                 donation_dict['donor_id'],
                 donation_dict['submit_date'],
                 donation_dict['description'],
                 donation_dict['amount'],
+                donation_dict['units']
                 donation_dict['type'],
             ])
     curs.execute('''SELECT max(donationID) FROM donation;''')
@@ -69,7 +70,7 @@ def add_to_inventory(donation_dict):
     amount in its database entry. If it doesn't exist, adds it to inventory
     Inputs:
        donation_dict -- dictionary with keys: donor_id, submit_date, type, 
-                        description, amount
+                        description, amount, units
     Returns: id of newly added/updated row in inventory table
     '''
     
@@ -84,10 +85,12 @@ def add_to_inventory(donation_dict):
     
     # item not in inventory
     if (match==0):
-        curs.execute('''INSERT INTO inventory(description, status, type)
-            VALUES (%s,%s,%s)''', [
+        curs.execute('''INSERT INTO inventory(description, amount, units, status, type)
+            VALUES (%s,%s,%s, %s, %s)''', [
                     donation_dict['description'],
                     donation_dict['amount'],
+                    donation_dict['units'],
+                    "NULL",
                     donation_dict['type']
                 ])
         curs.execute('''SELECT max(item_id) FROM inventory;''')
@@ -115,7 +118,7 @@ def validate_donation(donation_dict):
     Validates donation data according to basic type expectations
     Inputs:
         donation_dict -- dictionary with donor_id, submit_date, description,
-                         amount, type
+                         amount, type, units
     Returns: messages list with errors to flash. If list empty, data is valid
     '''
     

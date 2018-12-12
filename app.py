@@ -56,6 +56,7 @@ def donationForm():
             'submit_date': date.today(), 
             'description': request.form['donation-description'],
             'amount': request.form['amount'],
+            'units': request.form['units']
             'type': request.form['donation-category']
         }
         
