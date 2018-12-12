@@ -36,7 +36,7 @@ insert into expenditure (description, `type`, `date`, amount)
         ('blankets', 'supplies', '2018-11-06', 100);
         
 -- setStatus
--- values hardcodied for testing purposes
+-- values defined for testing purposes
 insert into setStatus (item_id, threshold)
     values
         (1, 5),

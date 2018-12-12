@@ -21,9 +21,7 @@ def getConn(db):
     return conn
                     
 def countInventoryTotal(conn):
-    """Returns all inventory, in order of last modified.
-    since there could be none of an item, but then more added, 
-    so updates should be first"""
+    """Returns the number of items in inventory"""
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute(
         '''select count(*) from inventory''')

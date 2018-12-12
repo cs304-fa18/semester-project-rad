@@ -36,7 +36,7 @@ create table donation (
 
     
 -- Inventory Table
--- status is the amount left
+-- status refers to the amount of an item left
 CREATE TABLE inventory(
     `item_id` int auto_increment,
     `description` varchar(50),
