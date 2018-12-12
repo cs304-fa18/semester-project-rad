@@ -10,7 +10,7 @@ import expenditureBackend
 from connection import get_conn
 
 app = Flask(__name__)
-app.secret_key = 'string string'
+app.secret_key = 'stringy string'
 
 @app.route('/')
 def index():
