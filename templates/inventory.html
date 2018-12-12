@@ -7,20 +7,30 @@
 {% block content %}
 
         <form method=POST action="/reset/">
-            <input type="submit" name="submit-btn" value="Reset Inventory">
+            <input type="submit" name="submit-reset" value="Reset Inventory">
         </form>
-        
-        
-        <form method=POST action="/sortBy/">
+        <div class = "sort">
+        <form name="FilterForm" id="FilterForm" action="/filterInventory/sortBy/" method="POST">
             <label for="menu-tt">Order By:</label>
             <select name="menu-tt">
-              <option value="none">Select</option>
+                <option value="none">Select</option>
                 <option value = "Most Recent Item" > Most Recent</option>
                 <option value = "Oldest Item First" > Oldest Donation</option>
                 <option value = "Type" > Type Descending </option>
              </select>
+            <p><label>Filter by Type:</label></p>
+            <ul>
+                <li><input type="checkbox" name="type" value="food" />food</label></li>
+                <li><input type="checkbox" name="type"  value="medical" />medical</label></li>
+                <li><input type="checkbox" name="type"  value="clothes" />clothes</label></li>
+                <li><input type="checkbox" name="type"  value="supplies" />supplies</label></li>
+                <li><input type="checkbox" name="type"  value="money" />money</label></li>
+                <li><input type="checkbox" name="type" value="other" />other</label></li>
+                <!--<li><input type="submit" name="submit-btn" value="Choose">-->
+            </ul>
             <input type="submit" name="submit-btn" value="Sort">
         </form>
+    </div>
 
 <table id="inventory-list" border =1>
     
@@ -39,28 +49,13 @@
                     <td class="date">{{inventory.submitDate}}</td>
                     <td class="description">{{inventory.description}}</td>
                     <td class="type">{{inventory.type}}</td>
-                    <td class="type">{{inventory.amount}}</td>
-                    <td class="type">{{inventory.units}}</td>
+                    <td class="amount">{{inventory.amount}}</td>
+                    <td class="units">{{inventory.units}}</td>
                     <td class="status">{{inventory.status}}</td>
                 </tr>
                 {% endfor %}
     
             </table>
-    
-    <div class = "sort">
-        <form name="FilterForm" id="FilterForm" action="/filterInventoryType/" method="POST">
-            <label>Filter by Type:</label>
-            <ul>
-                <li><input type="checkbox" name="type" value="food" />food</label></li>
-                <li><input type="checkbox" name="type"  value="medical" />medical</label></li>
-                <li><input type="checkbox" name="type"  value="clothes" />clothes</label></li>
-                <li><input type="checkbox" name="type"  value="supplies" />supplies</label></li>
-                <li><input type="checkbox" name="type"  value="money" />money</label></li>
-                <li><input type="checkbox" name="type" value="other" />other</label></li>
-                <li><input type="submit" name="submit-btn" value="Choose">
-            </ul>
-        </form>
-    </div>
 
 
     <body>

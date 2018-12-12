@@ -42,7 +42,7 @@ def donationForm():
         #validate donor data
         validation_result = donationBackend.validate_donor(donor)
         if len(validation_result) != 0:
-            for msg in val_result:
+            for msg in validation_result:
                 flash(msg)
             return(redirect(url_for('donationForm')))
         
@@ -62,7 +62,7 @@ def donationForm():
         # validate donation data
         validation_result = donationBackend.validate_donation(donation)
         if len(validation_result) != 0:
-            for msg in val_result:
+            for msg in validation_result:
                 flash(msg)
             return(redirect(url_for('donationForm')))
         
@@ -144,32 +144,92 @@ def displayInventory():
     allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn) 
     return render_template('inventory.html', allInventory = allInventory)
 
-    
-@app.route('/filterDonationType/', methods=["GET", "POST"])
+@app.route('/filterDonations/sortBy', methods=["GET", "POST"])
 def filterDonationType():
     conn = search_donation_history.getConn('c9')
-    selectedType = request.form.get("type")
-    donationByType = search_donation_history.getDonationByType(conn, selectedType)
+    checkboxType = request.form.get("type")
+    donationByType = search_donation_history.getDonationByType(conn, checkboxType)
+    
+    #If none of the donations fits checkboxType
     if (len(donationByType) == 0):
-        flash("There have been no donations of type: " + selectedType)
+        flash("There have been no donations of type: " + checkboxType)
         return render_template('donations.html',allDonations = donationByType)
+        
+    #If at least one donation has checkboxType
     else:
-        return render_template('donations.html',allDonations = donationByType)
+        selectedType = request.form.get("menu-tt")
+        if (selectedType == "Most Recent Donation"):
+            donationsOrdered = search_donation_history.sortDonationByDateDescending(conn)
+            return render_template('donations.html',allDonations = donationsOrdered)
+        elif (selectedType == "Oldest Donation First"):
+            donationsOrdered = search_donation_history.sortDonationByDateAscending(conn)
+            return render_template('donations.html',allDonations = donationsOrdered)
+        elif (selectedType == "Donation Type"):
+            donationsOrdered = search_donation_history.sortDonationType(conn)
+            return render_template('donations.html',allDonations = donationsOrdered)
+    
 
-
-@app.route('/filterInventoryType/', methods=["GET", "POST"])
+@app.route('/filterInventory/sortBy/', methods=["GET", "POST"])
 def filterInventoryType():
     conn = search_inventory_history.getConn('c9')
-    selectedType = request.form.get("type")
-    inventoryByType = search_inventory_history.getInventoryByType(conn, selectedType)
-    if (len(inventoryByType) == 0):
-        flash("There are no inventory items of type: " + selectedType)
-    return render_template('inventory.html',allInventory = inventoryByType)
+    selectedType = request.form.get("menu-tt")
+    checkboxType = request.form.get("type")
+    inventoryByType = search_inventory_history.getInventoryByType(conn, checkboxType)
+    allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn)
+    
+    if selectedType == "none": #No drop down selected
+        #No drop down or checkboxes are selected
+        if checkboxType is None: 
+            return render_template('inventory.html', allInventory = allInventory)
+            
+        else: #No drop down selected but at least one checkbox selected
+            if (len(inventoryByType) == 0): #No items of checkboxType
+                flash("There are no inventory items of type: " + checkboxType)
+            return render_template('inventory.html',allInventory = inventoryByType)
+            
+    else:# Drop down is selected
+        #Drop down selected but not checkbox
+        if checkboxType is None:
+            if (selectedType == "Most Recent Inventory"):
+                inventoryOrdered = search_inventory_history.sortInventoryByDateDescending(conn)
+                return render_template('inventory.html',allInventory = inventoryOrdered)
+            elif (selectedType == "Oldest Inventory First"):
+                inventoryOrdered = search_inventory_history.sortInventoryByDateAscending(conn)
+                return render_template('inventory.html',allInventory = inventoryOrdered)
+            else:
+                inventoryOrdered = search_inventory_history.sortInventoryType(conn)
+                return render_template('inventory.html',allInventory = inventoryOrdered)
+        #Drop down and checkbox both selected!
+        else:
+            if (selectedType == "Most Recent Inventory"):
+                inventoryOrdered = search_inventory_history.sortInventoryByDateDescending(conn).getInventoryByType(conn, checkboxType)
+                return render_template('inventory.html',allInventory = inventoryOrdered)
+            elif (selectedType == "Oldest Inventory First"):
+                inventoryOrdered = search_inventory_history.sortInventoryByDateAscending(conn).getInventoryByType(conn, checkboxType)
+                return render_template('inventory.html',allInventory = inventoryOrdered)
+            else:
+                inventoryOrdered = search_inventory_history.sortInventoryType(conn).getInventoryByType(conn, checkboxType)
+                return render_template('inventory.html',allInventory = inventoryOrdered)
+                
+    # #If there are items of checkboxType
+    # else:
+    #     selectedType = request.form.get("menu-tt")
+    #     if (selectedType == "Most Recent Inventory"):
+    #         inventoryOrdered = search_inventory_history.sortInventoryByDateDescending(conn)
+    #         return render_template('inventory.html',allInventory = inventoryOrdered)
+    #     elif (selectedType == "Oldest Inventory First"):
+    #         inventoryOrdered = search_inventory_history.sortInventoryByDateAscending(conn)
+    #         return render_template('inventory.html',allInventory = inventoryOrdered)
+    #     elif (selectedType == "Inventory Type"):
+    #         inventoryOrdered = search_inventory_history.sortInventoryType(conn)
+    #         return render_template('inventory.html',allInventory = inventoryOrdered)
+    #     else: #If nothing is selected:
+    #         return render_template('inventory.html')
 
 
 @app.route('/reset/', methods=['GET', 'POST'])
 def reset():
-    resetType = request.form.get("submit-btn")
+    resetType = request.form.get("submit-reset")
     if (resetType == "Reset Inventory"):
         return redirect('inventory')
     else: 
