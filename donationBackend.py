@@ -13,6 +13,13 @@ def get_conn(db):
 
 
 def add_donor(donor_dict):
+    '''
+    Adds donor row to database
+    Inputs:
+       donor_dict -- dictionary with keys: name, description, type, phone,
+                     email, address
+    Returns: id of newly added row in donor table
+    '''
     conn = get_conn('c9')
     curs = conn.cursor()
     curs.execute(
@@ -30,7 +37,16 @@ def add_donor(donor_dict):
     result =curs.fetchall()
     return(result[0][0])
 
+
 def add_donation(donation_dict):
+    '''
+    Adds donation row to database
+    Inputs:
+       donation_dict -- dictionary with keys: donor_id, submit_date, type, 
+                        description, amount
+    Returns: id of newly added row in donation table
+    '''
+    
     conn = get_conn('c9')
     curs = conn.cursor()
     curs.execute('''INSERT INTO 
@@ -46,7 +62,17 @@ def add_donation(donation_dict):
     result =curs.fetchall()
     return(result[0][0])
 
-def add_to_inventory(donation_dict): #surely there is a better way to do this? standardize caps?
+
+def add_to_inventory(donation_dict): 
+    '''
+    Checks if item already exists in inventory. In this case increments its
+    amount in its database entry. If it doesn't exist, adds it to inventory
+    Inputs:
+       donation_dict -- dictionary with keys: donor_id, submit_date, type, 
+                        description, amount
+    Returns: id of newly added/updated row in inventory table
+    '''
+    
     conn = get_conn('c9')
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''SELECT count(*) FROM inventory 
@@ -83,10 +109,14 @@ def add_to_inventory(donation_dict): #surely there is a better way to do this? s
         # print(update_id)
         return(update_id)
 
+
 def validate_donation(donation_dict):
     '''
-    input dict with keys: donor_id, submit_date, description, amount, type
-    output: messages list with errors to flash. If list empty, green light
+    Validates donation data according to basic type expectations
+    Inputs:
+        donation_dict -- dictionary with donor_id, submit_date, description,
+                         amount, type
+    Returns: messages list with errors to flash. If list empty, data is valid
     '''
     
     messages = []
@@ -103,14 +133,14 @@ def validate_donation(donation_dict):
     
 
 def validate_donor(donor_dict):
-    #  donor = {
-    #         'name': request.form['donor-name'],
-    #         'type': request.form['donor-type'],
-    #         'phone': request.form['donor-phone'],
-    #         'email': request.form['donor-email'],
-    #         'address': request.form['donor-address'],
-    #         'description': request.form['donor-description']
-    #     }
+    '''
+    Validates donor data according to basic type expectations
+    Inputs:
+        donor_dict -- dictionary with name, type, phone, email, address,
+                      description
+    Returns: messages list with errors to flash, if list empty, data is valid
+    '''
+    
     messages = []
     
     donor_types = ['individual', 'organization']
@@ -129,8 +159,12 @@ def validate_donor(donor_dict):
         if (re.match(pattern, donor_dict['email']) is None):
             messages.append('Invalid email address format')
     return messages
+ 
     
 def test_pattern():
+    '''
+    testing function for email regex pattern
+    '''
     pattern = '.*@.*[.].{2}.*'
     print('expected pass')
     print(re.match(pattern, "arivera4@wellesley.edu"))
@@ -144,9 +178,10 @@ def test_pattern():
     print(re.match(pattern, "just a word . word"))
     
     
-
-#testing driver
 if __name__ == '__main__':
+    '''
+    testing driver
+    '''
     # add_to_inventory(
     #     {'description': 'pile of sticks', 'amount': 1, 'type': 'other'}
     # )
