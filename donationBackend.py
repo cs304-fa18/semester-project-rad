@@ -90,7 +90,7 @@ def add_to_inventory(conn, donation_dict):
                 ])
         curs.execute('''SELECT last_insert_id() FROM inventory;''')
         result = curs.fetchall()
-        print(str(result))
+        # print(str(result))
         return(result[0]['last_insert_id()'])
     
     # item found in inventory previously
@@ -102,7 +102,7 @@ def add_to_inventory(conn, donation_dict):
         # print(match_row)
         update_id = match_row[0]['item_id']
         new_amount = int(match_row[0]['amount']) + int(donation_dict['amount'])
-        updateInventory(update_id, new_amount)
+        updateInventory(conn, update_id, new_amount)
         # curs.execute('''UPDATE inventory 
         #     SET amount=%s WHERE item_id=%s''', [new_amount, update_id] )
         # # print(update_id)
@@ -174,7 +174,7 @@ def get_donations(conn):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''SELECT donationID as id, description FROM donation;''')
     result = curs.fetchall()
-    print(result)
+    # print(result)
     return(result)
 
 
