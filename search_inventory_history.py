@@ -108,6 +108,7 @@ def updateStatus(conn, item_id):
     
     itemAmountDictionary = curs.execute('''select amount
     from inventory where item_id = %s''', [item_id])
+    print 'check!!!'
     itemAmount = curs.fetchall()[0]['amount'] #extracts amount corresponding to item
 
     thresholdForItemDictionary = curs.execute('''select threshold
@@ -120,6 +121,18 @@ def updateStatus(conn, item_id):
         setStatus(conn, item_id, 'low')
     else:
         setStatus(conn, item_id, 'high')
+        
+def updateInventory(conn, item_id, amount):
+    '''updates the inventory table from the inventory form'''
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    
+    #updates inventory item with correct amount
+    curs.execute('''update inventory set amount = %s where item_id = %s''', 
+    [amount, item_id])
+    
+    #updates status based on new amount
+    updateStatus(conn, item_id)
+    
         
     
 if __name__ == '__main__':
