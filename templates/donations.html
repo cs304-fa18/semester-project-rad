@@ -6,71 +6,58 @@
 {% endblock %}
 
 {% block content %}
-
+        
     <form method=POST action="/reset/">
         <input type="submit" name="submit-reset" value="Reset Donations">
     </form>
     
     <div class = "row">
-    <div class = "blockLeft">
-        <form method=POST action="/sortBy/">
-            <label for="menu-tt">Order By:</label>
-            <select name="menu-tt">
-              <option value="none">Select</option>
-                <option value = "Most Recent Donation" > Most Recent Donation</option>
-                <option value = "Oldest Donation First" > Oldest Donation First</option>
-                <option value = "Donation Type" > Type Descending </option>
-             </select>
-        </form>
-    
-        <form name="FilterForm" id="FilterForm" action="/filterDonations/sortBy/" method="POST">
-            <label>Filter by Type:</label>
-            <ul>
-            <li><input type="checkbox" name="type" value="food" />food</label></li>
-            <li><input type="checkbox" name="type"  value="medical" />medical</label></li>
-            <li><input type="checkbox" name="type"  value="clothes" />clothes</label></li>
-            <li><input type="checkbox" name="type"  value="supplies" />supplies</label></li>
-            <li><input type="checkbox" name="type"  value="money" />money</label></li>
-            <li><input type="checkbox" name="type" value="other" />other</label></li>
-            </ul>
-            <input type="submit" name="submit-btn" value="Sort">
-        </form>
-    </div>
-    <div class = "blockMiddle">  
-            <table id="donation-list" border=1>
-    
-            <tr>
-                <th>Date of Submission</th>
-                <th>Donation Name</th>
-                <th>Amount</th>
-                <th>Units</th>
-                <th>Type</th>
-            </tr>
-    
-            <!-- Fills out donation history table --> 
-            {% for donation in allDonations %}
-            <tr data-tt="{{donation.donationID}}">
-                <td class="date">{{donation.submitDate}}</td>
-                <td class="description">{{donation.description}}</td>
-                <td class="amount">{{donation.amount}}</td>
-                <td class="units">{{donation.units}}</td>
-                <td class="type">{{donation.type}}</td>
-            </tr>
-            {% endfor %}
-    
-        </table>
-    </div>
-        <div style="" id="flashes">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div id="messages">
-                {% for msg in messages %}
-                    <p>{{msg}}</p>
-                {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
+        <div class = "blockLeft">
+            <form name="FilterForm" id="FilterForm" method=POST action="/filterDonations/sortBy/">
+                <label for="menu-tt">Order By:</label>
+                <select name="menu-tt">
+                  <option value="none">Select</option>
+                    <option value = "Most Recent Donation" > Most Recent Donation</option>
+                    <option value = "Oldest Donation First" > Oldest Donation First</option>
+                    <option value = "Donation Type" > Type Descending </option>
+                 </select>
+                <p><label>Filter by Type:</label></p>
+                <ul>
+                    <li><input type="checkbox" name="type" value="food" />food</label></li>
+                    <li><input type="checkbox" name="type"  value="medical" />medical</label></li>
+                    <li><input type="checkbox" name="type"  value="clothes" />clothes</label></li>
+                    <li><input type="checkbox" name="type"  value="supplies" />supplies</label></li>
+                    <li><input type="checkbox" name="type"  value="money" />money</label></li>
+                    <li><input type="checkbox" name="type" value="other" />other</label></li>
+                </ul>
+                <input type="submit" name="submit-btn" value="Sort">
+            </form>
         </div>
+        
+        <div class = "blockMiddle">  
+            <table id="donation-list" border=1>
+                <tr>
+                    <th>Date of Submission</th>
+                    <th>Donation Name</th>
+                    <th>Amount</th>
+                    <th>Units</th>
+                    <th>Type</th>
+                </tr>
+    
+                <!-- Fills out donation history table --> 
+                {% for donation in allDonations %}
+                <tr data-tt="{{donation.donationID}}">
+                    <td class="date">{{donation.submitDate}}</td>
+                    <td class="description">{{donation.description}}</td>
+                    <td class="amount">{{donation.amount}}</td>
+                    <td class="units">{{donation.units}}</td>
+                    <td class="type">{{donation.type}}</td>
+                </tr>
+                {% endfor %}
+    
+            </table>
+        </div>
+    </div>
 
 {% endblock %}
 
