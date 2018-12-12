@@ -27,36 +27,51 @@ def donationForm():
     On POST, collects and validates data and if valid, adds to database. 
        Renders form again with submission confirmation flashed.
     '''
+    
+    conn = get_conn()
+    
     if request.method == 'GET':
-        return render_template('donation_form.html')
+        donor_list = donationBackend.get_donors(conn)
+        donation_list = donationBackend.get_donations(conn)
+        return render_template('donation_form.html', donor_list=donor_list, donation_list=donation_list)
     else:
-        # collect donor data
-        donor = {
-            'name': request.form['donor-name'],
-            'type': request.form['donor-type'],
-            'phone': request.form['donor-phone'],
-            'email': request.form['donor-email'],
-            'address': request.form['donor-address'],
-            'description': request.form['donor-description']
-        }
+        existing_id = request.form['existing-donor']
+        if existing_id is not '':
+            donor_id = existing_id
+            print(existing_id)
+            
+        else:
+            # collect donor data
+            donor = {
+                'name': request.form['donor-name'],
+                'type': request.form['donor-type'],
+                'phone': request.form['donor-phone'],
+                'email': request.form['donor-email'],
+                'address': request.form['donor-address'],
+                'description': request.form['donor-description']
+            }
+            
+            #validate donor data
+            validation_result = donationBackend.validate_donor(donor)
+            if len(validation_result) != 0:
+                for msg in validation_result:
+                    flash(msg)
+                return(redirect(url_for('donationForm')))
+            
+            #add donor to db, collect donorID
+            donor_id = donationBackend.add_donor(conn, donor)
+            flash('Donor ID: ' + str(donor_id))
         
-        #validate donor data
-        validation_result = donationBackend.validate_donor(donor)
-        if len(validation_result) != 0:
-            for msg in validation_result:
-                flash(msg)
-            return(redirect(url_for('donationForm')))
-        
-        #add donor to db, collect donorID
-        conn = get_conn()
-        donor_id = donationBackend.add_donor(conn, donor)
-        flash('Donor ID: ' + str(donor_id))
         
         #collect donation data
+        description = request.form['existing-donation']
+        if request.form['existing-donation'] is '':
+            description = request.form['donation-description']
+            
         donation = {
             'donor_id': donor_id,
             'submit_date': date.today(), 
-            'description': request.form['donation-description'],
+            'description': description,
             'amount': request.form['amount'],
             'units': request.form['units'],
             'type': request.form['donation-category']
