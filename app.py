@@ -183,7 +183,7 @@ def reset():
         
 @app.route('/filterDonations/sortBy/', methods=["GET", "POST"])
 def filterDonations():
-    conn = search_donation_history.getConn('c9')
+    conn = get_conn()
     dropdownType = request.form.get("menu-tt")
     checkboxType = request.form.get("type")
     donationByType = search_donation_history.getDonationByType(conn, checkboxType)
@@ -219,7 +219,7 @@ def filterDonations():
 
 @app.route('/filterInventory/sortBy/', methods=["GET", "POST"])
 def filterInventory():
-    conn = search_inventory_history.getConn('c9')
+    conn = get_conn()
     dropdownType = request.form.get("menu-tt")
     checkboxType = request.form.get("type")
     inventoryByStatus = search_inventory_history.getInventoryByStatus(conn, dropdownType)

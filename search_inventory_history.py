@@ -1,24 +1,15 @@
 #!/usr/bin/python2.7
 
 """
-Searches for the movie by title.
+Backend functions for searching and updating the inventory
 ----------------------------------------------------------------
 CS 304 - Databases 
-RAD P3
+
 """
 
 import sys
 import MySQLdb
 
-def getConn(db):
-    """A function that opens a connection with the database
-    """
-    conn = MySQLdb.connect(host='localhost',
-                           user='cotequotey',
-                           passwd='',
-                           db=db)
-    conn.autocommit(True)
-    return conn
                     
 def countInventoryTotal(conn):
     """Returns the number of items in inventory"""
