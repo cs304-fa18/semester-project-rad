@@ -16,7 +16,15 @@ app.secret_key = 'stringy string'
 def index():
     conn = get_conn()
     total = search_inventory_history.countInventoryTotal(conn)
-    flash("Total Number of Inventory Items: " + str(total))
+    mediumCount = search_inventory_history.statusCount(conn, "medium")
+    lowCount = search_inventory_history.statusCount(conn, "low")
+    highCount = search_inventory_history.statusCount(conn, "high")
+    flash("INVENTORY AT A GLANCE: ")
+    flash("Total Items: " + str(total))
+    flash("STATUS COUNT: ")
+    flash( "Total Low:" + str(lowCount))
+    flash( "Total Medium:" + str(mediumCount))
+    flash( "Total High:" + str(highCount))
     return render_template('index.html')
     
 @app.route("/donationForm/", methods=['GET', 'POST'])
@@ -146,41 +154,61 @@ def displayInventory():
     conn = get_conn()
     allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn) 
     return render_template('inventory.html', allInventory = allInventory)
-
-@app.route('/filterDonations/sortBy', methods=["GET", "POST"])
-def filterDonationType():
+    
+@app.route('/reset/', methods=['GET', 'POST'])
+def reset():
+    resetType = request.form.get("submit-reset")
+    if (resetType == "Reset Inventory"):
+        return redirect('inventory')
+    else: 
+        return redirect('donations')
+        
+@app.route('/filterDonations/sortBy/', methods=["GET", "POST"])
+def filterDonations():
     conn = search_donation_history.getConn('c9')
+    dropdownType = request.form.get("menu-tt")
     checkboxType = request.form.get("type")
     donationByType = search_donation_history.getDonationByType(conn, checkboxType)
-    
-    #If none of the donations fits checkboxType
-    if (len(donationByType) == 0):
-        flash("There have been no donations of type: " + checkboxType)
-        return render_template('donations.html',allDonations = donationByType)
-        
-    #If at least one donation has checkboxType
-    else:
-        selectedType = request.form.get("menu-tt")
-        if (selectedType == "Most Recent Donation"):
-            donationsOrdered = search_donation_history.sortDonationByDateDescending(conn)
-            return render_template('donations.html',allDonations = donationsOrdered)
-        elif (selectedType == "Oldest Donation First"):
-            donationsOrdered = search_donation_history.sortDonationByDateAscending(conn)
-            return render_template('donations.html',allDonations = donationsOrdered)
-        elif (selectedType == "Donation Type"):
-            donationsOrdered = search_donation_history.sortDonationType(conn)
-            return render_template('donations.html',allDonations = donationsOrdered)
+    allDonations = search_donation_history.getAllDonationHistoryInfo(conn)
     
 
+    if dropdownType == "none": #No drop down selected
+        #No drop down or checkboxes are selected
+        if checkboxType is None: 
+            return render_template('donations.html', allDonations = allDonations)
+            
+        else: #No drop down selected but at least one checkbox selected
+            if (len(donationByType) == 0): #No items of checkboxType
+                flash("There are no donations of type: " + checkboxType)
+            return render_template('donations.html',allDonations = donationByType)
+            
+    else:# Drop down is selected
+        #Drop down selected but not checkbox
+        if checkboxType is None:
+            if (dropdownType == "Most Recent Item"):
+                donationsOrdered = search_donation_history.sortDonationByDateDescending(conn)
+                return render_template('donations.html',allDonations = donationsOrdered)
+            elif (dropdownType == "Oldest Item First"):
+                donationsOrdered = search_donation_history.sortDonationByDateAscending(conn)
+                return render_template('donations.html',allDonations = donationsOrdered)
+            else:
+                donationsOrdered = search_donation_history.sortDonationType(conn)
+                return render_template('donations.html',allDonations = donationsOrdered)
+        #Drop down and checkbox both selected! 
+        else:
+            filtered = search_donation_history.combineFilters(conn, checkboxType,dropdownType)
+            return render_template('donations.html',allDonations = filtered)
+
 @app.route('/filterInventory/sortBy/', methods=["GET", "POST"])
-def filterInventoryType():
+def filterInventory():
     conn = search_inventory_history.getConn('c9')
-    selectedType = request.form.get("menu-tt")
+    dropdownType = request.form.get("menu-tt")
     checkboxType = request.form.get("type")
+    inventoryByStatus = search_inventory_history.getInventoryByStatus(conn, dropdownType)
     inventoryByType = search_inventory_history.getInventoryByType(conn, checkboxType)
     allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn)
     
-    if selectedType == "none": #No drop down selected
+    if dropdownType == "none": #No drop down selected
         #No drop down or checkboxes are selected
         if checkboxType is None: 
             return render_template('inventory.html', allInventory = allInventory)
@@ -193,76 +221,16 @@ def filterInventoryType():
     else:# Drop down is selected
         #Drop down selected but not checkbox
         if checkboxType is None:
-            if (selectedType == "Most Recent Inventory"):
-                inventoryOrdered = search_inventory_history.sortInventoryByDateDescending(conn)
-                return render_template('inventory.html',allInventory = inventoryOrdered)
-            elif (selectedType == "Oldest Inventory First"):
-                inventoryOrdered = search_inventory_history.sortInventoryByDateAscending(conn)
-                return render_template('inventory.html',allInventory = inventoryOrdered)
+            if (dropdownType == "Ascending Status"):
+                sortInventory = search_inventory_history.getInventoryByStatus(conn, dropdownType)
+                return render_template('inventory.html',allInventory = sortInventory)
             else:
-                inventoryOrdered = search_inventory_history.sortInventoryType(conn)
-                return render_template('inventory.html',allInventory = inventoryOrdered)
-        #Drop down and checkbox both selected!
+                sortInventory = search_inventory_history.sortInventoryType(conn)
+                return render_template('inventory.html',allInventory = sortInventory)
+        #Drop down and checkbox both selected! 
         else:
-            if (selectedType == "Most Recent Inventory"):
-                inventoryOrdered = search_inventory_history.sortInventoryByDateDescending(conn).getInventoryByType(conn, checkboxType)
-                return render_template('inventory.html',allInventory = inventoryOrdered)
-            elif (selectedType == "Oldest Inventory First"):
-                inventoryOrdered = search_inventory_history.sortInventoryByDateAscending(conn).getInventoryByType(conn, checkboxType)
-                return render_template('inventory.html',allInventory = inventoryOrdered)
-            else:
-                inventoryOrdered = search_inventory_history.sortInventoryType(conn).getInventoryByType(conn, checkboxType)
-                return render_template('inventory.html',allInventory = inventoryOrdered)
-                
-    # #If there are items of checkboxType
-    # else:
-    #     selectedType = request.form.get("menu-tt")
-    #     if (selectedType == "Most Recent Inventory"):
-    #         inventoryOrdered = search_inventory_history.sortInventoryByDateDescending(conn)
-    #         return render_template('inventory.html',allInventory = inventoryOrdered)
-    #     elif (selectedType == "Oldest Inventory First"):
-    #         inventoryOrdered = search_inventory_history.sortInventoryByDateAscending(conn)
-    #         return render_template('inventory.html',allInventory = inventoryOrdered)
-    #     elif (selectedType == "Inventory Type"):
-    #         inventoryOrdered = search_inventory_history.sortInventoryType(conn)
-    #         return render_template('inventory.html',allInventory = inventoryOrdered)
-    #     else: #If nothing is selected:
-    #         return render_template('inventory.html')
-
-
-@app.route('/reset/', methods=['GET', 'POST'])
-def reset():
-    resetType = request.form.get("submit-reset")
-    if (resetType == "Reset Inventory"):
-        return redirect('inventory')
-    else: 
-        return redirect('donations')
-
-    
-@app.route('/sortBy/', methods=["GET", "POST"])
-def sortBy():
-    conn = get_conn()
-    selectedType = request.form.get("menu-tt")
-    if (selectedType == "Most Recent Donation"):
-        donationsOrdered = search_donation_history.sortDonationByDateDescending(conn)
-        return render_template('donations.html',allDonations = donationsOrdered)
-    elif (selectedType == "Oldest Donation First"):
-        donationsOrdered = search_donation_history.sortDonationByDateAscending(conn)
-        return render_template('donations.html',allDonations = donationsOrdered)
-    elif (selectedType == "Donation Type"):
-        donationsOrdered = search_donation_history.sortDonationType(conn)
-        return render_template('donations.html',allDonations = donationsOrdered)
-    # If selectedType is within inventory page:
-    elif (selectedType == "Most Recent Item"):
-        inventoryOrdered = search_inventory_history.sortInventoryByDateDescending(conn)
-        return render_template('inventory.html',allInventory = inventoryOrdered)
-    elif (selectedType == "Oldest Item First"):
-        inventoryOrdered = search_inventory_history.sortInventoryByDateAscending(conn)
-        return render_template('inventory.html',allInventory = inventoryOrdered)
-    #If selectedType == "Item Type"....
-    else: 
-        inventoryOrdered = search_inventory_history.sortInventoryType(conn)
-        return render_template('inventory.html',allInventory = inventoryOrdered)
+            filtered = search_inventory_history.combineFilters(conn, checkboxType,dropdownType)
+            return render_template('inventory.html',allInventory = filtered)
 
 
 if __name__ == '__main__':

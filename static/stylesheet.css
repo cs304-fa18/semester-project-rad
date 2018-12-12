@@ -9,6 +9,17 @@ main_body{
     margin-top: 30px;
 }
 
+img {
+    height: 100%;
+    width: 65%;
+    margin: auto;
+    left: 0; 
+    right: 0;
+    top: 0;
+    bottom: 0;  
+}
+ 
+
 ul{
 list-style: none
 }
@@ -48,6 +59,7 @@ table {
     margin: 0 auto;
 }
 
+
 nav {
     list-style-type: none;
     margin: 0;
@@ -87,92 +99,36 @@ nav a:hover {
     background-color: #bdeaee;
     color: #5e5656;
 }
-body{
-    background-color: rgb(235,244,246);
-    color: rgb(94,86,86);
+
+.row {
+  width: 100%;
+  margin: 0 auto;
+  text-align: left;
 }
 
-main_body{
-    margin-left: 80px;
-    margin-right: 80px;
-    margin-top: 30px;
-}
-
-h1{
-    text-align: center; 
-    color: rgb(118,180,189);
-}
-
-h2{
-    color: rgb(88,102,139);
-    border: rgb(88,102,139);
-}
-
-h3{
-    text-align: center;
-    color: rgb(101,30,62);
-    border: double rgb(101,30,62);
-    padding: 10px;
-    margin-left: 275px;
-    margin-right: 275px;
-}
-
-.error{
-    border: 2px solid rgb(88,102,139);
-    padding: 3px;
-    text-align: center;
-}
-
-.sort{
+.blockLeft{
+  float: left;
+  display: inline-block;
+  zoom: 0;
   margin-bottom: auto;
-  display: block;
-  width: 175px;
-  height: 250px;
+  width: 15%;
+  height: 35%;
+  /*width: 175px;*/
+  /*height: 250px;*/
   padding: 5px;
   border: 1px solid blue;    
   background-color: #e8e4da; 
 }
 
-table {
-    margin: 0 auto;
-}
-
-nav {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: rgb(118,180,189);
-    font-size: 110% ;
-}
-
-
-nav a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 20px 30px;
-    text-decoration: none;
-    float: left;
-}
-
-nav a:hover {
-    background-color: #bdeaee;
-    color: #5e5656;
+.blockMiddle {
+    width: 65%;
+    height: 100%;
+    /*float: left;*/
+    position: absolute;
+    display: inline-block;
+    zoom: 1.5;
+    text-align: middle;
 }
 
 
 
-nav a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 20px 30px;
-    text-decoration: none;
-    float: left;
-}
-
-nav a:hover {
-    background-color: #bdeaee;
-    color: #5e5656;
-}
