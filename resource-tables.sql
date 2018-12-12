@@ -37,7 +37,6 @@ create table donation (
     
 -- Inventory Table
 -- status is the amount left
--- relevance is a flag of whether we need more
 CREATE TABLE inventory(
     `item_id` int auto_increment,
     `description` varchar(50),

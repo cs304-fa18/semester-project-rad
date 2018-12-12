@@ -126,7 +126,7 @@ def updateStatus(conn, item_id):
     thresholdForItemDictionary = curs.execute('''select threshold
     from setStatus where item_id = %s''', [item_id])
     
-    thresholdForItem = curs.fetchall()[0]['threshold'] #extracts dictionary containing thresholdHigh and threshLow
+    thresholdForItem = curs.fetchall()[0]['threshold']
     
     #set status depending on amount of item 
     if itemAmount <= thresholdForItem:
