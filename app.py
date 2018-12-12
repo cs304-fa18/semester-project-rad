@@ -9,7 +9,7 @@ import donationDBOps
 import expenditureBackend
 
 app = Flask(__name__)
-app.secret_key = 'stringy string'
+app.secret_key = 'string string'
 
     
 @app.route('/')
