@@ -7,23 +7,23 @@
 
 {% block content %}
 
-        <form method=POST action="/reset/">
-            <input type="submit" name="submit-btn" value="Reset Donations">
-        </form>
-        
-    <div class = "sort">
+    <form method=POST action="/reset/">
+        <input type="submit" name="submit-reset" value="Reset Donations">
+    </form>
+    
+    <div class = "row">
+    <div class = "blockLeft">
         <form method=POST action="/sortBy/">
             <label for="menu-tt">Order By:</label>
             <select name="menu-tt">
               <option value="none">Select</option>
-                <option value = "Most Recent Donation" > Most Recent</option>
-                <option value = "Oldest Donation First" > Oldest Donation</option>
+                <option value = "Most Recent Donation" > Most Recent Donation</option>
+                <option value = "Oldest Donation First" > Oldest Donation First</option>
                 <option value = "Donation Type" > Type Descending </option>
              </select>
-            <input type="submit" name="submit-btn" value="Sort">
         </form>
     
-        <form name="FilterForm" id="FilterForm" action="/filterDonationType/" method="POST">
+        <form name="FilterForm" id="FilterForm" action="/filterDonations/sortBy/" method="POST">
             <label>Filter by Type:</label>
             <ul>
             <li><input type="checkbox" name="type" value="food" />food</label></li>
@@ -33,11 +33,10 @@
             <li><input type="checkbox" name="type"  value="money" />money</label></li>
             <li><input type="checkbox" name="type" value="other" />other</label></li>
             </ul>
-            <input type="submit" name="submit-btn" value="Choose">
+            <input type="submit" name="submit-btn" value="Sort">
         </form>
-
     </div>
-        
+    <div class = "blockMiddle">  
             <table id="donation-list" border=1>
     
             <tr>
@@ -60,10 +59,8 @@
             {% endfor %}
     
         </table>
-    
-
-    <body>
-        <div style="color:red;font-weight:bold" id="flashes">
+    </div>
+        <div style="" id="flashes">
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <div id="messages">
@@ -74,10 +71,6 @@
             {% endif %}
         {% endwith %}
         </div>
-
-
- 
-    </body>
 
 {% endblock %}
 

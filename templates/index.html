@@ -7,20 +7,22 @@
 {% block content %}
   <body>
 
-<div class = "sort">
-          <div style="color:red;font-weight:bold" id="flashes">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div id="messages">
-                {% for msg in messages %}
-                    <p>{{msg}}</p>
-                {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
+<div class = "row">
+    <div class = "blockLeft">
+        <div style="" id="flashes">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div id="messages">
+                    {% for msg in messages %}
+                        <p>{{msg}}</p>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
         </div>
-</div>
-    <img src = "../static/donate.png">
+    </div>
+
+        <img src = "../static/donate.png">
 
     <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
     

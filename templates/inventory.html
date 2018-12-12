@@ -5,61 +5,7 @@
 {% endblock %}
 
 {% block content %}
-
-        <form method=POST action="/reset/">
-            <input type="submit" name="submit-reset" value="Reset Inventory">
-        </form>
-        <div class = "sort">
-        <form name="FilterForm" id="FilterForm" action="/filterInventory/sortBy/" method="POST">
-            <label for="menu-tt">Order By:</label>
-            <select name="menu-tt">
-                <option value="none">Select</option>
-                <option value = "Most Recent Item" > Most Recent</option>
-                <option value = "Oldest Item First" > Oldest Donation</option>
-                <option value = "Type" > Type Descending </option>
-             </select>
-            <p><label>Filter by Type:</label></p>
-            <ul>
-                <li><input type="checkbox" name="type" value="food" />food</label></li>
-                <li><input type="checkbox" name="type"  value="medical" />medical</label></li>
-                <li><input type="checkbox" name="type"  value="clothes" />clothes</label></li>
-                <li><input type="checkbox" name="type"  value="supplies" />supplies</label></li>
-                <li><input type="checkbox" name="type"  value="money" />money</label></li>
-                <li><input type="checkbox" name="type" value="other" />other</label></li>
-                <!--<li><input type="submit" name="submit-btn" value="Choose">-->
-            </ul>
-            <input type="submit" name="submit-btn" value="Sort">
-        </form>
-    </div>
-
-<table id="inventory-list" border =1>
-    
-                <tr>
-                    <th>Date of Submission</th>
-                    <th>Item Name</th>
-                    <th>Type</th>
-                    <th>Amount</th>
-                    <th>Units</th>
-                    <th>Status</th>
-                </tr>
-    
-                <!-- Fills out inventory history table --> 
-                {% for inventory in allInventory %}
-                    <tr data-tt="{{inventory.item_id}}">
-                    <td class="date">{{inventory.submitDate}}</td>
-                    <td class="description">{{inventory.description}}</td>
-                    <td class="type">{{inventory.type}}</td>
-                    <td class="amount">{{inventory.amount}}</td>
-                    <td class="units">{{inventory.units}}</td>
-                    <td class="status">{{inventory.status}}</td>
-                </tr>
-                {% endfor %}
-    
-            </table>
-
-
-    <body>
-        <div style="color:red;font-weight:bold" id="flashes">
+        <div style="" id="flashes">
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <div id="messages">
@@ -71,8 +17,58 @@
         {% endwith %}
         </div>
 
-
- 
-    </body>
+    <form method=POST action="/reset/">
+            <input type="submit" name="submit-reset" value="Reset Inventory">
+    </form>
+    
+    <div class = "row">
+        <div class = "blockLeft">
+            <form name="FilterForm" id="FilterForm" action="/filterInventory/sortBy/" method="POST">
+                <label for="menu-tt">Order By:</label>
+                <select name="menu-tt">
+                    <option value="none">Select</option>
+                    <option value = "Status Type" > Status Ascending</option>
+                    <option value = "Item Type" > Type Descending </option>
+                 </select>
+                <p><label>Filter by Type:</label></p>
+                <ul>
+                    <li><input type="checkbox" name="type" value="food" />food</label></li>
+                    <li><input type="checkbox" name="type"  value="medical" />medical</label></li>
+                    <li><input type="checkbox" name="type"  value="clothes" />clothes</label></li>
+                    <li><input type="checkbox" name="type"  value="supplies" />supplies</label></li>
+                    <li><input type="checkbox" name="type" value="other" />other</label></li>
+                    <!--<li><input type="submit" name="submit-btn" value="Choose">-->
+                </ul>
+                <input type="submit" name="submit-btn" value="Sort">
+            </form>
+        </div>
+        
+        <div class = "blockMiddle">
+            <table id="inventory-list" border =1>
+    
+                <tr>
+                    <th>Item Name</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Units</th>
+                    <th>Status</th>
+                </tr>
+    
+                <!-- Fills out inventory history table --> 
+                {% for inventory in allInventory %}
+                    <tr data-tt="{{inventory.item_id}}">
+                    <td class="description">{{inventory.description}}</td>
+                    <td class="type">{{inventory.type}}</td>
+                    <td class="amount">{{inventory.amount}}</td>
+                    <td class="units">{{inventory.units}}</td>
+                    <td class="status">{{inventory.status}}</td>
+                </tr>
+                {% endfor %}
+    
+            </table>
+        </div>
+    </div>
+    
+    
 {% endblock %}
 
