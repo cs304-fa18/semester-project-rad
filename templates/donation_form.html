@@ -12,15 +12,23 @@
         <h2> Donor: </h2>
         <table id='donor-table'>
             <tr>
-            <!-- dropdown: create new donor -->
-            <td></td>
+            <!-- dropdown: select existing donor -->
+            <td>Select Existing Donor: </td>
             <td>
-            <select name="donor">
-                <option value="new"> Create New Donor </option>
+            <select name="existing-donor">
+                <option value=''> Select... </option>
+                {% for dict in donor_list %}
+                    <option value={{dict.id}}> {{dict.name}} </option>
+                {% endfor %}
             </select>
             </td>
-            </tr>   
-            <!-- dropdown: create new donor -->
+            </tr> 
+            
+            <!-- Create new donor -->
+            <tr>
+                <td> Or create new donor: </td>
+            </tr>
+            
             <tr>
                 <td> Type: </td>
                 <td>
@@ -63,7 +71,22 @@
         <!-- Donation-->
         <h2> Donation: </h2>
         <table id='donation-table'>
+            
+            <tr>
+                <td> Select Previously Given Donation:</td>
+                <td>
+                    <select name="existing-donation">
+                        <option value=''> Select... </option>
+                        {% for dict in donation_list %}
+                            <option value={{dict.id}}> {{dict.description}} </option>
+                        {% endfor %}
+                    </select> 
+                </td>
+            </tr>
             <!-- Item description text field -->
+            <tr>
+                <td> Or give for the first time: </td>
+            </tr>
             <tr>
                 <td> Donation Description: </td>
                 <td> <input type="text" name="donation-description"> </td>
@@ -72,20 +95,20 @@
             <!-- Amount number field -->
             <tr>
                 <td> Amount: </td>
-                <td> <input type="number" name="amount"> </td>
+                <td> <input type="number" required name="amount"> </td>
             </tr>
             
             <!-- Units -->
             <tr>
                 <td> Units: </td>
-                <td> <input type="text" name="units" </td>
+                <td> <input type="text" required name="units" </td>
             </tr>
             
             <!-- dropdown: donation category -->
             <tr>
                 <td> Select donation category: </td>
                 <td>
-                   <select name="donation-category">
+                   <select required name="donation-category">
                         <option value="food"> Food </option>
                         <option value="medical"> Medical </option>
                         <option value="clothing"> Clothing </option>

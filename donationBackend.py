@@ -1,6 +1,7 @@
 import MySQLdb
 import re
 from connection import get_conn
+from search_inventory_history import updateInventory
 
 # curs = conn.cursor(MySQLdb.cursors.DictCursor)
 
@@ -90,20 +91,21 @@ def add_to_inventory(conn, donation_dict):
         curs.execute('''SELECT last_insert_id() FROM inventory;''')
         result = curs.fetchall()
         print(str(result))
-        return(result[0]['max(item_id)'])
+        return(result[0]['last_insert_id()'])
     
     # item found in inventory previously
     else:
-        curs.execute('''SELECT item_id, status FROM inventory 
+        curs.execute('''SELECT item_id, amount FROM inventory 
             WHERE description like %s 
             LIMIT 1;''',[ donation_dict['description']])
         match_row = curs.fetchall()
         # print(match_row)
         update_id = match_row[0]['item_id']
-        new_status = int(match_row[0]['status']) + int(donation_dict['amount'])
-        curs.execute('''UPDATE inventory 
-            SET status=%s WHERE item_id=%s''', [new_status, update_id] )
-        # print(update_id)
+        new_amount = int(match_row[0]['amount']) + int(donation_dict['amount'])
+        updateInventory(update_id, new_amount)
+        # curs.execute('''UPDATE inventory 
+        #     SET amount=%s WHERE item_id=%s''', [new_amount, update_id] )
+        # # print(update_id)
         return(update_id)
 
 
@@ -121,10 +123,10 @@ def validate_donation(donation_dict):
     if donation_dict['type'] not in categories:
         messages.append('Invalid donation category')
     
-    if not isinstance(donation_dict['amount'], int):
-        messages.append("Invalid input: Amount donated must be integer.")
-    elif donation_dict['amount'] <= 0:
-        messages.append("Invalid input: Amount donated must be positive nonzero number.")
+    # if not isinstance(donation_dict['amount'], int):  #buggy -- always flashes -- ValueError casting?
+    #     messages.append("Invalid input: Amount donated must be integer.")
+    # elif donation_dict['amount'] <= 0:
+    #     messages.append("Invalid input: Amount donated must be positive nonzero number.")
     
     return messages
     
@@ -147,16 +149,47 @@ def validate_donor(donor_dict):
     # phone is  10 digits
     if len(donor_dict['phone']) != 10:
         messages.append('Invalid phone number: must be 10 digits long')
+    
+    # email exists
+    if donor_dict['email'] is None:
+        messages.append('Invalid input: email address required')
     # email has exactly one @
-    if (donor_dict['email'].count('@') != 1):
-        messages.append('Invalid email address: must include exactly one @ symbol')
     else:
-        # email matches pattern *@*.*
-        pattern = '.*@.*[.].{2}.*'
-        if (re.match(pattern, donor_dict['email']) is None):
-            messages.append('Invalid email address format')
+        if (donor_dict['email'].count('@') != 1):
+            messages.append('Invalid email address: must include exactly one @ symbol')
+        else:
+            # email matches pattern *@*.*
+            pattern = '.*@.*[.].{2}.*'
+            if (re.match(pattern, donor_dict['email']) is None):
+                messages.append('Invalid email address format')
     return messages
  
+
+def get_donations(conn):
+    '''
+    Inputs:
+        conn -- database connection
+    Returns: list of all donations (id and name) from database
+    '''
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''SELECT donationID as id, description FROM donation;''')
+    result = curs.fetchall()
+    print(result)
+    return(result)
+
+
+def get_donors(conn):
+    '''
+    Inputs:
+        conn -- database connection
+    Returns: list of all donors (id and name) from database
+    '''
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''SELECT donorID as id, name FROM donor;''')
+    result = curs.fetchall()
+    # print(result)
+    return(result)
+
     
 def test_pattern():
     '''
@@ -186,4 +219,10 @@ if __name__ == '__main__':
     #     {'description': 'unknown donation', 'amount': 2, 'type': 'supplies'}
     # )
     
-    test_pattern()
+    #test_pattern()
+    
+    from connection import get_conn
+    
+    conn = get_conn()
+    get_donors(conn)
+    
