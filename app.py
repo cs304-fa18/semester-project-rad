@@ -42,7 +42,7 @@ def donationForm():
         #validate donor data
         validation_result = donationBackend.validate_donor(donor)
         if len(validation_result) != 0:
-            for msg in val_result:
+            for msg in validation_result:
                 flash(msg)
             return(redirect(url_for('donationForm')))
         
@@ -56,14 +56,14 @@ def donationForm():
             'submit_date': date.today(), 
             'description': request.form['donation-description'],
             'amount': request.form['amount'],
-            'units': request.form['units']
+            'units': request.form['units'],
             'type': request.form['donation-category']
         }
         
         # validate donation data
         validation_result = donationBackend.validate_donation(donation)
         if len(validation_result) != 0:
-            for msg in val_result:
+            for msg in validation_result:
                 flash(msg)
             return(redirect(url_for('donationForm')))
         
@@ -101,9 +101,9 @@ def expenditureForm():
         }
         
         # Validate Expenditure Data
-        val_result = expenditureBackend.validate_expenditure(expenditure)
-        if len(val_result) != 0:
-            for msg in val_result:
+        validation_result = expenditureBackend.validate_expenditure(expenditure)
+        if len(validation_result) != 0:
+            for msg in validation_result:
                 flash(msg)
             return(redirect(url_for('expenditureForm')))
            

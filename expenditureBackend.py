@@ -80,5 +80,8 @@ def test_validate_expenditure():
     
 
 if __name__ == '__main__':
-    # test_validate_expenditure()
+    '''
+    testing driver
+    '''
+    test_validate_expenditure()
     
