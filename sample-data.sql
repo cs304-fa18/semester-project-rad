@@ -19,13 +19,12 @@ insert into donation (submitDate, description, amount, units,`type`, donorID)
         ('2018-11-07', 'eggs', 48, 'cartons', 'food', 1);
 
 -- inventory
-insert into inventory (description, `type`, amount) 
+insert into inventory (description, `type`, amount, units) 
     values 
-        ('carrots', 'food', 3),
-        ('Winter sleeping bags', 'supplies', 2),
-        ('blankets', 'supplies', 12),
-        ('eggs', 'food', 24),
-        ('flour', 'food', 1);
+        ('carrots', 'food', 3, 'bushels'),
+        ('Winter sleeping bags', 'supplies', 2, 'bags'),
+        ('eggs', 'food', 24, 'dozen'),
+        ('flour', 'food', 1, '5lb bags');
     
 -- expenditure, 
 insert into expenditure (description, `type`, `date`, amount) 
@@ -41,6 +40,6 @@ insert into setStatus (item_id, threshold)
     values
         (1, 5),
         (2, 10),
-        (3, 5),
+        (3, 12),
         (4, 6);
         

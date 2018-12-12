@@ -29,40 +29,18 @@
                 <td>
                    <select name="item-type">
                     {% for item in inventory %}
-                        <option value={{item_id}}>{{item.description}}</option>
+                        <option value={{item_id}}>{{item.description}} ({{item.units}})</option>
                     {% endfor %}
                     </select> 
                 </td>
             </tr>
         
-        
-            
             <!-- Amount text field -->
             <tr>
                 <td> Updated Amount: </td>
                 <td> <input type="number" name="item-amount"> </td>
             </tr>
             
-            <!-- Units text field -->
-            <tr>
-                <td> Units: </td>
-                <td> <input type="text" name="item-units"> </td>
-            </tr>
-            
-            <!-- dropdown: donation category -->
-            <!--<tr>-->
-            <!--    <td> Select expenditure category: </td>-->
-            <!--    <td>-->
-            <!--       <select name="item-category">-->
-            <!--            <option value="food"> Food </option>-->
-            <!--            <option value="medical"> Medical </option>-->
-            <!--            <option value="clothing"> Clothing </option>-->
-            <!--            <option value="supplies"> Supplies </option>-->
-            <!--            <option value="in house"> In House </option>-->
-            <!--            <option value="other"> Other </option>-->
-            <!--        </select> -->
-            <!--    </td>-->
-            <!--</tr>-->
             <br>
         </table>
         

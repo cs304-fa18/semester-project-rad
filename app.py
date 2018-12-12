@@ -128,10 +128,11 @@ def updateInventoryForm():
         updatedItem = {
             'item_id' : request.form['item-type'],
             'amount' : request.form['item-amount'],
-            'units' : request.form['item-units'],
             'date' : date.today()
         }
-        return render_template('updateInventory.html', inventory = allItemTypes)
+    conn = search_inventory_history.getConn('c9')
+    search_inventory_history.updateInventory(conn, updatedItem['item_id'], updatedItem['amount'])
+    return render_template('updateInventory.html', inventory = allItemTypes)
 
 
 @app.route('/donations/', methods=["GET", "POST"])
