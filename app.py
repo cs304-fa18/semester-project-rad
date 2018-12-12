@@ -5,22 +5,28 @@ from flask import (Flask, render_template, request, url_for, redirect, flash)
 import sys
 import search_donation_history
 import search_inventory_history
-import donationDBOps
+import donationBackend
 import expenditureBackend
+from connection import get_conn
 
 app = Flask(__name__)
 app.secret_key = 'string string'
 
-    
 @app.route('/')
 def index():
-    conn = search_donation_history.getConn('c9')
+    conn = get_conn()
     total = search_inventory_history.countInventoryTotal(conn)
     flash("Total Number of Inventory Items: " + str(total))
     return render_template('index.html')
     
 @app.route("/donationForm/", methods=['GET', 'POST'])
 def donationForm():
+    '''
+    Route for donation form page. 
+    On GET, renders blank form.
+    On POST, collects and validates data and if valid, adds to database. 
+       Renders form again with submission confirmation flashed.
+    '''
     if request.method == 'GET':
         return render_template('donation_form.html')
     else:
@@ -35,9 +41,15 @@ def donationForm():
         }
         
         #validate donor data
+        validation_result = donationBackend.validate_donor(donor)
+        if len(validation_result) != 0:
+            for msg in validation_result:
+                flash(msg)
+            return(redirect(url_for('donationForm')))
         
         #add donor to db, collect donorID
-        donor_id = donationDBOps.add_donor(donor)
+        conn = get_conn()
+        donor_id = donationBackend.add_donor(donor)
         flash('Donor ID: ' + str(donor_id))
         
         #collect donation data
@@ -46,17 +58,23 @@ def donationForm():
             'submit_date': date.today(), 
             'description': request.form['donation-description'],
             'amount': request.form['amount'],
+            'units': request.form['units'],
             'type': request.form['donation-category']
         }
         
         # validate donation data
+        validation_result = donationBackend.validate_donation(donation)
+        if len(validation_result) != 0:
+            for msg in validation_result:
+                flash(msg)
+            return(redirect(url_for('donationForm')))
         
         # send data to db
-        donation_id = donationDBOps.add_donation(donation)
+        donation_id = donationBackend.add_donation(donation)
         flash('Donation ID: '+ str(donation_id))
         
         #add donation to inventory
-        inventory_id = donationDBOps.add_to_inventory(donation)
+        inventory_id = donationBackend.add_to_inventory(donation)
         flash('Inventory ID: ' + str(inventory_id))
         
         # render template
@@ -65,6 +83,13 @@ def donationForm():
 
 @app.route('/expenditureForm/', methods = ['GET', 'POST'])
 def expenditureForm():
+    '''
+    Route for exenditure form page. 
+    On GET, renders blank form.
+    On POST, collects and validates data and if valid, adds to database. 
+       Renders form again with submission confirmation flashed.
+    '''
+    
     if request.method == 'GET':
         return render_template('expenditures.html')
         
@@ -78,17 +103,23 @@ def expenditureForm():
         }
         
         # Validate Expenditure Data
-        
+        validation_result = expenditureBackend.validate_expenditure(expenditure)
+        if len(validation_result) != 0:
+            for msg in validation_result:
+                flash(msg)
+            return(redirect(url_for('expenditureForm')))
+           
         # Submit to Expenditure DB
-        conn = donationDBOps.get_conn('c9')
+        conn = get_conn()
         expend_id = expenditureBackend.add_expend(expenditure, conn)
         flash('Expenditure ID: ' + str(expend_id))
         return render_template('expenditures.html')
+ 
     
 #is not hooked up to the back end yet
 @app.route('/updateInventory/', methods = ['GET', 'POST'])
 def updateInventoryForm():
-    conn = search_inventory_history.getConn('c9')
+    conn = get_conn()
     allItemTypes = search_inventory_history.getInventoryItemTypes(conn)
     if request.method == 'GET':
         return render_template('updateInventory.html', inventory = allItemTypes)
@@ -105,14 +136,14 @@ def updateInventoryForm():
 
 @app.route('/donations/', methods=["GET", "POST"])
 def displayDonations():
-    conn = search_donation_history.getConn('c9')
+    conn = get_conn()
     allDonations = search_donation_history.getAllDonationHistoryInfo(conn, rowType='dictionary')
     return render_template('donations.html',allDonations= allDonations )
     
 
 @app.route('/inventory/', methods=["GET", "POST"])
 def displayInventory():
-    conn = search_inventory_history.getConn('c9')
+    conn = get_conn()
     allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn) 
     return render_template('inventory.html', allInventory = allInventory)
 
@@ -198,6 +229,7 @@ def filterInventoryType():
     #     else: #If nothing is selected:
     #         return render_template('inventory.html')
 
+
 @app.route('/reset/', methods=['GET', 'POST'])
 def reset():
     resetType = request.form.get("submit-reset")
@@ -205,10 +237,11 @@ def reset():
         return redirect('inventory')
     else: 
         return redirect('donations')
+
     
 @app.route('/sortBy/', methods=["GET", "POST"])
 def sortBy():
-    conn = search_donation_history.getConn('c9')
+    conn = get_conn()
     selectedType = request.form.get("menu-tt")
     if (selectedType == "Most Recent Donation"):
         donationsOrdered = search_donation_history.sortDonationByDateDescending(conn)
