@@ -23,7 +23,6 @@ def index():
     flash("Total Items: " + str(total))
     flash("STATUS COUNT: ")
     flash( "Total Low:" + str(lowCount))
-    flash( "Total Medium:" + str(mediumCount))
     flash( "Total High:" + str(highCount))
     return render_template('index.html')
     
@@ -206,10 +205,10 @@ def filterDonations():
     else:# Drop down is selected
         #Drop down selected but not checkbox
         if checkboxType is None:
-            if (dropdownType == "Most Recent Item"):
+            if (dropdownType == "Most Recent Donation"):
                 donationsOrdered = search_donation_history.sortDonationByDateDescending(conn)
                 return render_template('donations.html',allDonations = donationsOrdered)
-            elif (dropdownType == "Oldest Item First"):
+            elif (dropdownType == "Oldest Donation First"):
                 donationsOrdered = search_donation_history.sortDonationByDateAscending(conn)
                 return render_template('donations.html',allDonations = donationsOrdered)
             else:

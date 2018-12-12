@@ -5,17 +5,10 @@
 {% endblock %}
 
 {% block content %}
-        <div style="" id="flashes">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div id="messages">
-                {% for msg in messages %}
-                    <p>{{msg}}</p>
-                {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
-        </div>
+
+<div class = "flashes">
+    
+</div>
 
     <form method=POST action="/reset/">
             <input type="submit" name="submit-reset" value="Reset Inventory">
