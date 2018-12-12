@@ -1,7 +1,8 @@
 import donationDBOps
 import MySQLdb
+from connection import get_conn
 
-def add_expend(expenditure, conn):
+def add_expend(conn, expenditure):
     '''
     Adds expenditure row to database
     Inputs:
@@ -80,5 +81,8 @@ def test_validate_expenditure():
     
 
 if __name__ == '__main__':
-    # test_validate_expenditure()
+    '''
+    testing driver
+    '''
+    test_validate_expenditure()
     
