@@ -49,7 +49,7 @@ def donationForm():
         
         #add donor to db, collect donorID
         conn = get_conn()
-        donor_id = donationBackend.add_donor(conn, donor)
+        donor_id = donationBackend.add_donor(donor)
         flash('Donor ID: ' + str(donor_id))
         
         #collect donation data
@@ -70,11 +70,11 @@ def donationForm():
             return(redirect(url_for('donationForm')))
         
         # send data to db
-        donation_id = donationBackend.add_donation(conn, donation)
+        donation_id = donationBackend.add_donation(donation)
         flash('Donation ID: '+ str(donation_id))
         
         #add donation to inventory
-        inventory_id = donationBackend.add_to_inventory(conn, donation)
+        inventory_id = donationBackend.add_to_inventory(donation)
         flash('Inventory ID: ' + str(inventory_id))
         
         # render template
@@ -111,7 +111,7 @@ def expenditureForm():
            
         # Submit to Expenditure DB
         conn = get_conn()
-        expend_id = expenditureBackend.add_expend(conn, expenditure)
+        expend_id = expenditureBackend.add_expend(expenditure, conn)
         flash('Expenditure ID: ' + str(expend_id))
         return render_template('expenditures.html')
  
