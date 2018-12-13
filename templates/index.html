@@ -5,8 +5,24 @@
 {% endblock %}
 
 {% block content %}
-    
     <img src = "../static/donate.png">
+    <div class = "row">
+      <div class = "inventoryBlock">
+          <p><div id = "header">INVENTORY</div></p>
+          <p>Total Items: {{inventoryTotal}}</p>
+          <p>Total Low Status: {{lowCount}}</p>
+          <p>Total High Status: {{highCount}}</p>
+      </div>
+      <div class = "donationsBlock">
+          <p><div id = "header">DONATIONS/DONORS</div></p>
+          <p>Total Donations: {{donationTotal}}</p>
+          <p>Total Donors: {{donorTotal}}</p>
+      </div>
+      <div class = "expendituresBlock">
+          <p><div id = "header">EXPENDITURES</div></p>
+          <p>Total Expenses: {{expenditureTotal}}</p>
+      </div>
+    </div>
     <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
     
     

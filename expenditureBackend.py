@@ -2,6 +2,13 @@ import donationDBOps
 import MySQLdb
 from connection import get_conn
 
+def countExpenditureTotal(conn):
+    """Returns the number of items in inventory"""
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute(
+        '''select count(*) from expenditure''')
+    return curs.fetchall()[0]['count(*)']
+
 def add_expend(conn, expenditure):
     '''
     Adds expenditure row to database
@@ -26,6 +33,7 @@ def add_expend(conn, expenditure):
     # print(result)
     return(result[0][0])
 
+    
 def validate_expenditure(expend_dict):
     '''
         Validates expenditure data according to expectations
