@@ -15,16 +15,13 @@ app.secret_key = 'stringy string'
 @app.route('/')
 def index():
     conn = get_conn()
-    total = search_inventory_history.countInventoryTotal(conn)
-    mediumCount = search_inventory_history.statusCount(conn, "medium")
+    inventoryTotal = search_inventory_history.countInventoryTotal(conn)
     lowCount = search_inventory_history.statusCount(conn, "low")
     highCount = search_inventory_history.statusCount(conn, "high")
-    flash("INVENTORY AT A GLANCE: ")
-    flash("Total Items: " + str(total))
-    flash("STATUS COUNT: ")
-    flash( "Total Low:" + str(lowCount))
-    flash( "Total High:" + str(highCount))
-    return render_template('index.html')
+    donationTotal = search_donation_history.countDonationTotal(conn)
+    donorTotal = search_donation_history.countDonorTotal(conn)
+    expenditureTotal = expenditureBackend.countExpenditureTotal(conn)
+    return render_template('index.html', inventoryTotal=inventoryTotal, lowCount = lowCount, highCount=highCount, donationTotal=donationTotal, donorTotal=donorTotal, expenditureTotal=expenditureTotal)
     
 @app.route("/donationForm/", methods=['GET', 'POST'])
 def donationForm():

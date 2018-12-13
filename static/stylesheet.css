@@ -10,13 +10,10 @@ main_body{
 }
 
 img {
-    /*height: 100%;*/
-    /*width: 65%;*/
-    margin: auto;
-    left: 0; 
-    right: 0;
-    top: 0;
-    bottom: 0;  
+    float: left;
+    zoom: 0;
+    width: 25%;
+    height: 50%;
 }
  
 
@@ -86,29 +83,73 @@ nav a:hover {
   zoom: 0;
   width: 15%;
   height: 35%;
-  /*width: 175px;*/
-  /*height: 250px;*/
   padding: 5px;
   border: 1px solid blue;    
   background-color: #e8e4da; 
 }
 
-.flashes {
-      background-color: #f89406;
-      border-color: #e96506;
-      color: #ffffff;
-    }
-    
-.blockMiddle {
-    width: 65%;
+.tableMiddle {
+    width: 75%;
     height: 100%;
-    /*float: left;*/
     position: absolute;
     display: inline-block;
     zoom: 1.5;
     text-align: middle;
 }
+    
+.inventoryBlock {
+    width: 15%;
+    height: 30%;
+    position: absolute;
+    display: inline-block;
+    zoom: 0;
+    padding: 5px;
+    border: 3px solid brown;    
+    background-color: #e8e4da; 
+    text-align: center;
+    margin: auto;
+    left: 0; 
+    right: 30%;
+    top: 0;
+    bottom: 10%;
+}
+
+.donationsBlock {
+    width: 15%;
+    height: 30%;
+    position: absolute;
+    display: inline-block;
+    zoom: 0;
+    padding: 5px;
+    border: 3px solid brown;    
+    background-color: #e8e4da; 
+    text-align: center;
+    margin: auto;
+    left: 0; 
+    right: -2%;
+    top: 0;
+    bottom: 10%;
+}
+
+.expendituresBlock {
+    width: 15%;
+    height: 30%;
+    position: absolute;
+    display: inline-block;
+    zoom: 0;
+    padding: 5px;
+    border: 3px solid brown;    
+    background-color: #e8e4da; 
+    text-align: center;
+    margin: auto;
+    left: 0; 
+    right: -34%;
+    top: 0;
+    bottom: 10%;
+}
 
 
-
-
+#header {
+    font-weight: bold;
+    color: rgb(118,180,189);
+}
