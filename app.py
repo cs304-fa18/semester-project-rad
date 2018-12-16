@@ -36,13 +36,13 @@ def donationForm():
     
     if request.method == 'GET':
         donor_list = donationBackend.get_donors(conn)
-        donation_list = donationBackend.get_donations(conn)
+        donation_list = donationBackend.get_inventory_items(conn)
         return render_template('donation_form.html', donor_list=donor_list, donation_list=donation_list)
     else:
         existing_id = request.form['existing-donor']
         if existing_id != "create-new-donor":
             donor_id = existing_id
-            print('***********Existing ID: ' + existing_id)
+            # print('***********Existing ID: ' + existing_id)
             
         else:
             # collect donor data
@@ -100,7 +100,9 @@ def donationForm():
         flash('Inventory ID: ' + str(inventory_id))
         
         # render template
-        return render_template('donation_form.html')
+        donor_list = donationBackend.get_donors(conn)
+        donation_list = donationBackend.get_inventory_items(conn)
+        return render_template('donation_form.html', donor_list=donor_list, donation_list=donation_list)
 
 
 

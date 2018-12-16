@@ -123,11 +123,13 @@ def validate_donation(donation_dict):
     if donation_dict['type'] not in categories:
         messages.append('Invalid donation category')
     
-    # if not isinstance(donation_dict['amount'], int):  #buggy -- always flashes -- ValueError casting?
-    #     messages.append("Invalid input: Amount donated must be integer.")
-    # elif donation_dict['amount'] <= 0:
-    #     messages.append("Invalid input: Amount donated must be positive nonzero number.")
-    
+    try:
+       x = int(donation_dict['amount'])
+       if x <= 0:   
+        messages.append("Invalid input: Amount donated must be positive nonzero number")
+    except ValueError:
+        messages.append("Invalid input: amount donated must be an integer")
+
     return messages
     
 
@@ -165,11 +167,11 @@ def validate_donor(donor_dict):
     return messages
  
 
-def get_donations(conn):    # TODO: rename
+def get_inventory_items(conn):    # TODO: rename
     '''
     Inputs:
         conn -- database connection
-    Returns: list of all donations (id and name) from database
+    Returns: list of all items in inventory (id and name)
     '''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''SELECT item_id as id, description FROM inventory;''')
