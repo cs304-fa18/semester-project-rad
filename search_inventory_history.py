@@ -9,7 +9,7 @@ CS 304 - Databases
 
 import sys
 import MySQLdb
-
+from connection import get_conn
                     
 def countInventoryTotal(conn):
     """Returns the number of items in inventory"""
@@ -70,7 +70,8 @@ def getAllInventoryDescription(conn):
 def getInventoryItemTypes(conn):
     '''Returns all inventory types, used in update inventory form'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('''select description, item_id, units from inventory''')
+    curs.execute('''select description, inventory.item_id, units, amount, threshold from 
+    inventory, setStatus where inventory.item_id = setStatus.item_id''')
     return curs.fetchall()
     
                                
@@ -102,7 +103,6 @@ def updateStatus(conn, item_id):
     
     itemAmountDictionary = curs.execute('''select amount
     from inventory where item_id = %s''', [item_id])
-    print 'check!!!'
     itemAmount = curs.fetchall()[0]['amount'] #extracts amount corresponding to item
 
     thresholdForItemDictionary = curs.execute('''select threshold
@@ -133,4 +133,6 @@ def updateInventory(conn, item_id, amount):
         
     
 if __name__ == '__main__':
-    conn = getConn('c9')
+    conn = get_conn()
+    allInventory = getInventoryItemTypes(conn)
+    print allInventory

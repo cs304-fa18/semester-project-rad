@@ -1,17 +1,32 @@
 #!/usr/bin/python2.7
 
 from datetime import date
-from flask import (Flask, render_template, request, url_for, redirect, flash)
+from flask import (Flask, render_template, request, url_for, redirect, flash, session)
+import bcrypt
 import sys
+import MySQLdb
 import search_donation_history
 import search_inventory_history
 import donationBackend
 import expenditureBackend
 from connection import get_conn
+from functools import wraps
 
 app = Flask(__name__)
 app.secret_key = 'stringy string'
 
+#login decorator         
+def login_required(f):
+    @wraps(f)
+    def wrap():
+        if 'logged_in' in session:
+            return f()
+        else:
+            flash("You need to login first")
+            return redirect(url_for('index'))
+
+    return wrap
+           
 @app.route('/')
 def index():
     conn = get_conn()
@@ -24,6 +39,7 @@ def index():
     return render_template('index.html', inventoryTotal=inventoryTotal, lowCount = lowCount, highCount=highCount, donationTotal=donationTotal, donorTotal=donorTotal, expenditureTotal=expenditureTotal)
     
 @app.route("/donationForm/", methods=['GET', 'POST'])
+@login_required
 def donationForm():
     '''
     Route for donation form page. 
@@ -31,6 +47,14 @@ def donationForm():
     On POST, collects and validates data and if valid, adds to database. 
        Renders form again with submission confirmation flashed.
     '''
+    # username = session.get('username', '')
+    # if str(username) == "":
+    #         flash("Error: Not Logged In, Please login to submit a donation")
+    #         return redirect( url_for('index'))
+    
+    # redirect( url_for('checkLogin'))
+    
+    
     
     conn = get_conn()
     
@@ -107,6 +131,7 @@ def donationForm():
 
 
 @app.route('/expenditureForm/', methods = ['GET', 'POST'])
+@login_required
 def expenditureForm():
     '''
     Route for exenditure form page. 
@@ -114,7 +139,7 @@ def expenditureForm():
     On POST, collects and validates data and if valid, adds to database. 
        Renders form again with submission confirmation flashed.
     '''
-    
+            
     if request.method == 'GET':
         return render_template('expenditures.html')
         
@@ -142,6 +167,7 @@ def expenditureForm():
  
     
 @app.route('/updateInventory/', methods = ['GET', 'POST'])
+@login_required
 def updateInventoryForm():
     '''Collects information from update inventory form
     passes this information to backend to update inventory table'''
@@ -158,18 +184,31 @@ def updateInventoryForm():
             'amount' : request.form['item-amount'],
             'date' : date.today()
         }
+        
+    if (updatedItem['amount'] ==""):
+        updatedItem['amount'] = 0;
+    flash('Inventory item ' + updatedItem['item_id'] + ' Updated')    
+    search_inventory_history.updateInventory(conn, updatedItem['item_id'], updatedItem['amount'])
     return render_template('updateInventory.html', inventory = allItemTypes)
 
 
 @app.route('/donations/', methods=["GET", "POST"])
+@login_required
 def displayDonations():
-    conn = get_conn()
-    allDonations = search_donation_history.getAllDonationHistoryInfo(conn, rowType='dictionary')
-    return render_template('donations.html',allDonations= allDonations )
+
+            
+        conn = get_conn()
+        allDonations = search_donation_history.getAllDonationHistoryInfo(conn, rowType='dictionary')
+        return render_template('donations.html',allDonations= allDonations )
+        
+        
+    
     
 
 @app.route('/inventory/', methods=["GET", "POST"])
+@login_required
 def displayInventory():
+        
     conn = get_conn()
     allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn) 
     return render_template('inventory.html', allInventory = allInventory)
@@ -251,6 +290,96 @@ def filterInventory():
         else:
             filtered = search_inventory_history.combineFilters(conn, checkboxType,dropdownType)
             return render_template('inventory.html',allInventory = filtered)
+
+@app.route('/loginPage/',methods=["POST"])  
+def redirectLogin():
+    return render_template('login.html')
+    
+@app.route('/join/', methods=["POST"])
+def join():
+    try:
+        username = request.form['username']
+        passwd1 = request.form['password1']
+        passwd2 = request.form['password2']
+        if passwd1 != passwd2:
+            flash('passwords do not match')
+            return redirect( url_for('index'))
+        hashed = bcrypt.hashpw(passwd1.encode('utf-8'), bcrypt.gensalt())
+        conn = get_conn()
+        curs = conn.cursor(MySQLdb.cursors.DictCursor)
+        curs.execute('SELECT username FROM userpass WHERE username = %s',
+                     [username])
+        row = curs.fetchone()
+        if row is not None:
+            flash('That username is taken')
+            return redirect( url_for('index') )
+        curs.execute('INSERT into userpass(username,hashed) VALUES(%s,%s)',
+                     [username, hashed])
+        session['username'] = username
+        session['logged_in'] = True
+        flash('successfully logged in as '+username)
+        return redirect( url_for('index') )
+    except Exception as err:
+        flash('form submission error '+str(err))
+        return redirect( url_for('index') )
+    
+    
+# @app.route('/login/', methods = ['GET','POST'])
+# def login():
+#     username = request.form.get('username')
+#     if not username: #if form is empty
+#         return redirect(request.referrer)
+#     else: 
+#         session['username'] = username #storing username in the session 
+#         flash("Logged in as " + username)
+#         return(redirect(url_for('index')))
+        
+@app.route('/login/', methods=["POST"])
+def login():
+    try:
+        username = request.form['username']
+        passwd = request.form['password']
+        conn = get_conn()
+        curs = conn.cursor(MySQLdb.cursors.DictCursor)
+        curs.execute('SELECT hashed FROM userpass WHERE username = %s',
+                     [username])
+        row = curs.fetchone()
+        if row is None:
+            # Same response as wrong password, so no information about what went wrong
+            flash('login incorrect. Try again or join')
+            return redirect( url_for('index'))
+        hashed = row['hashed']
+        # strings always come out of the database as unicode objects
+        if bcrypt.hashpw(passwd.encode('utf-8'),hashed.encode('utf-8')) == hashed:
+            flash('successfully logged in as '+username)
+            session['username'] = username
+            session['logged_in'] = True
+            return redirect( url_for('index'))
+        else:
+            flash('login incorrect. Try again or join')
+            return redirect( url_for('index'))
+    except Exception as err:
+        flash('form submission error '+str(err))
+        return redirect( url_for('index') )
+        
+@app.route('/logout/', methods=["POST"])
+def logout():
+    try:
+        if 'username' in session:
+            username = session['username']
+            session.pop('username')
+            session.pop('logged_in')
+            flash('You are logged out')
+            return redirect(url_for('index'))
+        else:
+            flash('you are not logged in. Please login or join')
+            return redirect( url_for('index') )
+    except Exception as err:
+        flash('some kind of error '+str(err))
+        return redirect( url_for('index') )
+        
+  
+        
 
 
 if __name__ == '__main__':
