@@ -220,8 +220,9 @@ def filterDonations():
 def filterInventory():
     conn = get_conn()
     dropdownType = request.form.get("menu-tt")
+    print dropdownType
     checkboxType = request.form.get("type")
-    inventoryByStatus = search_inventory_history.getInventoryByStatus(conn, dropdownType)
+    #inventoryByStatus = search_inventory_history.getInventoryByStatus(conn)
     inventoryByType = search_inventory_history.getInventoryByType(conn, checkboxType)
     allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn)
     
@@ -238,8 +239,8 @@ def filterInventory():
     else:# Drop down is selected
         #Drop down selected but not checkbox
         if checkboxType is None:
-            if (dropdownType == "Ascending Status"):
-                sortInventory = search_inventory_history.getInventoryByStatus(conn, dropdownType)
+            if dropdownType == "status":
+                sortInventory = search_inventory_history.sortInventoryStatus(conn)
                 return render_template('inventory.html',allInventory = sortInventory)
             else:
                 sortInventory = search_inventory_history.sortInventoryType(conn)
