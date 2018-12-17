@@ -184,6 +184,7 @@ def reset():
 def filterDonations():
     conn = get_conn()
     dropdownType = request.form.get("menu-tt")
+    print dropdownType
     checkboxType = request.form.get("type")
     donationByType = search_donation_history.getDonationByType(conn, checkboxType)
     allDonations = search_donation_history.getAllDonationHistoryInfo(conn)
@@ -239,7 +240,7 @@ def filterInventory():
     else:# Drop down is selected
         #Drop down selected but not checkbox
         if checkboxType is None:
-            if dropdownType == "status":
+            if dropdownType == "Status (Low to High)":
                 sortInventory = search_inventory_history.sortInventoryStatus(conn)
                 return render_template('inventory.html',allInventory = sortInventory)
             else:

@@ -35,12 +35,17 @@ def getAllInventoryHistoryInfo(conn):
     return curs.fetchall()
 
 def combineFilters(conn, filter, sort):
-    """Returns the inventory after filtering and then sorting"""
+    """Returns the inventory table after filtering and then sorting"""
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute(
+    if (sort == "Status (Low to High)"):
+        curs.execute(
         '''select item_id, description, status, amount, units, `type` from inventory
-        where `type` = %s order by %s''' ,[filter,sort])
-    return curs.fetchall()  
+        where `type` = %s order by status desc''' ,[filter])
+    else: # If sorting by type alphabetically    
+        curs.execute(
+            '''select item_id, description, status, amount, units, `type` from inventory
+            where `type` = %s order by type''' ,[filter])
+    return curs.fetchall() 
     
 def sortInventoryType(conn):
     """Returns all inventory items alphabetically by type."""
