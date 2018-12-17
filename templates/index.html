@@ -25,5 +25,14 @@
     </div>
     <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
     
+    <div id='login'>
+      <form id="loginform" action="{{url_for('redirectLogin')}}" method="post">
+      <p><button type="submit">Login or Create Account</button></p>
+      </form>
+      <form id="logout" action="{{url_for('logout')}}" method="post">
+      <p><button type="submit">Logout</button></p>
+      </form>
+    </div>
+    
     
 {% endblock %}
