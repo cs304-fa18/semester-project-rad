@@ -40,7 +40,6 @@ create table donation (
 CREATE TABLE inventory(
     `item_id` int auto_increment,
     `description` varchar(50),
-    `submitDate` date,
     `amount` int,
     `units` varchar(30),
     `status` set('high','low', 'null') default 'null',
