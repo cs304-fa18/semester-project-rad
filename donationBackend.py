@@ -1,6 +1,8 @@
 import MySQLdb
 import re
+import threading
 from connection import get_conn
+from threading import Lock
 from search_inventory_history import updateInventory
 
 # curs = conn.cursor(MySQLdb.cursors.DictCursor)
@@ -28,9 +30,9 @@ def add_donor(conn, donor_dict):
             donor_dict['address']
         ]
     )
-    curs.execute('''SELECT last_insert_id() FROM donor;''')
-    result =curs.fetchall()
-    return(result[0][0])
+    curs.execute('''SELECT last_insert_id();''')
+    result =curs.fetchone()
+    return(result[0])
 
 
 def add_donation(conn, donation_dict):
@@ -54,7 +56,7 @@ def add_donation(conn, donation_dict):
                 donation_dict['units'],
                 donation_dict['type']
             ])
-    curs.execute('''SELECT last_insert_id() FROM donation;''')
+    curs.execute('''SELECT last_insert_id();''')
     result =curs.fetchall()
     return(result[0][0])
 
@@ -69,7 +71,9 @@ def add_to_inventory(conn, donation_dict):
                         description, amount, units
     Returns: id of newly added/updated row in inventory table
     '''
-
+    
+    inventory_lock = Lock()
+    inventory_lock.acquire()
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''SELECT count(*) FROM inventory 
         WHERE description like %s''', [ donation_dict['description']])
@@ -88,7 +92,8 @@ def add_to_inventory(conn, donation_dict):
                     "NULL",
                     donation_dict['type']
                 ])
-        curs.execute('''SELECT last_insert_id() FROM inventory;''')
+        curs.execute('''SELECT last_insert_id();''')
+        inventory_lock.release()
         result = curs.fetchall()
         # print(str(result))
         return(result[0]['last_insert_id()'])
@@ -103,6 +108,7 @@ def add_to_inventory(conn, donation_dict):
         update_id = match_row[0]['item_id']
         new_amount = int(match_row[0]['amount']) + int(donation_dict['amount'])
         updateInventory(conn, update_id, new_amount)
+        inventory_lock.release()
         # curs.execute('''UPDATE inventory 
         #     SET amount=%s WHERE item_id=%s''', [new_amount, update_id] )
         # # print(update_id)
@@ -167,7 +173,7 @@ def validate_donor(donor_dict):
     return messages
  
 
-def get_inventory_items(conn):    # TODO: rename
+def get_inventory_items(conn):  
     '''
     Inputs:
         conn -- database connection
