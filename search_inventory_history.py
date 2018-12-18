@@ -9,21 +9,21 @@ CS 304 - Databases
 
 import sys
 import MySQLdb
-
+from connection import get_conn
                     
 def countInventoryTotal(conn):
     """Returns the number of items in inventory"""
-    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs = conn.cursor()
     curs.execute(
         '''select count(*) from inventory''')
-    return curs.fetchall()[0]['count(*)']
+    return curs.fetchone()[0]
     
 def statusCount(conn, status):
     """Returns the number of items in inventory"""
-    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs = conn.cursor()
     curs.execute(
         '''select count(*) from inventory where status = %s''',[status])
-    return curs.fetchall()[0]['count(*)']
+    return curs.fetchone()[0]
     
 def getAllInventoryHistoryInfo(conn):
     """Returns all inventory, in order of last modified.
@@ -31,28 +31,36 @@ def getAllInventoryHistoryInfo(conn):
     so updates should be first"""
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute(
-        '''select item_id, submitDate, description, status, amount, units, `type` from inventory''')
+        '''select item_id, description, status, amount, units, `type` from inventory''')
     return curs.fetchall()
 
 def combineFilters(conn, filter, sort):
-    """Returns the inventory after filtering and then sorting"""
+    """Returns the inventory table after filtering and then sorting"""
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    if (sort == "Status (Low to High)"):
+        curs.execute(
+        '''select item_id, description, status, amount, units, `type` from inventory
+        where `type` = %s order by status desc''' ,[filter])
+    else: # If sorting by type alphabetically    
+        curs.execute(
+            '''select item_id, description, status, amount, units, `type` from inventory
+            where `type` = %s order by type''' ,[filter])
+    return curs.fetchall() 
+    
+def sortInventoryType(conn):
+    """Returns all inventory items alphabetically by type."""
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute(
-        '''select item_id, submitDate, description, status, amount, units, `type` from inventory
-        where `type` = %s order by %s''' ,[filter,sort])
-    return curs.fetchall()  
-    
-def sortInventoryType(conn, rowType='dictionary'):
-    """Returns all donations, in the order they were 
-    entered in the database."""
-    if rowType == "tuple":
-        curs = conn.cursor()
-    elif rowType == "dictionary":
-        # results as Dictionaries
-        curs = conn.cursor(MySQLdb.cursors.DictCursor)
-        curs.execute(
-        '''select item_id, submitDate, description, status, amount, units, `type` from inventory
+        '''select item_id, description, status, amount, units, `type` from inventory
         order by type''')
+    return curs.fetchall()
+    
+def sortInventoryStatus(conn):
+    """Returns all inventory items by status, low to high."""
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute(
+    '''select item_id, description, status, amount, units, `type` from inventory
+        order by status desc''')
     return curs.fetchall()
     
 def getAllInventoryDescription(conn):
@@ -61,28 +69,29 @@ def getAllInventoryDescription(conn):
     so updates should be first"""
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute(
-        '''select item_id, submitDate, description, status, amount, units,`type` from inventory''')
+        '''select item_id, description, status, amount, units,`type` from inventory''')
     return curs.fetchall()
 
 def getInventoryItemTypes(conn):
     '''Returns all inventory types, used in update inventory form'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('''select description, item_id, units from inventory''')
+    curs.execute('''select description, inventory.item_id, units, amount, threshold from 
+    inventory, setStatus where inventory.item_id = setStatus.item_id''')
     return curs.fetchall()
     
                                
-def getInventoryByStatus(conn, status):
-    """Returns all inventory items with same given by a specific donor."""
-    curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('''select item_id, submitDate, description, status, amount, units, `type` from inventory
-    where status = %s''', [status])
-    return curs.fetchall()
+# def getInventoryByStatus(conn, status):
+#     """Returns all inventory items with same given by a specific donor."""
+#     curs = conn.cursor(MySQLdb.cursors.DictCursor)
+#     curs.execute('''select item_id, description, status, amount, units, `type` from inventory
+#     where status = %s''', [status])
+#     return curs.fetchall()
 
 
 def getInventoryByType(conn, itemType):
     """Returns all donations of a specific type."""
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('''select item_id, submitDate, description, status, amount, units, `type` from inventory
+    curs.execute('''select item_id, description, status, amount, units, `type` from inventory
     where `type` = %s''', [itemType])
     return curs.fetchall()
 
@@ -99,7 +108,6 @@ def updateStatus(conn, item_id):
     
     itemAmountDictionary = curs.execute('''select amount
     from inventory where item_id = %s''', [item_id])
-    print 'check!!!'
     itemAmount = curs.fetchall()[0]['amount'] #extracts amount corresponding to item
 
     thresholdForItemDictionary = curs.execute('''select threshold
@@ -130,4 +138,6 @@ def updateInventory(conn, item_id, amount):
         
     
 if __name__ == '__main__':
-    conn = getConn('c9')
+    conn = get_conn()
+    allInventory = getInventoryItemTypes(conn)
+    print allInventory

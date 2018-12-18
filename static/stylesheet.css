@@ -41,6 +41,10 @@ h3{
     margin-right: 275px;
 }
 
+p {
+   text-align: center; 
+}
+
 
 table {
     margin: 0 auto;
@@ -83,7 +87,7 @@ nav a:hover {
   display: inline-block;
   zoom: 0;
   width: 15%;
-  height: 35%;
+  height: 45%;
   padding: 5px;
   border: 1px solid blue;    
   background-color: #e8e4da; 
@@ -147,6 +151,32 @@ nav a:hover {
     right: -34%;
     top: 0;
     bottom: 10%;
+}
+
+#itemList {
+    margin-left:auto; 
+    margin-right:auto;
+
+}
+
+#itemSpecifics {
+    margin-left:auto; 
+    margin-right:auto;
+
+}
+
+#login {
+    width: 15%;
+    height: 30%;
+    position: absolute;
+    display: inline-block;
+    zoom: 0;
+    text-align: center;
+    margin: auto;
+    left: 0; 
+    right: -64%;
+    top: 0%;
+    bottom: 0%;
 }
 
 

@@ -18,20 +18,21 @@ def getConn(db):
                            user='cotequotey',
                            passwd='',
                            db=db)
-                           
+    
+    
 def countDonationTotal(conn):
     """Returns the number of items in inventory"""
-    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs = conn.cursor()
     curs.execute(
         '''select count(*) from donation''')
-    return curs.fetchall()[0]['count(*)']
+    return curs.fetchone()[0]
     
 def countDonorTotal(conn):
     """Returns the number of items in inventory"""
-    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs = conn.cursor()
     curs.execute(
         '''select count(*) from donor''')
-    return curs.fetchall()[0]['count(*)']
+    return curs.fetchone()[0]
                            
 def getAllDonationHistoryInfo(conn, rowType='dictionary'):
     """Returns all donations, in the order they were 
@@ -99,9 +100,18 @@ def getDonationByDonorID(conn, donorID, rowType='dictionary'):
 def combineFilters(conn, filter, sort):
     """Returns the donations table after filtering and then sorting"""
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute(
+    if (sort == "Most Recent Donation"):
+        curs.execute(
         '''select description, donationID, submitDate, amount, units, type from donation
-        where `type` = %s order by %s''' ,[filter,sort])
+        where `type` = %s order by submitDate desc''' ,[filter])
+    elif (sort == "Most Recent Donation"):
+        curs.execute(
+        '''select description, donationID, submitDate, amount, units, type from donation
+        where `type` = %s order by submitDate asc''' ,[filter])
+    else: # If sorting by type alphabetically    
+        curs.execute(
+            '''select description, donationID, submitDate, amount, units, type from donation
+            where `type` = %s order by type''' ,[filter])
     return curs.fetchall() 
 
 def getDonationByDonorName(conn, donorName, rowType='dictionary'):
