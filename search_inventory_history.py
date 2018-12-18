@@ -114,7 +114,7 @@ def updateStatus(conn, item_id):
     from setStatus where item_id = %s''', [item_id])
     
     result = curs.fetchall()
-    if len(result) == 0: #if item not found, result will be (), pass
+    if len(result) == 0:  #if item not found, result will be (), pass
         return
     
     thresholdForItem = result[0]['threshold']

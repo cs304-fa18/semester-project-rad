@@ -19,7 +19,7 @@ img {
  
 
 ul{
-list-style: none
+    list-style: none
 }
 
 h1{
@@ -183,4 +183,36 @@ nav a:hover {
 #header {
     font-weight: bold;
     color: rgb(118,180,189);
+}
+
+/* sandbox */
+h4{
+    text-align: center;
+    color: rgb(101,30,62);
+}
+
+/*for use with donation submission page*/
+.columns {
+    width: 80%;
+    height: 350px;
+    margin: auto;
+    padding: 0px;
+}
+.left {
+    width: 50%;
+    height: 350px;
+    float: left;
+    border: 1px solid rgb(182,175,175);
+}
+.right {
+    margin-left: 50%;
+    height: 350px;
+    border: 1px solid rgb(182,175,175);
+}
+
+/*want to center button and make it bigger, currently does nothing*/
+#donation-submit{
+    width: 50px;
+    height: 20px;
+    margin-left: 50%;
 }

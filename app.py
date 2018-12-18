@@ -37,7 +37,8 @@ def index():
     donorTotal = search_donation_history.countDonorTotal(conn)
     expenditureTotal = expenditureBackend.countExpenditureTotal(conn)
     return render_template('index.html', inventoryTotal=inventoryTotal, lowCount = lowCount, highCount=highCount, donationTotal=donationTotal, donorTotal=donorTotal, expenditureTotal=expenditureTotal)
-    
+ 
+   
 @app.route("/donationForm/", methods=['GET', 'POST'])
 @login_required
 def donationForm():
@@ -126,9 +127,20 @@ def donationForm():
         # render template
         donor_list = donationBackend.get_donors(conn)
         donation_list = donationBackend.get_inventory_items(conn)
-        return render_template('donation_form.html', donor_list=donor_list, donation_list=donation_list)
+        return render_template(
+            'donation_form.html',
+            donor_list=donor_list, 
+            donation_list=donation_list
+        )
 
-
+@app.route('/sandbox/', methods=['GET', 'POST'])
+def sandbox():
+    conn = get_conn()
+    donor_list = donationBackend.get_donors(conn)
+    donation_list = donationBackend.get_inventory_items(conn)
+    return render_template(
+        'donation_form.html', donor_list=donor_list, donation_list=donation_list
+    )
 
 @app.route('/expenditureForm/', methods = ['GET', 'POST'])
 @login_required

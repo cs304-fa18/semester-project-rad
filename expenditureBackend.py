@@ -1,4 +1,3 @@
-import donationDBOps
 import MySQLdb
 from connection import get_conn
 
