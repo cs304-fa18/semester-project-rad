@@ -95,6 +95,16 @@ def getInventoryByType(conn, itemType):
     where `type` = %s''', [itemType])
     return curs.fetchall()
 
+
+def addItemStatus(conn,item_id):
+    ''' 
+        Adds a row to the setStatus table for the given item_id
+        Threshold defaults to null
+    '''
+    curs = conn.cursor()
+    curs.execute('''INSERT INTO setStatus(item_id) VALUES (%s)''', [item_id])
+    
+    
 def setStatus(conn, item_id, newStatus):
     '''Sets status to newStatus, helper function for updateStatus'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)

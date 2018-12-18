@@ -3,7 +3,7 @@ import re
 import threading
 from connection import get_conn
 from threading import Lock
-from search_inventory_history import updateInventory
+from search_inventory_history import updateInventory, addItemStatus
 
 # curs = conn.cursor(MySQLdb.cursors.DictCursor)
 
@@ -93,8 +93,11 @@ def add_to_inventory(conn, donation_dict):
                     donation_dict['type']
                 ])
         curs.execute('''SELECT last_insert_id();''')
-        inventory_lock.release()
         result = curs.fetchall()
+        print(result)
+        addItemStatus(conn, result[0]['last_insert_id()'])
+        inventory_lock.release()
+        
         # print(str(result))
         return(result[0]['last_insert_id()'])
     
