@@ -216,9 +216,20 @@ h4{
     margin:0 50%;
     position:relative;
     left:-65px;
+}
+
+input[type=submit]{
     background-color: rgb(118,180,189);
     color: white;
     font-family: Verdana;
     border-radius: 5px;
-    border: 0;
+    border: 0px;  
+}
+
+button{
+    background-color: rgb(118,180,189);
+    color: white;
+    font-family: Verdana;
+    border-radius: 5px;
+    border: 0;  
 }
