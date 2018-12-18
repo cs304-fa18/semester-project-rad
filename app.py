@@ -89,7 +89,7 @@ def donationForm():
             
             #add donor to db, collect donorID
             donor_id = donationBackend.add_donor(conn, donor)
-            print("*************DONOR ID: " + str(donor_id))
+            # print("*************DONOR ID: " + str(donor_id))
             flash('Donor ID: ' + str(donor_id))
         
         
@@ -98,9 +98,9 @@ def donationForm():
         description = request.form['existing-donation']
         if request.form['existing-donation'] == 'create-new-donation':
             description = request.form['donation-description']
-            amount = request.form['left-amount']
-        else:
             amount = request.form['amount']
+        else:
+            amount = request.form['left-amount']
         
             
         donation = {

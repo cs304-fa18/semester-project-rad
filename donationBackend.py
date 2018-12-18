@@ -135,6 +135,7 @@ def validate_donation(donation_dict):
         messages.append("Invalid input: Amount donated must be positive nonzero number")
     except ValueError:
         messages.append("Invalid input: amount donated must be an integer")
+        print("*****" + donation_dict['amount'] + "*****")
 
     return messages
     
@@ -182,7 +183,7 @@ def get_inventory_items(conn):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''SELECT item_id as id, description, units, `type` as category FROM inventory;''')
     result = curs.fetchall()
-    print(result)
+    # print(result)
     return(result)
 
 
