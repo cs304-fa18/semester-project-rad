@@ -1,36 +1,43 @@
-<!DOCTYPE html>
 <html>
-    <head>
-        <title>Login Page</title>
-    </head>
-    <body>
+<head>
+    <meta charset = 'utf-8'>
+    <meta name= author content= "Alyssa Rivera, Angela Wang, Hannah Weissman"
+    <title>Login Page</title>
+    <link type="text/css" rel="stylesheet" href= "{{url_for('static', filename ='stylesheet.css')}}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+
+<h1>Login Page</h1> 
+
 
 {% for msg in get_flashed_messages() %}
     <class="error"> {{msg}} </class>
     <br>
-    {% endfor %}
+{% endfor %}
+
 
 <p>Please login or join, using one of the forms below:</p>
 
     <form id="loginform" action="{{url_for('login')}}" method="post">
-        <h2>Login</h2>
+        <h2 align="center">Login</h2>
         <p><label>Username: <input type="text" name="username" required pattern="^\w+$"></label></p>
         <p><label>Password: <input type="password" name="password" required></label></p>
-        <p><button type="submit">Sumit</button></p>
+        <p><button type="submit">Submit</button></p>
     </form>
 
     <form id="joinform" action="{{url_for('join')}}" method="post">
-        <h2>Join</h2>
-        <p><label><input type="text" name="username" required pattern="^\w+$"> Username</label></p>
-        <p><label><input type="password" name="password1" required> Password </label></p>
-        <p><label><input type="password" name="password2" required> Password again </label></p>
+        <h2 align="center">Join</h2>
+        <p><label>  Username: <input type="text" name="username" required pattern="^\w+$"></label></p>
+        <p><label> Password: <input type="password" name="password1" required></label></p>
+        <p><label> Password again: <input type="password" name="password2" required></label></p>
         <p><button type="submit">Submit</button></p>
     </form>
     
 
 </body>
+</html>
 
-{% block jquery_scripts %}
+
 <script>
 /*global $*/
 
@@ -44,7 +51,7 @@ $("#joinform").on('submit', function (event) {
      }
 });
 </script>
-{% endblock %}
+
 
     
 
