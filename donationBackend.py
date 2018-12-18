@@ -180,9 +180,9 @@ def get_inventory_items(conn):
     Returns: list of all items in inventory (id and name)
     '''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('''SELECT item_id as id, description FROM inventory;''')
+    curs.execute('''SELECT item_id as id, description, units, `type` as category FROM inventory;''')
     result = curs.fetchall()
-    # print(result)
+    print(result)
     return(result)
 
 
@@ -193,9 +193,9 @@ def get_donors(conn):
     Returns: list of all donors (id and name) from database
     '''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('''SELECT donorID as id, name FROM donor;''')
+    curs.execute('''SELECT donorID as id, name, `type` as category, phoneNum as phone, email, address, description FROM donor;''')
     result = curs.fetchall()
-    # print(result)
+    print(result)
     return(result)
 
     
