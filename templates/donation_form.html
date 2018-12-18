@@ -18,7 +18,7 @@
                         <select id="existing-donor" name="existing-donor">
                             <option value="create-new-donor"> Select... </option>
                             {% for dict in donor_list %}
-                                <option data-id={{dict.id}} data-category={{dict.category}} data-phone={{dict.phone}} data-email={{dict.email}} data-address={{dict.address}} data-description={{dict.description}} value={{dict.id}}> {{dict.name}} </option>
+                                <option data-id={{dict.id}} data-category={{dict.category}} data-phone={{dict.phone}} data-email={{dict.email}} data-address="{{dict.address}}" data-description="{{dict.description}}" value={{dict.id}}> {{dict.name}} </option>
                             {% endfor %}
                         </select>
                     </td>

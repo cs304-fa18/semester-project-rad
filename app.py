@@ -90,7 +90,7 @@ def donationForm():
             #add donor to db, collect donorID
             donor_id = donationBackend.add_donor(conn, donor)
             # print("*************DONOR ID: " + str(donor_id))
-            flash('Donor ID: ' + str(donor_id))
+            flash('New donor created. ID: ' + str(donor_id))
         
         
         #collect donation data
@@ -121,7 +121,7 @@ def donationForm():
         
         # send data to db
         donation_id = donationBackend.add_donation(conn, donation)
-        flash('Donation ID: '+ str(donation_id))
+        flash('Thank you for your donation! ID: '+ str(donation_id))
         
         #add donation to inventory
         inventory_id = donationBackend.add_to_inventory(conn, donation)
@@ -210,15 +210,10 @@ def updateInventoryForm():
 @app.route('/donations/', methods=["GET", "POST"])
 @login_required
 def displayDonations():
+    conn = get_conn()
+    allDonations = search_donation_history.getAllDonationHistoryInfo(conn, rowType='dictionary')
+    return render_template('donations.html',allDonations= allDonations )
 
-            
-        conn = get_conn()
-        allDonations = search_donation_history.getAllDonationHistoryInfo(conn, rowType='dictionary')
-        return render_template('donations.html',allDonations= allDonations )
-        
-        
-    
-    
 
 @app.route('/inventory/', methods=["GET", "POST"])
 @login_required
@@ -227,6 +222,7 @@ def displayInventory():
     conn = get_conn()
     allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn) 
     return render_template('inventory.html', allInventory = allInventory)
+
     
 @app.route('/reset/', methods=['GET', 'POST'])
 def reset():
@@ -235,6 +231,7 @@ def reset():
         return redirect('inventory')
     else: 
         return redirect('donations')
+ 
         
 @app.route('/filterDonations/sortBy/', methods=["GET", "POST"])
 def filterDonations():
