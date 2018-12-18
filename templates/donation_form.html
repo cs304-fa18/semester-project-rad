@@ -87,7 +87,7 @@
                     <select id="existing-donation" name="existing-donation">
                         <option value='create-new-donation'> Select... </option>
                         {% for dict in donation_list %}
-                            <option data-units={{dict.units}} data-category={{dict.category}} value="{{dict.description}}"> {{dict.description}} </option>
+                            <option data-units="{{dict.units}}" data-category="{{dict.category}}" value="{{dict.description}}"> {{dict.description}} </option>
                         {% endfor %}
                     </select> 
                 </td>
@@ -97,7 +97,7 @@
             </tr>
             <tr>
                     <td> Amount: </td>
-                    <td> <input type="number" min=0 required name="left-amount"> </td>
+                    <td> <input type="number" min=0 name="left-amount"> </td>
                 </tr>
             <tr> <td> Units: </td> <td id='existing-units'> </td> </tr>
             <tr> <td> Category: </td> <td id='ex-category'> </td> </tr>
@@ -114,12 +114,12 @@
                 <!-- Amount number field -->
                 <tr>
                     <td> Amount: </td>
-                    <td> <input type="number" min=0 required name="amount"> </td>
+                    <td> <input type="number" min=0 name="amount"> </td>
                 </tr>
                 <!-- Units -->
                 <tr>
                     <td> Units: </td>
-                    <td> <input type="text" required name="units" </td>
+                    <td> <input type="text" name="units" </td>
                 </tr>
                 <!-- dropdown: donation category -->
                 <tr>
