@@ -98,13 +98,16 @@ def donationForm():
         description = request.form['existing-donation']
         if request.form['existing-donation'] == 'create-new-donation':
             description = request.form['donation-description']
+            amount = request.form['left-amount']
+        else:
+            amount = request.form['amount']
         
             
         donation = {
             'donor_id': donor_id,
             'submit_date': date.today(), 
             'description': description,
-            'amount': request.form['amount'],
+            'amount': amount,
             'units': request.form['units'],
             'type': request.form['donation-category']
         }
