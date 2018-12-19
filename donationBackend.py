@@ -92,6 +92,10 @@ def add_to_inventory(conn, donation_dict):
                     "NULL",
                     donation_dict['type']
                 ])
+                
+        #we want to get the entry that was just added and pull at the item_id
+        #I think I should be able to fetch all and get the entered row and thus its item_id
+        #then use that item_id in a new entry in setStatus with a default threshold value -1, which is null
         curs.execute('''SELECT last_insert_id();''')
         result = curs.fetchall()
         print(result)
@@ -110,7 +114,7 @@ def add_to_inventory(conn, donation_dict):
         # print(match_row)
         update_id = match_row[0]['item_id']
         new_amount = int(match_row[0]['amount']) + int(donation_dict['amount'])
-        updateInventory(conn, update_id, new_amount)
+        updateInventory(conn, update_id, new_amount, "") #does not update a threshold value to inventory
         inventory_lock.release()
         # curs.execute('''UPDATE inventory 
         #     SET amount=%s WHERE item_id=%s''', [new_amount, update_id] )

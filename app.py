@@ -48,15 +48,7 @@ def donationForm():
     On POST, collects and validates data and if valid, adds to database. 
        Renders form again with submission confirmation flashed.
     '''
-    # username = session.get('username', '')
-    # if str(username) == "":
-    #         flash("Error: Not Logged In, Please login to submit a donation")
-    #         return redirect( url_for('index'))
-    
-    # redirect( url_for('checkLogin'))
-    
-    
-    
+
     conn = get_conn()
     
     if request.method == 'GET':
@@ -196,14 +188,20 @@ def updateInventoryForm():
     else:
         updatedItem = {
             'item_id' : request.form['inventoryItem'],
-            'amount' : request.form['item-amount'],
+            'amount' : request.form['new-amount'],
+            'threshold' : request.form['new-threshold'],
             'date' : date.today()
         }
-        
+    
+    print "this is the itemid" + updatedItem['item_id']
+    print updatedItem['amount']
+    print updatedItem['threshold']
+    
     if (updatedItem['amount'] ==""):
         updatedItem['amount'] = 0;
+        
     flash('Inventory item ' + updatedItem['item_id'] + ' Updated')    
-    search_inventory_history.updateInventory(conn, updatedItem['item_id'], updatedItem['amount'])
+    search_inventory_history.updateInventory(conn, updatedItem['item_id'], updatedItem['amount'], updatedItem['threshold'])
     return render_template('updateInventory.html', inventory = allItemTypes)
 
 
@@ -336,16 +334,6 @@ def join():
         flash('form submission error '+str(err))
         return redirect( url_for('index') )
     
-    
-# @app.route('/login/', methods = ['GET','POST'])
-# def login():
-#     username = request.form.get('username')
-#     if not username: #if form is empty
-#         return redirect(request.referrer)
-#     else: 
-#         session['username'] = username #storing username in the session 
-#         flash("Logged in as " + username)
-#         return(redirect(url_for('index')))
         
 @app.route('/login/', methods=["POST"])
 def login():
