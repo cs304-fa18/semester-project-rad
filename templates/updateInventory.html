@@ -21,10 +21,7 @@
                 <td><button type ="button" class="select">Select</button></td>
                 </td>
             </tr>
-            
             </table>
-            
-          
             
             <table id="itemSpecifics">
 
@@ -45,11 +42,13 @@
                 <td> Update Threshold: </td>
                 <td><input type="text" name="new-threshold"> </td>
             </tr>
-        
+            <tr>
+                <td><input type="submit" value="Submit Updated Inventory"></p></td>
+            </tr>
             </table>
         
         
-        <input type="submit" value="Submit Updated Inventory"></p>
+        
     </form>
     
 </body>
@@ -76,7 +75,7 @@ $("#itemList").on("click",".select",function (event) {
     
     
     
-$("#itemSpecifics").slideDown();
+ $("#itemSpecifics").slideDown();
     });
 
 </script>

@@ -24,7 +24,6 @@ def login_required(f):
         else:
             flash("You need to login first")
             return redirect(url_for('index'))
-
     return wrap
            
 @app.route('/')
@@ -36,7 +35,8 @@ def index():
     donationTotal = search_donation_history.countDonationTotal(conn)
     donorTotal = search_donation_history.countDonorTotal(conn)
     expenditureTotal = expenditureBackend.countExpenditureTotal(conn)
-    return render_template('index.html', inventoryTotal=inventoryTotal, lowCount = lowCount, highCount=highCount, donationTotal=donationTotal, donorTotal=donorTotal, expenditureTotal=expenditureTotal)
+    return render_template('index.html', inventoryTotal=inventoryTotal, lowCount = lowCount, 
+    highCount=highCount, donationTotal=donationTotal, donorTotal=donorTotal, expenditureTotal=expenditureTotal)
  
    
 @app.route("/donationForm/", methods=['GET', 'POST'])
@@ -209,14 +209,16 @@ def updateInventoryForm():
 @app.route('/donations/', methods=["GET", "POST"])
 @login_required
 def displayDonations():
+    '''displays all donations in a table on donations page'''
     conn = get_conn()
-    allDonations = search_donation_history.getAllDonationHistoryInfo(conn, rowType='dictionary')
+    allDonations = search_donation_history.getAllDonationHistoryInfo(conn)
     return render_template('donations.html',allDonations= allDonations )
 
 
 @app.route('/inventory/', methods=["GET", "POST"])
 @login_required
 def displayInventory():
+    '''displays all inventory in a table on inventory page'''
         
     conn = get_conn()
     allInventory = search_inventory_history.getInventoryItemTypes(conn) 
@@ -225,6 +227,7 @@ def displayInventory():
     
 @app.route('/reset/', methods=['GET', 'POST'])
 def reset():
+    '''clears all filters and sorting and displays original tables'''
     resetType = request.form.get("submit-reset")
     if (resetType == "Reset Inventory"):
         return redirect('inventory')
@@ -303,12 +306,16 @@ def filterInventory():
             filtered = search_inventory_history.combineFilters(conn, checkboxType,dropdownType)
             return render_template('inventory.html',allInventory = filtered)
 
+#renders login/join page
 @app.route('/loginPage/',methods=["POST"])  
 def redirectLogin():
+    '''renders login.html where user can login or join'''
     return render_template('login.html')
     
 @app.route('/join/', methods=["POST"])
 def join():
+    '''allows user to join by creating a username and password, checks if username is
+    unique, encyrpts passwords and stores it'''
     try:
         username = request.form['username']
         passwd1 = request.form['password1']
@@ -338,6 +345,7 @@ def join():
         
 @app.route('/login/', methods=["POST"])
 def login():
+    '''allows user to login, confirms username and password combination are valid'''
     try:
         username = request.form['username']
         passwd = request.form['password']
@@ -366,6 +374,7 @@ def login():
         
 @app.route('/logout/', methods=["POST"])
 def logout():
+    '''logouts current user'''
     try:
         if 'username' in session:
             username = session['username']
