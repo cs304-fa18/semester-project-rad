@@ -61,7 +61,7 @@ CREATE TABLE expenditure(
 -- Currently this table is not linked to inventory, this will need to be done
 CREATE TABLE setStatus(
     `item_id` int,
-    `threshold` int default -1, -- if amount is equal to or less than this threshold status is low otherwise high
+    `threshold` int, -- if amount is equal to or less than this threshold status is low otherwise high
     primary key(item_id),
     foreign key (item_id) references inventory(item_id) on delete cascade on update cascade
     )ENGINE=InnoDB;

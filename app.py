@@ -39,10 +39,27 @@ def index():
     expenditureTotal = expenditureBackend.countExpenditureTotal(conn)
     mostSpent = expenditureBackend.mostExpensiveType(conn)
     leastSpent = expenditureBackend.leastExpensiveType(conn)
+<<<<<<< HEAD
     return render_template('index.html', inventoryTotal=inventoryTotal, 
     lowList = lowList, lowCount = lowCount, highCount=highCount, areasDonation = areasDonation,
     donationTotal=donationTotal, donorTotal=donorTotal, expenditureTotal=expenditureTotal, mostSpent = mostSpent, leastSpent = leastSpent)
     
+=======
+    return render_template(
+        'index.html', 
+        inventoryTotal=inventoryTotal, 
+        lowList = lowList, 
+        lowCount = lowCount, 
+        highCount=highCount, 
+        areasDonation = areasDonation,
+        donationTotal=donationTotal, 
+        donorTotal=donorTotal, 
+        expenditureTotal=expenditureTotal, 
+        mostSpent = mostSpent, 
+        leastSpent = leastSpent
+    ) 
+   
+>>>>>>> b540ebd61aeb2f8849e1a0c31d0e5e62a9271618
 @app.route("/donationForm/", methods=['GET', 'POST'])
 @login_required
 def donationForm():
@@ -52,7 +69,15 @@ def donationForm():
     On POST, collects and validates data and if valid, adds to database. 
        Renders form again with submission confirmation flashed.
     '''
-
+    # username = session.get('username', '')
+    # if str(username) == "":
+    #         flash("Error: Not Logged In, Please login to submit a donation")
+    #         return redirect( url_for('index'))
+    
+    # redirect( url_for('checkLogin'))
+    
+    
+    
     conn = get_conn()
     
     if request.method == 'GET':
@@ -192,21 +217,14 @@ def updateInventoryForm():
     else:
         updatedItem = {
             'item_id' : request.form['inventoryItem'],
-            'amount' : request.form['new-amount'],
-            'threshold' : request.form['new-threshold'],
+            'amount' : request.form['item-amount'],
             'date' : date.today()
         }
-    
-    #ensures an amount is entered for threshold if current value is none
-    if updatedItem['threshold'] == "":
-        currentStatus = search_inventory_history.getStatus(conn, updatedItem['item_id'])
-    
-        if (currentStatus[0]['status'] == "null"):
-            flash("Please set a threshold for item " + updatedItem['item_id'])
-            return(redirect(url_for('updateInventoryForm')))
-    
+        
+    if (updatedItem['amount'] ==""):
+        updatedItem['amount'] = 0;
     flash('Inventory item ' + updatedItem['item_id'] + ' Updated')    
-    search_inventory_history.updateInventory(conn, updatedItem['item_id'], updatedItem['amount'], updatedItem['threshold'])
+    search_inventory_history.updateInventory(conn, updatedItem['item_id'], updatedItem['amount'])
     return render_template('updateInventory.html', inventory = allItemTypes)
 
 
@@ -225,7 +243,7 @@ def displayInventory():
     '''displays all inventory in a table on inventory page'''
         
     conn = get_conn()
-    allInventory = search_inventory_history.getInventoryItemTypes(conn) 
+    allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn) 
     return render_template('inventory.html', allInventory = allInventory)
 
     
@@ -285,7 +303,7 @@ def filterInventory():
     print dropdownType
     checkboxType = request.form.get("type")
     inventoryByType = search_inventory_history.getInventoryByType(conn, checkboxType)
-    allInventory = search_inventory_history.getInventoryItemTypes(conn)
+    allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn)
     
     if dropdownType == "none": #No drop down selected
         #No drop down or checkboxes are selected
@@ -347,6 +365,16 @@ def join():
         flash('form submission error '+str(err))
         return redirect( url_for('index') )
     
+    
+# @app.route('/login/', methods = ['GET','POST'])
+# def login():
+#     username = request.form.get('username')
+#     if not username: #if form is empty
+#         return redirect(request.referrer)
+#     else: 
+#         session['username'] = username #storing username in the session 
+#         flash("Logged in as " + username)
+#         return(redirect(url_for('index')))
         
 @app.route('/login/', methods=["POST"])
 def login():
