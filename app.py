@@ -39,10 +39,27 @@ def index():
     expenditureTotal = expenditureBackend.countExpenditureTotal(conn)
     mostSpent = expenditureBackend.mostExpensiveType(conn)
     leastSpent = expenditureBackend.leastExpensiveType(conn)
+<<<<<<< HEAD
     return render_template('index.html', inventoryTotal=inventoryTotal, 
     lowList = lowList, lowCount = lowCount, highCount=highCount, areasDonation = areasDonation,
     donationTotal=donationTotal, donorTotal=donorTotal, expenditureTotal=expenditureTotal, mostSpent = mostSpent, leastSpent = leastSpent)
     
+=======
+    return render_template(
+        'index.html', 
+        inventoryTotal=inventoryTotal, 
+        lowList = lowList, 
+        lowCount = lowCount, 
+        highCount=highCount, 
+        areasDonation = areasDonation,
+        donationTotal=donationTotal, 
+        donorTotal=donorTotal, 
+        expenditureTotal=expenditureTotal, 
+        mostSpent = mostSpent, 
+        leastSpent = leastSpent
+    ) 
+   
+>>>>>>> 24d54daeb325073ea2fd7943e19dfd119e5454ef
 @app.route("/donationForm/", methods=['GET', 'POST'])
 @login_required
 def donationForm():
