@@ -25,27 +25,6 @@ def statusCount(conn, status):
     curs.execute(
         '''select count(*) from inventory where status = %s''',[status])
     return curs.fetchone()[0]
-<<<<<<< HEAD
-    
-def listLowItems(conn):
-    """Returns list of low status items"""
-    curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute(
-        '''select description from inventory where status = "low"''')
-    tupleList = curs.fetchall()
-    list = [dictionary['description'] for dictionary in tupleList]
-    return '\n'.join(list)
-    
-def mostDonationTypes(conn):
-    """Returns list of types with the most donations aka items of high status"""
-    curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute(
-        '''select distinct type from inventory where status = "high"''')
-    tupleList = curs.fetchall()
-    list = [dictionary['type'] for dictionary in tupleList]
-    return '\n'.join(list)
-
-=======
 
 
 def listLowItems(conn):
@@ -66,7 +45,6 @@ def mostDonationTypes(conn):
  tupleList = curs.fetchall()
  list = [dictionary['type'] for dictionary in tupleList]
  return '\n'.join(list)
->>>>>>> b540ebd61aeb2f8849e1a0c31d0e5e62a9271618
 
 def getAllInventoryHistoryInfo(conn):
     """Returns all inventory, in order of last modified.
@@ -106,9 +84,6 @@ def sortInventoryStatus(conn):
     '''select item_id, description, status, amount, units, `type` from inventory
         order by status desc''')
     return curs.fetchall()
-<<<<<<< HEAD
-
-=======
     
 def getAllInventoryDescription(conn):
     """Returns all inventory, in order of last modified.
@@ -118,17 +93,12 @@ def getAllInventoryDescription(conn):
     curs.execute(
         '''select item_id, description, status, amount, units,`type` from inventory''')
     return curs.fetchall()
->>>>>>> b540ebd61aeb2f8849e1a0c31d0e5e62a9271618
 
 def getInventoryItemTypes(conn):
     '''Returns all inventory types, used in update inventory form'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-<<<<<<< HEAD
-    curs.execute('''select description, item_id, units from inventory''')
-=======
     curs.execute('''select description, inventory.item_id, units, amount, threshold from 
     inventory, setStatus where inventory.item_id = setStatus.item_id''')
->>>>>>> b540ebd61aeb2f8849e1a0c31d0e5e62a9271618
     return curs.fetchall()
 
 
