@@ -9,18 +9,41 @@
     <div class = "row">
       <div class = "inventoryBlock">
           <p><div id = "header">INVENTORY</div></p>
-          <p>Total Items: {{inventoryTotal}}</p>
-          <p>Total Low Status: {{lowCount}}</p>
-          <p>Total High Status: {{highCount}}</p>
+          <div id = "totals">
+            <ul>
+              <li>Total Items: <b>{{inventoryTotal}}</b></li>
+              <li>Total Low Status: <b>{{lowCount}}</b></li>
+              <li>Total High Status: <b>{{highCount}}</b></li><br>
+            </ul>
+          <ul><p><b>Low Status Items:</b></p>
+              <li>{{lowList}}</li>
+          </ul>
+          </div>
+          
       </div>
       <div class = "donationsBlock">
           <p><div id = "header">DONATIONS/DONORS</div></p>
-          <p>Total Donations: {{donationTotal}}</p>
-          <p>Total Donors: {{donorTotal}}</p>
+          <div id = "totals">
+            <ul>
+              <li>Total Donations: <b>{{donationTotal}}</b></li>
+              <li>Total Donors: <b>{{donorTotal}}</b></li>
+            </ul>
+            <ul><p><b><br></br> Popular Donation Categories:</b></p>
+            <li>{{areasDonation}}</li>
+            </ul>
+          </div>
+          </div>
       </div>
+      
       <div class = "expendituresBlock">
           <p><div id = "header">EXPENDITURES</div></p>
-          <p>Total Expenses: {{expenditureTotal}}</p>
+          <div id = "totals">
+            <ul>
+              <li>Total Expenses: <b>{{expenditureTotal}}</b></li>
+            </ul>
+          </div>
+            <p><b><br></br> Category with Most Expenditures:</b> {{mostSpent}}</p>
+            <p><b> Category with Least Expenditures:</b>{{leastSpent}}</p>
       </div>
     </div>
     <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
