@@ -193,13 +193,14 @@ def updateInventoryForm():
             'date' : date.today()
         }
     
-    print "this is the itemid" + updatedItem['item_id']
-    print updatedItem['amount']
-    print updatedItem['threshold']
+    #ensures an amount is entered for threshold if current value is none
+    if updatedItem['threshold'] == "":
+        currentStatus = search_inventory_history.getStatus(conn, updatedItem['item_id'])
     
-    if (updatedItem['amount'] ==""):
-        updatedItem['amount'] = 0;
-        
+        if (currentStatus[0]['status'] == "null"):
+            flash("Please set a threshold for item " + updatedItem['item_id'])
+            return(redirect(url_for('updateInventoryForm')))
+    
     flash('Inventory item ' + updatedItem['item_id'] + ' Updated')    
     search_inventory_history.updateInventory(conn, updatedItem['item_id'], updatedItem['amount'], updatedItem['threshold'])
     return render_template('updateInventory.html', inventory = allItemTypes)
@@ -218,7 +219,7 @@ def displayDonations():
 def displayInventory():
         
     conn = get_conn()
-    allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn) 
+    allInventory = search_inventory_history.getInventoryItemTypes(conn) 
     return render_template('inventory.html', allInventory = allInventory)
 
     
@@ -276,7 +277,7 @@ def filterInventory():
     checkboxType = request.form.get("type")
     #inventoryByStatus = search_inventory_history.getInventoryByStatus(conn)
     inventoryByType = search_inventory_history.getInventoryByType(conn, checkboxType)
-    allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn)
+    allInventory = search_inventory_history.getInventoryItemTypes(conn)
     
     if dropdownType == "none": #No drop down selected
         #No drop down or checkboxes are selected

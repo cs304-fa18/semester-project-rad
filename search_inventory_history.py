@@ -25,13 +25,20 @@ def statusCount(conn, status):
         '''select count(*) from inventory where status = %s''',[status])
     return curs.fetchone()[0]
     
-def getAllInventoryHistoryInfo(conn):
-    """Returns all inventory, in order of last modified.
-    since there could be none of an item, but then more added, 
-    so updates should be first"""
+# def getAllInventoryHistoryInfo(conn):
+#     """Returns all inventory, in order of last modified.
+#     since there could be none of an item, but then more added, 
+#     so updates should be first"""
+#     curs = conn.cursor(MySQLdb.cursors.DictCursor)
+#     curs.execute(
+#         '''select item_id, description, status, amount, units, `type` from inventory''')
+#     return curs.fetchall()
+    
+def getInventoryItemTypes(conn):
+    '''Returns all inventory types, used in update inventory form'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute(
-        '''select item_id, description, status, amount, units, `type` from inventory''')
+    curs.execute('''select description, inventory.item_id, units, amount, status, `type`, threshold from 
+    inventory, setStatus where inventory.item_id = setStatus.item_id''')
     return curs.fetchall()
 
 def combineFilters(conn, filter, sort):
@@ -72,12 +79,7 @@ def sortInventoryStatus(conn):
 #         '''select item_id, description, status, amount, units,`type` from inventory''')
 #     return curs.fetchall()
 
-def getInventoryItemTypes(conn):
-    '''Returns all inventory types, used in update inventory form'''
-    curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('''select description, inventory.item_id, units, amount, threshold from 
-    inventory, setStatus where inventory.item_id = setStatus.item_id''')
-    return curs.fetchall()
+
     
                                
 # def getInventoryByStatus(conn, status):
@@ -97,14 +99,18 @@ def getInventoryByType(conn, itemType):
 
 
 def addItemStatus(conn,item_id):
-    ''' 
-        Adds a row to the setStatus table for the given item_id
-        Threshold defaults to null
-    '''
+    ''' Adds a row to the setStatus table for the given item_id
+        Threshold defaults to null'''
     curs = conn.cursor()
     curs.execute('''INSERT INTO setStatus(item_id) VALUES (%s)''', [item_id])
     
-    
+def getStatus(conn, item_id):
+    '''checks if an item has status null'''
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''select status
+    from inventory where item_id = %s''', [item_id])
+    return curs.fetchall()
+
 def setStatus(conn, item_id, newStatus):
     '''Sets status to newStatus, helper function for updateStatus'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
@@ -157,5 +163,6 @@ def updateInventory(conn, item_id, amount, threshold):
     
 if __name__ == '__main__':
     conn = get_conn()
-    allInventory = getInventoryItemTypes(conn)
-    print allInventory
+    checking = getStatus(conn, 6)
+    print (checking[0]['status'] == "null")
+    
