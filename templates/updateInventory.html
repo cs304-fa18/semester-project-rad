@@ -63,18 +63,14 @@ $("#check").hide();
 
 $("#itemList").on("click",".select",function (event) {
     
-    // console.log('clicked on a .select in #itemlist');
-    
     var selectedID = parseInt($("[name=inventoryItem]").val())
     var amountforSelectID = $('#itemList option:selected').data("amount")
     var thresholdforSelectID = $('#itemList option:selected').data("threshold");
-    //console.log(thresholdforSelectID);
     
     $("#amount").html(amountforSelectID);
     $("#threshold").html(thresholdforSelectID);
     
-    
-    
+
  $("#itemSpecifics").slideDown();
     });
 
