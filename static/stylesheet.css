@@ -104,7 +104,7 @@ nav a:hover {
     
 .inventoryBlock {
     width: 15%;
-    height: 30%;
+    height: 40%;
     position: absolute;
     display: inline-block;
     zoom: 0;
@@ -121,7 +121,7 @@ nav a:hover {
 
 .donationsBlock {
     width: 15%;
-    height: 30%;
+    height: 40%;
     position: absolute;
     display: inline-block;
     zoom: 0;
@@ -130,15 +130,15 @@ nav a:hover {
     background-color: #e8e4da; 
     text-align: center;
     margin: auto;
-    left: 0; 
-    right: -2%;
+    left: 2%; 
+    right: 0%;
     top: 0;
     bottom: 10%;
 }
 
 .expendituresBlock {
     width: 15%;
-    height: 30%;
+    height: 40%;
     position: absolute;
     display: inline-block;
     zoom: 0;
@@ -183,6 +183,11 @@ nav a:hover {
 #header {
     font-weight: bold;
     color: rgb(118,180,189);
+    text-align: center;
+}
+
+#totals{
+    text-align: left;
 }
 
 
