@@ -19,12 +19,31 @@ def countInventoryTotal(conn):
     return curs.fetchone()[0]
     
 def statusCount(conn, status):
-    """Returns the number of items in inventory"""
+    """Returns the number of items with a given status"""
     curs = conn.cursor()
     curs.execute(
         '''select count(*) from inventory where status = %s''',[status])
     return curs.fetchone()[0]
     
+def listLowItems(conn):
+    """Returns list of low status items"""
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute(
+        '''select description from inventory where status = "low"''')
+    tupleList = curs.fetchall()
+    list = [dictionary['description'] for dictionary in tupleList]
+    return '\n'.join(list)
+    
+def mostDonationTypes(conn):
+    """Returns list of types with the most donations aka items of high status"""
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute(
+        '''select distinct type from inventory where status = "high"''')
+    tupleList = curs.fetchall()
+    list = [dictionary['type'] for dictionary in tupleList]
+    return '\n'.join(list)
+
+
 def getAllInventoryHistoryInfo(conn):
     """Returns all inventory, in order of last modified.
     since there could be none of an item, but then more added, 
@@ -33,6 +52,7 @@ def getAllInventoryHistoryInfo(conn):
     curs.execute(
         '''select item_id, description, status, amount, units, `type` from inventory''')
     return curs.fetchall()
+ 
 
 def combineFilters(conn, filter, sort):
     """Returns the inventory table after filtering and then sorting"""
@@ -77,14 +97,6 @@ def getInventoryItemTypes(conn):
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''select description, item_id, units from inventory''')
     return curs.fetchall()
-    
-                               
-# def getInventoryByStatus(conn, status):
-#     """Returns all inventory items with same given by a specific donor."""
-#     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-#     curs.execute('''select item_id, description, status, amount, units, `type` from inventory
-#     where status = %s''', [status])
-#     return curs.fetchall()
 
 
 def getInventoryByType(conn, itemType):

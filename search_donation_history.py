@@ -21,18 +21,19 @@ def getConn(db):
     
     
 def countDonationTotal(conn):
-    """Returns the number of items in inventory"""
+    """Returns total number donations"""
     curs = conn.cursor()
     curs.execute(
         '''select count(*) from donation''')
     return curs.fetchone()[0]
     
 def countDonorTotal(conn):
-    """Returns the number of items in inventory"""
+    """Returns total number donors"""
     curs = conn.cursor()
     curs.execute(
         '''select count(*) from donor''')
     return curs.fetchone()[0]
+    
                            
 def getAllDonationHistoryInfo(conn, rowType='dictionary'):
     """Returns all donations, in the order they were 

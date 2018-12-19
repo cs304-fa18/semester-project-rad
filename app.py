@@ -16,12 +16,18 @@ app.secret_key = 'stringy string'
 def index():
     conn = get_conn()
     inventoryTotal = search_inventory_history.countInventoryTotal(conn)
+    lowList = search_inventory_history.listLowItems(conn)
+    areasDonation = search_inventory_history.mostDonationTypes(conn)
     lowCount = search_inventory_history.statusCount(conn, "low")
     highCount = search_inventory_history.statusCount(conn, "high")
     donationTotal = search_donation_history.countDonationTotal(conn)
     donorTotal = search_donation_history.countDonorTotal(conn)
     expenditureTotal = expenditureBackend.countExpenditureTotal(conn)
-    return render_template('index.html', inventoryTotal=inventoryTotal, lowCount = lowCount, highCount=highCount, donationTotal=donationTotal, donorTotal=donorTotal, expenditureTotal=expenditureTotal)
+    mostSpent = expenditureBackend.mostExpensiveType(conn)
+    leastSpent = expenditureBackend.leastExpensiveType(conn)
+    return render_template('index.html', inventoryTotal=inventoryTotal, 
+    lowList = lowList, lowCount = lowCount, highCount=highCount, areasDonation = areasDonation,
+    donationTotal=donationTotal, donorTotal=donorTotal, expenditureTotal=expenditureTotal, mostSpent = mostSpent, leastSpent = leastSpent)
     
 @app.route("/donationForm/", methods=['GET', 'POST'])
 def donationForm():
@@ -161,6 +167,7 @@ def updateInventoryForm():
 
 @app.route('/donations/', methods=["GET", "POST"])
 def displayDonations():
+    '''Route to display donations table'''
     conn = get_conn()
     allDonations = search_donation_history.getAllDonationHistoryInfo(conn, rowType='dictionary')
     return render_template('donations.html',allDonations= allDonations )
@@ -168,12 +175,14 @@ def displayDonations():
 
 @app.route('/inventory/', methods=["GET", "POST"])
 def displayInventory():
+    '''Route to display inventory table'''
     conn = get_conn()
     allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn) 
     return render_template('inventory.html', allInventory = allInventory)
     
 @app.route('/reset/', methods=['GET', 'POST'])
 def reset():
+    '''Route to reset filter and sort feature!'''
     resetType = request.form.get("submit-reset")
     if (resetType == "Reset Inventory"):
         return redirect('inventory')
@@ -182,6 +191,7 @@ def reset():
         
 @app.route('/filterDonations/sortBy/', methods=["GET", "POST"])
 def filterDonations():
+    '''Route that deals with all sorting and filtering of donations table'''
     conn = get_conn()
     dropdownType = request.form.get("menu-tt")
     print dropdownType
@@ -219,11 +229,11 @@ def filterDonations():
 
 @app.route('/filterInventory/sortBy/', methods=["GET", "POST"])
 def filterInventory():
+    '''Route that deals with all sorting and filtering of inventory table'''
     conn = get_conn()
     dropdownType = request.form.get("menu-tt")
     print dropdownType
     checkboxType = request.form.get("type")
-    #inventoryByStatus = search_inventory_history.getInventoryByStatus(conn)
     inventoryByType = search_inventory_history.getInventoryByType(conn, checkboxType)
     allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn)
     

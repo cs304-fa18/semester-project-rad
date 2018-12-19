@@ -4,10 +4,29 @@ from connection import get_conn
 
 def countExpenditureTotal(conn):
     """Returns the number of items in inventory"""
-    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs = conn.cursor()
     curs.execute(
         '''select count(*) from expenditure''')
-    return curs.fetchall()[0]['count(*)']
+    return curs.fetchone()[0]
+    
+def mostExpensiveType(conn):
+    """Returns list of items most paid for"""
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute(
+        '''select type from expenditure where amount = (select max(amount) from expenditure)''')
+    tupleList = curs.fetchall()
+    list = [dictionary['type'] for dictionary in tupleList]
+    return '\n'.join(list)
+    
+    
+def leastExpensiveType(conn):
+    """Returns list of items most paid for"""
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute(
+        '''select type from expenditure where amount = (select min(amount) from expenditure)''')
+    tupleList = curs.fetchall()
+    list = [dictionary['type'] for dictionary in tupleList]
+    return '\n'.join(list)
 
 def add_expend(conn, expenditure):
     '''
