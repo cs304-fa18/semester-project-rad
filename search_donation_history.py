@@ -12,14 +12,6 @@ import sys
 import MySQLdb
 from connection import get_conn
 
-# def getConn(db):
-#     """A function that opens a connection with the database
-#     """
-#     return MySQLdb.connect(host='localhost',
-#                           user='cotequotey',
-#                           passwd='',
-#                           db=db)
-    
     
 def countDonationTotal(conn):
     """Returns total number donations"""
@@ -34,6 +26,16 @@ def countDonorTotal(conn):
     curs.execute(
         '''select count(*) from donor''')
     return curs.fetchone()[0]
+    
+def donationsPastWeek(conn):
+    """Returns total number donors"""
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute(
+        '''select distinct description from donation
+        where submitDate >= current_date - 7''')
+    tupleList = curs.fetchall()
+    list = [dictionary['description'] for dictionary in tupleList]
+    return '\n, '.join(list)
     
                            
 def getAllDonationHistoryInfo(conn):

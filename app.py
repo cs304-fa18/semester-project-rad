@@ -31,7 +31,7 @@ def index():
     conn = get_conn()
     inventoryTotal = search_inventory_history.countInventoryTotal(conn)
     lowList = search_inventory_history.listLowItems(conn)
-    areasDonation = search_inventory_history.mostDonationTypes(conn)
+    lastWeekDonations = search_donation_history.donationsPastWeek(conn)
     lowCount = search_inventory_history.statusCount(conn, "low")
     highCount = search_inventory_history.statusCount(conn, "high")
     donationTotal = search_donation_history.countDonationTotal(conn)
@@ -45,7 +45,7 @@ def index():
         lowList = lowList, 
         lowCount = lowCount, 
         highCount=highCount, 
-        areasDonation = areasDonation,
+        lastWeekDonations=lastWeekDonations,
         donationTotal=donationTotal, 
         donorTotal=donorTotal, 
         expenditureTotal=expenditureTotal, 
@@ -210,14 +210,21 @@ def updateInventoryForm():
     else:
         updatedItem = {
             'item_id' : request.form['inventoryItem'],
-            'amount' : request.form['item-amount'],
+            'amount' : request.form['new-amount'],
+            'threshold' : request.form['new-threshold'],
             'date' : date.today()
         }
-        
-    if (updatedItem['amount'] ==""):
-        updatedItem['amount'] = 0;
+    
+    #ensures an amount is entered for threshold if current value is none
+    if updatedItem['threshold'] == "":
+        currentStatus = search_inventory_history.getStatus(conn, updatedItem['item_id'])
+    
+        if (currentStatus[0]['status'] == "null"):
+            flash("Please set a threshold for item " + updatedItem['item_id'])
+            return(redirect(url_for('updateInventoryForm')))
+    
     flash('Inventory item ' + updatedItem['item_id'] + ' Updated')    
-    search_inventory_history.updateInventory(conn, updatedItem['item_id'], updatedItem['amount'])
+    search_inventory_history.updateInventory(conn, updatedItem['item_id'], updatedItem['amount'], updatedItem['threshold'])
     return render_template('updateInventory.html', inventory = allItemTypes)
 
 
@@ -236,7 +243,7 @@ def displayInventory():
     '''displays all inventory in a table on inventory page'''
         
     conn = get_conn()
-    allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn) 
+    allInventory = search_inventory_history.getInventoryItemTypes(conn) 
     return render_template('inventory.html', allInventory = allInventory)
 
     
@@ -296,7 +303,7 @@ def filterInventory():
     print dropdownType
     checkboxType = request.form.get("type")
     inventoryByType = search_inventory_history.getInventoryByType(conn, checkboxType)
-    allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn)
+    allInventory = search_inventory_history.getInventoryItemTypes(conn)
     
     if dropdownType == "none": #No drop down selected
         #No drop down or checkboxes are selected

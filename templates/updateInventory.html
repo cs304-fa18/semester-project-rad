@@ -14,7 +14,7 @@
                 <td>Item to Update: </td>
                    <td><select name="inventoryItem">
                     {% for item in inventory %}
-                        <option data-threshold = {{item.threshold}} data-amount = {{item.amount}} data-value={{item.item_id}}>{{item.description}} ({{item.units}})</option>
+                        <option value={{item.item_id}} data-threshold = {{item.threshold}} data-amount = {{item.amount}} >{{item.description}} ({{item.units}})</option>
                     {% endfor %}
                     </select> 
                     </td>
@@ -58,10 +58,8 @@
 
 <script>
 /* global $ */
-
 $("#itemSpecifics").hide();
 $("#check").hide();
-
 $("#itemList").on("click",".select",function (event) {
     
     var selectedID = parseInt($("[name=inventoryItem]").val())
@@ -71,10 +69,8 @@ $("#itemList").on("click",".select",function (event) {
     $("#amount").html(amountforSelectID);
     $("#threshold").html(thresholdforSelectID);
     
-
  $("#itemSpecifics").slideDown();
     });
-
 </script>
   
 {% endblock %}
