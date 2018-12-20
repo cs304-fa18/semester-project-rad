@@ -99,6 +99,6 @@ def getDonationByType(conn, itemType):
     return curs.fetchall()   
 
 if __name__ == '__main__':
-    conn = getConn('c9')
+    conn = get_conn()
     allDonations = getDonationByType(conn, 'food')
     print allDonations
