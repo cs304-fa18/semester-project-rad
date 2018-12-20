@@ -8,43 +8,69 @@
     <!-- Update Inventory Form -->
     <form method="POST" action="" >
         <table id='inventory-table'>
-            <!-- Item description text field -->
-            <!--<tr>-->
-            <!--    <td> Item: </td>-->
-            <!--    <td> <input type="text" name="item-description"> </td>-->
-            <!--</tr>-->
             
-            
-    
-                
-                
-            <option value="none">Choose One</option>
-            {% for description in items %}
-                <option value={{m.tt}}>{{m.title}}</option>
-            {% endfor %}
-            
+            <table id="itemList">
               <tr>
-                <td> Select Item to Update: </td>
-                <td>
-                   <select name="inventoryItem">
+                <td>Item to Update: </td>
+                   <td><select name="inventoryItem">
                     {% for item in inventory %}
-                        <option value={{item.item_id}}>{{item.description}} ({{item.units}})</option>
+                        <option value={{item.item_id}} data-threshold = {{item.threshold}} data-amount = {{item.amount}} >{{item.description}} ({{item.units}})</option>
                     {% endfor %}
                     </select> 
+                    </td>
+                <td><button type ="button" class="select">Select</button></td>
                 </td>
             </tr>
-        
-            <!-- Amount text field -->
+            </table>
+            
+            <table id="itemSpecifics">
+
             <tr>
-                <td> Updated Amount: </td>
-                <td> <input type="number" name="item-amount"> </td>
+                <td>Current Amount: <span id="amount"></span></td>
             </tr>
             
-            <br>
-        </table>
+            <tr>
+            <td>Threshold: <span id="threshold"></span></td>
+            </tr>
+
+            <tr>
+                <td> Update Amount: </td>
+                <td><input type="text" name="new-amount"> </td>
+            </tr>
+            
+             <tr>
+                <td> Update Threshold: </td>
+                <td><input type="text" name="new-threshold"> </td>
+            </tr>
+            <tr>
+                <td><input type="submit" value="Submit Updated Inventory"></p></td>
+            </tr>
+            </table>
         
-        <input type="submit" value="Submit Updated Inventory"></p>
+        <br>
+        <!--<input type="submit" class="center-submit" value="Submit Update"></p>-->
     </form>
     
 </body>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script>
+/* global $ */
+$("#itemSpecifics").hide();
+$("#check").hide();
+$("#itemList").on("click",".select",function (event) {
+    
+    var selectedID = parseInt($("[name=inventoryItem]").val())
+    var amountforSelectID = $('#itemList option:selected').data("amount")
+    var thresholdforSelectID = $('#itemList option:selected').data("threshold");
+    
+    $("#amount").html(amountforSelectID);
+    $("#threshold").html(thresholdforSelectID);
+    
+ $("#itemSpecifics").slideDown();
+    });
+</script>
+  
 {% endblock %}

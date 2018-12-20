@@ -15,9 +15,11 @@
               <li>Total Low Status: <b>{{lowCount}}</b></li>
               <li>Total High Status: <b>{{highCount}}</b></li><br>
             </ul>
-          <ul><p><b>Low Status Items:</b></p>
+            <p><b>Low Status Items:</b></p>
+            <ul>
               <li>{{lowList}}</li>
-          </ul>
+            </ul>
+          
           </div>
           
       </div>
@@ -28,9 +30,11 @@
               <li>Total Donations: <b>{{donationTotal}}</b></li>
               <li>Total Donors: <b>{{donorTotal}}</b></li>
             </ul>
-            <ul><p><b><br></br> Popular Donation Categories:</b></p>
-            <li>{{areasDonation}}</li>
+            <p><b><br></br> Past Week Donations:</b></p>
+            <ul>
+              <li>{{lastWeekDonations}}</li>
             </ul>
+            
           </div>
           </div>
       </div>
@@ -42,11 +46,23 @@
               <li>Total Expenses: <b>{{expenditureTotal}}</b></li>
             </ul>
           </div>
-            <p><b><br></br> Category with Most Expenditures:</b> {{mostSpent}}</p>
-            <p><b> Category with Least Expenditures:</b>{{leastSpent}}</p>
+            <p><b><br></br> Most Expenditures:</b></p>
+            <p>{{mostSpent}}</p>
+            <p><b> Least Expenditures:</b></p>
+            <p>{{leastSpent}}</p>
       </div>
     </div>
-    <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
     
+    
+    <div id='login'>
+      <form id="loginform" action="{{url_for('redirectLogin')}}" method="post">
+      <p><button type="submit">Login/Signup</button></p>
+      </form>
+      <form id="logout" action="{{url_for('logout')}}" method="post">
+      <p><button type="submit">Logout</button></p>
+      </form>
+    </div>
+    
+  <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>  
     
 {% endblock %}

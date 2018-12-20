@@ -4,12 +4,11 @@
 Backend functions for searching and updating the inventory
 ----------------------------------------------------------------
 CS 304 - Databases 
-
 """
 
 import sys
 import MySQLdb
-
+from connection import get_conn
                     
 def countInventoryTotal(conn):
     """Returns the number of items in inventory"""
@@ -17,6 +16,7 @@ def countInventoryTotal(conn):
     curs.execute(
         '''select count(*) from inventory''')
     return curs.fetchone()[0]
+   
     
 def statusCount(conn, status):
     """Returns the number of items with a given status"""
@@ -32,16 +32,7 @@ def listLowItems(conn):
         '''select description from inventory where status = "low"''')
     tupleList = curs.fetchall()
     list = [dictionary['description'] for dictionary in tupleList]
-    return '\n'.join(list)
-    
-def mostDonationTypes(conn):
-    """Returns list of types with the most donations aka items of high status"""
-    curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute(
-        '''select distinct type from inventory where status = "high"''')
-    tupleList = curs.fetchall()
-    list = [dictionary['type'] for dictionary in tupleList]
-    return '\n'.join(list)
+    return '\n, '.join(list)
 
 
 def getAllInventoryHistoryInfo(conn):
@@ -95,7 +86,8 @@ def getAllInventoryDescription(conn):
 def getInventoryItemTypes(conn):
     '''Returns all inventory types, used in update inventory form'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('''select description, item_id, units from inventory''')
+    curs.execute('''select description, type, status, inventory.item_id, units, amount, threshold from 
+    inventory, setStatus where inventory.item_id = setStatus.item_id''')
     return curs.fetchall()
 
 
@@ -106,45 +98,71 @@ def getInventoryByType(conn, itemType):
     where `type` = %s''', [itemType])
     return curs.fetchall()
 
+
+def addItemStatus(conn,item_id):
+    ''' Adds a row to the setStatus table for the given item_id
+        Threshold defaults to null'''
+    curs = conn.cursor()
+    curs.execute('''INSERT INTO setStatus(item_id) VALUES (%s)''', [item_id])
+    
+def getStatus(conn, item_id):
+    '''checks if an item has status null'''
+    curs = conn.cursor(MySQLdb.cursors.DictCursor)
+    curs.execute('''select status
+    from inventory where item_id = %s''', [item_id])
+    return curs.fetchall()
+
 def setStatus(conn, item_id, newStatus):
     '''Sets status to newStatus, helper function for updateStatus'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''update inventory set status = %s where item_id = %s''',
         [newStatus, item_id])
     
-
 def updateStatus(conn, item_id):
     '''Updates status for an item based on pre-defined values in setStatus table'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     
     itemAmountDictionary = curs.execute('''select amount
     from inventory where item_id = %s''', [item_id])
-    print 'check!!!'
+    print itemAmountDictionary
     itemAmount = curs.fetchall()[0]['amount'] #extracts amount corresponding to item
 
     thresholdForItemDictionary = curs.execute('''select threshold
     from setStatus where item_id = %s''', [item_id])
     
-    thresholdForItem = curs.fetchall()[0]['threshold']
+    result = curs.fetchall()
+    if len(result) == 0:  #if item not found, result will be (), pass
+        return
     
+    thresholdForItem = result[0]['threshold']
     #set status depending on amount of item 
     if itemAmount <= thresholdForItem:
         setStatus(conn, item_id, 'low')
     else:
         setStatus(conn, item_id, 'high')
         
-def updateInventory(conn, item_id, amount):
+def updateInventory(conn, item_id, amount, threshold):
     '''updates the inventory table from the inventory form'''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     
-    #updates inventory item with correct amount
-    curs.execute('''update inventory set amount = %s where item_id = %s''', 
-    [amount, item_id])
+    #only updates if user entered an amount
+    if amount != "":
+        #updates inventory item with correct amount
+        curs.execute('''update inventory set amount = %s where item_id = %s''', 
+        [amount, item_id])
     
-    #updates status based on new amount
+    #only updates if user entered a status
+    if threshold != "":
+        #updates threshold of item in setStatus table
+        curs.execute('''update setStatus set threshold = %s where setStatus.item_id = %s''', 
+        [threshold, item_id])
+        
+    #updates status in inventory table based on new amount
     updateStatus(conn, item_id)
     
         
     
 if __name__ == '__main__':
-    conn = getConn('c9')
+    conn = get_conn()
+    allInventory = getInventoryItemTypes(conn)
+    print allInventory

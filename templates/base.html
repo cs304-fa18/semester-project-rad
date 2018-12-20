@@ -11,10 +11,10 @@
     <nav>
         <a id='nav-link' href="{{ url_for('index') }}"> Home </a>
         <a id='nav-link' href="{{ url_for('donationForm') }}"> Submit Donation </a>
-        <a id='nav-link' href="{{ url_for('displayInventory') }}"> View Inventory</a>  
         <a id='nav-link' href="{{ url_for('displayDonations') }}"> View Donations</a>
-        <a id='nav-link' href="{{ url_for('expenditureForm') }}"> Submit Expenditure </a>
         <a id='nav-link' href="{{ url_for('updateInventoryForm') }}"> Update Inventory</a>
+        <a id='nav-link' href="{{ url_for('displayInventory') }}"> View Inventory</a>  
+        <a id='nav-link' href="{{ url_for('expenditureForm') }}"> Submit Expenditure </a>
     </nav>
 
     <br>
@@ -31,6 +31,9 @@
     {% block content %}
     {% endblock %}
     </main_body>
+    
+    {% block scripts %}
+    {% endblock %}
 
 </body>
     

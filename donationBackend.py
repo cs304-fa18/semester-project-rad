@@ -1,7 +1,9 @@
 import MySQLdb
 import re
+import threading
 from connection import get_conn
-from search_inventory_history import updateInventory
+from threading import Lock
+from search_inventory_history import updateInventory, addItemStatus
 
 # curs = conn.cursor(MySQLdb.cursors.DictCursor)
 
@@ -28,9 +30,9 @@ def add_donor(conn, donor_dict):
             donor_dict['address']
         ]
     )
-    curs.execute('''SELECT last_insert_id() FROM donor;''')
-    result =curs.fetchall()
-    return(result[0][0])
+    curs.execute('''SELECT last_insert_id();''')
+    result =curs.fetchone()
+    return(result[0])
 
 
 def add_donation(conn, donation_dict):
@@ -54,7 +56,7 @@ def add_donation(conn, donation_dict):
                 donation_dict['units'],
                 donation_dict['type']
             ])
-    curs.execute('''SELECT last_insert_id() FROM donation;''')
+    curs.execute('''SELECT last_insert_id();''')
     result =curs.fetchall()
     return(result[0][0])
 
@@ -69,7 +71,9 @@ def add_to_inventory(conn, donation_dict):
                         description, amount, units
     Returns: id of newly added/updated row in inventory table
     '''
-
+    
+    inventory_lock = Lock()
+    inventory_lock.acquire()
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
     curs.execute('''SELECT count(*) FROM inventory 
         WHERE description like %s''', [ donation_dict['description']])
@@ -88,8 +92,16 @@ def add_to_inventory(conn, donation_dict):
                     "NULL",
                     donation_dict['type']
                 ])
-        curs.execute('''SELECT last_insert_id() FROM inventory;''')
+                
+        #we want to get the entry that was just added and pull at the item_id
+        #I think I should be able to fetch all and get the entered row and thus its item_id
+        #then use that item_id in a new entry in setStatus with a default threshold value -1, which is null
+        curs.execute('''SELECT last_insert_id();''')
         result = curs.fetchall()
+        print(result)
+        addItemStatus(conn, result[0]['last_insert_id()'])
+        inventory_lock.release()
+        
         # print(str(result))
         return(result[0]['last_insert_id()'])
     
@@ -102,7 +114,8 @@ def add_to_inventory(conn, donation_dict):
         # print(match_row)
         update_id = match_row[0]['item_id']
         new_amount = int(match_row[0]['amount']) + int(donation_dict['amount'])
-        updateInventory(conn, update_id, new_amount)
+        updateInventory(conn, update_id, new_amount, "") #does not update a threshold value to inventory
+        inventory_lock.release()
         # curs.execute('''UPDATE inventory 
         #     SET amount=%s WHERE item_id=%s''', [new_amount, update_id] )
         # # print(update_id)
@@ -123,11 +136,14 @@ def validate_donation(donation_dict):
     if donation_dict['type'] not in categories:
         messages.append('Invalid donation category')
     
-    # if not isinstance(donation_dict['amount'], int):  #buggy -- always flashes -- ValueError casting?
-    #     messages.append("Invalid input: Amount donated must be integer.")
-    # elif donation_dict['amount'] <= 0:
-    #     messages.append("Invalid input: Amount donated must be positive nonzero number.")
-    
+    try:
+       x = int(donation_dict['amount'])
+       if x <= 0:   
+        messages.append("Invalid input: Amount donated must be positive nonzero number")
+    except ValueError:
+        messages.append("Invalid input: amount donated must be an integer")
+        print("*****" + donation_dict['amount'] + "*****")
+
     return messages
     
 
@@ -165,14 +181,14 @@ def validate_donor(donor_dict):
     return messages
  
 
-def get_donations(conn):    # TODO: rename
+def get_inventory_items(conn):  
     '''
     Inputs:
         conn -- database connection
-    Returns: list of all donations (id and name) from database
+    Returns: list of all items in inventory (id and name)
     '''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('''SELECT item_id as id, description FROM inventory;''')
+    curs.execute('''SELECT item_id as id, description, units, `type` as category FROM inventory;''')
     result = curs.fetchall()
     # print(result)
     return(result)
@@ -185,9 +201,9 @@ def get_donors(conn):
     Returns: list of all donors (id and name) from database
     '''
     curs = conn.cursor(MySQLdb.cursors.DictCursor)
-    curs.execute('''SELECT donorID as id, name FROM donor;''')
+    curs.execute('''SELECT donorID as id, name, `type` as category, phoneNum as phone, email, address, description FROM donor;''')
     result = curs.fetchall()
-    # print(result)
+    print(result)
     return(result)
 
     
@@ -225,4 +241,6 @@ if __name__ == '__main__':
     
     conn = get_conn()
     get_donors(conn)
+    
+
     

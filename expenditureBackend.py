@@ -1,4 +1,3 @@
-import donationDBOps
 import MySQLdb
 from connection import get_conn
 
@@ -112,4 +111,5 @@ if __name__ == '__main__':
     testing driver
     '''
     test_validate_expenditure()
+    
     

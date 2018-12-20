@@ -1,23 +1,37 @@
 #!/usr/bin/python2.7
 
 from datetime import date
-from flask import (Flask, render_template, request, url_for, redirect, flash)
+from flask import (Flask, render_template, request, url_for, redirect, flash, session)
+import bcrypt
 import sys
+import MySQLdb
 import search_donation_history
 import search_inventory_history
 import donationBackend
 import expenditureBackend
 from connection import get_conn
+from functools import wraps
 
 app = Flask(__name__)
 app.secret_key = 'stringy string'
 
+#login decorator         
+def login_required(f):
+    @wraps(f)
+    def wrap():
+        if 'logged_in' in session:
+            return f()
+        else:
+            flash("You need to login first")
+            return redirect(url_for('index'))
+    return wrap
+           
 @app.route('/')
 def index():
     conn = get_conn()
     inventoryTotal = search_inventory_history.countInventoryTotal(conn)
     lowList = search_inventory_history.listLowItems(conn)
-    areasDonation = search_inventory_history.mostDonationTypes(conn)
+    lastWeekDonations = search_donation_history.donationsPastWeek(conn)
     lowCount = search_inventory_history.statusCount(conn, "low")
     highCount = search_inventory_history.statusCount(conn, "high")
     donationTotal = search_donation_history.countDonationTotal(conn)
@@ -25,11 +39,22 @@ def index():
     expenditureTotal = expenditureBackend.countExpenditureTotal(conn)
     mostSpent = expenditureBackend.mostExpensiveType(conn)
     leastSpent = expenditureBackend.leastExpensiveType(conn)
-    return render_template('index.html', inventoryTotal=inventoryTotal, 
-    lowList = lowList, lowCount = lowCount, highCount=highCount, areasDonation = areasDonation,
-    donationTotal=donationTotal, donorTotal=donorTotal, expenditureTotal=expenditureTotal, mostSpent = mostSpent, leastSpent = leastSpent)
-    
+    return render_template(
+        'index.html', 
+        inventoryTotal=inventoryTotal, 
+        lowList = lowList, 
+        lowCount = lowCount, 
+        highCount=highCount, 
+        lastWeekDonations=lastWeekDonations,
+        donationTotal=donationTotal, 
+        donorTotal=donorTotal, 
+        expenditureTotal=expenditureTotal, 
+        mostSpent = mostSpent, 
+        leastSpent = leastSpent
+    ) 
+   
 @app.route("/donationForm/", methods=['GET', 'POST'])
+@login_required
 def donationForm():
     '''
     Route for donation form page. 
@@ -37,18 +62,18 @@ def donationForm():
     On POST, collects and validates data and if valid, adds to database. 
        Renders form again with submission confirmation flashed.
     '''
-    
+
     conn = get_conn()
     
     if request.method == 'GET':
         donor_list = donationBackend.get_donors(conn)
-        donation_list = donationBackend.get_donations(conn)
+        donation_list = donationBackend.get_inventory_items(conn)
         return render_template('donation_form.html', donor_list=donor_list, donation_list=donation_list)
     else:
         existing_id = request.form['existing-donor']
         if existing_id != "create-new-donor":
             donor_id = existing_id
-            print('***********Existing ID: ' + existing_id)
+            # print('***********Existing ID: ' + existing_id)
             
         else:
             # collect donor data
@@ -70,8 +95,8 @@ def donationForm():
             
             #add donor to db, collect donorID
             donor_id = donationBackend.add_donor(conn, donor)
-            print("*************DONOR ID: " + str(donor_id))
-            flash('Donor ID: ' + str(donor_id))
+            # print("*************DONOR ID: " + str(donor_id))
+            flash('New donor created. ID: ' + str(donor_id))
         
         
         #collect donation data
@@ -79,13 +104,16 @@ def donationForm():
         description = request.form['existing-donation']
         if request.form['existing-donation'] == 'create-new-donation':
             description = request.form['donation-description']
+            amount = request.form['amount']
+        else:
+            amount = request.form['left-amount']
         
             
         donation = {
             'donor_id': donor_id,
             'submit_date': date.today(), 
             'description': description,
-            'amount': request.form['amount'],
+            'amount': amount,
             'units': request.form['units'],
             'type': request.form['donation-category']
         }
@@ -99,18 +127,32 @@ def donationForm():
         
         # send data to db
         donation_id = donationBackend.add_donation(conn, donation)
-        flash('Donation ID: '+ str(donation_id))
+        flash('Thank you for your donation! ID: '+ str(donation_id))
         
         #add donation to inventory
         inventory_id = donationBackend.add_to_inventory(conn, donation)
         flash('Inventory ID: ' + str(inventory_id))
         
         # render template
-        return render_template('donation_form.html')
+        donor_list = donationBackend.get_donors(conn)
+        donation_list = donationBackend.get_inventory_items(conn)
+        return render_template(
+            'donation_form.html',
+            donor_list=donor_list, 
+            donation_list=donation_list
+        )
 
-
+@app.route('/sandbox/', methods=['GET', 'POST'])
+def sandbox():
+    conn = get_conn()
+    donor_list = donationBackend.get_donors(conn)
+    donation_list = donationBackend.get_inventory_items(conn)
+    return render_template(
+        'donation_form.html', donor_list=donor_list, donation_list=donation_list
+    )
 
 @app.route('/expenditureForm/', methods = ['GET', 'POST'])
+@login_required
 def expenditureForm():
     '''
     Route for exenditure form page. 
@@ -118,7 +160,7 @@ def expenditureForm():
     On POST, collects and validates data and if valid, adds to database. 
        Renders form again with submission confirmation flashed.
     '''
-    
+            
     if request.method == 'GET':
         return render_template('expenditures.html')
         
@@ -146,6 +188,7 @@ def expenditureForm():
  
     
 @app.route('/updateInventory/', methods = ['GET', 'POST'])
+@login_required
 def updateInventoryForm():
     '''Collects information from update inventory form
     passes this information to backend to update inventory table'''
@@ -159,35 +202,52 @@ def updateInventoryForm():
     else:
         updatedItem = {
             'item_id' : request.form['inventoryItem'],
-            'amount' : request.form['item-amount'],
+            'amount' : request.form['new-amount'],
+            'threshold' : request.form['new-threshold'],
             'date' : date.today()
         }
+    
+    #ensures an amount is entered for threshold if current value is none
+    if updatedItem['threshold'] == "":
+        currentStatus = search_inventory_history.getStatus(conn, updatedItem['item_id'])
+    
+        if (currentStatus[0]['status'] == "null"):
+            flash("Please set a threshold for item " + updatedItem['item_id'])
+            return(redirect(url_for('updateInventoryForm')))
+    
+    flash('Inventory item ' + updatedItem['item_id'] + ' Updated')    
+    search_inventory_history.updateInventory(conn, updatedItem['item_id'], updatedItem['amount'], updatedItem['threshold'])
     return render_template('updateInventory.html', inventory = allItemTypes)
 
 
 @app.route('/donations/', methods=["GET", "POST"])
+@login_required
 def displayDonations():
-    '''Route to display donations table'''
+    '''displays all donations in a table on donations page'''
     conn = get_conn()
-    allDonations = search_donation_history.getAllDonationHistoryInfo(conn, rowType='dictionary')
+    allDonations = search_donation_history.getAllDonationHistoryInfo(conn)
     return render_template('donations.html',allDonations= allDonations )
-    
+
 
 @app.route('/inventory/', methods=["GET", "POST"])
+@login_required
 def displayInventory():
-    '''Route to display inventory table'''
+    '''displays all inventory in a table on inventory page'''
+        
     conn = get_conn()
-    allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn) 
+    allInventory = search_inventory_history.getInventoryItemTypes(conn) 
     return render_template('inventory.html', allInventory = allInventory)
+
     
 @app.route('/reset/', methods=['GET', 'POST'])
 def reset():
-    '''Route to reset filter and sort feature!'''
+    '''clears all filters and sorting and displays original tables'''
     resetType = request.form.get("submit-reset")
     if (resetType == "Reset Inventory"):
         return redirect('inventory')
     else: 
         return redirect('donations')
+ 
         
 @app.route('/filterDonations/sortBy/', methods=["GET", "POST"])
 def filterDonations():
@@ -235,7 +295,7 @@ def filterInventory():
     print dropdownType
     checkboxType = request.form.get("type")
     inventoryByType = search_inventory_history.getInventoryByType(conn, checkboxType)
-    allInventory = search_inventory_history.getAllInventoryHistoryInfo(conn)
+    allInventory = search_inventory_history.getInventoryItemTypes(conn)
     
     if dropdownType == "none": #No drop down selected
         #No drop down or checkboxes are selected
@@ -260,6 +320,92 @@ def filterInventory():
         else:
             filtered = search_inventory_history.combineFilters(conn, checkboxType,dropdownType)
             return render_template('inventory.html',allInventory = filtered)
+
+#renders login/join page
+@app.route('/loginPage/',methods=["POST"])  
+def redirectLogin():
+    '''renders login.html where user can login or join'''
+    return render_template('login.html')
+    
+@app.route('/join/', methods=["POST"])
+def join():
+    '''allows user to join by creating a username and password, checks if username is
+    unique, encyrpts passwords and stores it'''
+    try:
+        username = request.form['username']
+        passwd1 = request.form['password1']
+        passwd2 = request.form['password2']
+        if passwd1 != passwd2:
+            flash('passwords do not match')
+            return redirect( url_for('index'))
+        hashed = bcrypt.hashpw(passwd1.encode('utf-8'), bcrypt.gensalt())
+        conn = get_conn()
+        curs = conn.cursor(MySQLdb.cursors.DictCursor)
+        curs.execute('SELECT username FROM userpass WHERE username = %s',
+                     [username])
+        row = curs.fetchone()
+        if row is not None:
+            flash('That username is taken')
+            return redirect( url_for('index') )
+        curs.execute('INSERT into userpass(username,hashed) VALUES(%s,%s)',
+                     [username, hashed])
+        session['username'] = username
+        session['logged_in'] = True
+        flash('successfully logged in as '+username)
+        return redirect( url_for('index') )
+    except Exception as err:
+        flash('form submission error '+str(err))
+        return redirect( url_for('index') )
+    
+        
+@app.route('/login/', methods=["POST"])
+def login():
+    '''allows user to login, confirms username and password combination are valid'''
+    try:
+        username = request.form['username']
+        passwd = request.form['password']
+        conn = get_conn()
+        curs = conn.cursor(MySQLdb.cursors.DictCursor)
+        curs.execute('SELECT hashed FROM userpass WHERE username = %s',
+                     [username])
+        row = curs.fetchone()
+        if row is None:
+            # Same response as wrong password, so no information about what went wrong
+            flash('login incorrect. Try again or join')
+            return redirect( url_for('index'))
+        hashed = row['hashed']
+        # strings always come out of the database as unicode objects
+        if bcrypt.hashpw(passwd.encode('utf-8'),hashed.encode('utf-8')) == hashed:
+            flash('successfully logged in as '+username)
+            session['username'] = username
+            session['logged_in'] = True
+            return redirect( url_for('index'))
+        else:
+            flash('login incorrect. Try again or join')
+            return redirect( url_for('index'))
+    except Exception as err:
+        flash('form submission error '+str(err))
+        return redirect( url_for('index') )
+        
+@app.route('/logout/', methods=["POST"])
+def logout():
+    '''logouts current user'''
+    try:
+        if 'username' in session:
+            username = session['username']
+            session.pop('username')
+            session.pop('logged_in')
+            flash('You are logged out')
+            return redirect(url_for('index'))
+        else:
+            flash('you are not logged in. Please login or join')
+            return redirect( url_for('index') )
+    except Exception as err:
+        flash('some kind of error '+str(err))
+        return redirect( url_for('index') )
+        
+  
+        
 
 
 if __name__ == '__main__':

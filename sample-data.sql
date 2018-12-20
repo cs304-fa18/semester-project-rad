@@ -1,4 +1,3 @@
-
 -- donor values
 insert into donor (name, `type`, email) 
     values
@@ -11,12 +10,12 @@ insert into donor (name, `type`, email)
 -- donation values
 insert into donation (submitDate, description, amount, units,`type`, donorID) 
     values
-        ('2018-11-07', 'Winter Sleeping Bags', 4, 'bags', 'supplies', 1),
-        ('2018-02-24', 'carrots', 4, 'bushels','food', 1),
-        ('2018-10-07', 'blankets', 20, 'pairs','supplies', 2),
-        ('2018-10-31', 'arts and crafts supplies', 4, 'bags', 'supplies', 2),
-        ('2018-11-07', 'flour', 20, 'pounds', 'food', 2),
-        ('2018-11-07', 'eggs', 48, 'cartons', 'food', 1);
+        ('2018-12-13', 'Winter Sleeping Bags', 4, 'bags', 'supplies', 1),
+        ('2018-12-14', 'carrots', 4, 'bushels','food', 1),
+        ('2018-12-15', 'blankets', 20, 'pairs','supplies', 2),
+        ('2018-12-10', 'arts and crafts supplies', 4, 'bags', 'supplies', 2),
+        ('2018-12-09', 'flour', 20, 'pounds', 'food', 2),
+        ('2018-12-08', 'eggs', 48, 'cartons', 'food', 1);
 
 -- inventory
 insert into inventory (description, `type`, amount, units) 
@@ -42,4 +41,5 @@ insert into setStatus (item_id, threshold)
         (2, 10),
         (3, 12),
         (4, 6);
+        
         

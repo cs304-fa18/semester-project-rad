@@ -6,29 +6,44 @@
 
 {% block content %}
 
-    <!-- Donor and donation form -->
-    <form method="POST" action="" >
-        <!-- Donor -->
-        <h2> Donor: </h2>
-        <table id='donor-table'>
+<form method="POST" action="" >
+    <h2> Donor: </h2>
+    <!--Create table row up here with 'or' in the center-->
+    <section class="columns">
+        <div class="left">
+            <h4> Select Existing Donor: </h4> 
+            <table id="select-donor-table">
+                <tr>
+                    <td> 
+                        <select id="existing-donor" name="existing-donor">
+                            <option value="create-new-donor"> Select... </option>
+                            {% for dict in donor_list %}
+                                <option data-id={{dict.id}} data-category={{dict.category}} data-phone={{dict.phone}} data-email={{dict.email}} data-address="{{dict.address}}" data-description="{{dict.description}}" value={{dict.id}}> {{dict.name}} </option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <button type="button" id="existing-donor-button">Select</button>
+                    </td>
+                </tr>
+                <tr> <td> ID: </td> <td id='existing-id'> </td> </tr>
+                <tr> <td> Type: </td> <td id='existing-category'> </td> </tr>
+                <tr> <td> Phone: </td> <td id='existing-phone'> </td> </tr>
+                <tr> <td> Email: </td> <td id='existing-email'> </td> </tr>
+                <tr> <td> Address: </td> <td id='existing-address'> </td> </tr>
+                <tr> <td> Description: </td> <td id='existing-description'> </td> </tr>
+            </table>
+ 
+        </div>
+        <div class="right">
+            <h4>Create New Donor: </h4>
+            <table id='new-donor-table'>
+            <!-- name -->
             <tr>
-            <!-- dropdown: select existing donor -->
-            <td>Select Existing Donor: </td>
-            <td>
-            <select name="existing-donor">
-                <option value="create-new-donor"> Select... </option>
-                {% for dict in donor_list %}
-                    <option value={{dict.id}}> {{dict.name}} </option>
-                {% endfor %}
-            </select>
-            </td>
-            </tr> 
-            
-            <!-- Create new donor -->
-            <tr>
-                <td> Or create new donor: </td>
+                <td>Name: </td>
+                <td> <input type="text" name="donor-name"> </td>
             </tr>
-            
+            <!-- type -->
             <tr>
                 <td> Type: </td>
                 <td>
@@ -38,13 +53,7 @@
                     </select>
                 </td>
             </tr>
-            <!-- name -->
-            <tr>
-                <td>Name: </td>
-                <td> <input type="text" name="donor-name"> </td>
-            </tr>
             <!-- phone # -->
-            <!-- way to ensure formatting correct? and digestible? -->
             <tr>
                 <td> Phone: </td>
                 <td><input type="text" name="donor-phone"> </td>
@@ -54,75 +63,91 @@
                 <td> Email: </td>
                 <td> <input type="text" name="donor-email"> </td>
             </tr>
-            
             <!-- address -->
             <tr>
                 <td> Address: </td>
                 <td> <textarea name="donor-address" rows=5 cols=30></textarea> </td>
             </tr>
-
             <!-- description -->
             <tr>
                 <td> Description: </td>
                 <td> <textarea name = "donor-description" rows=2 cols=30></textarea> </td>
             </tr>
-        </table>
-        
-        <!-- Donation-->
-        <h2> Donation: </h2>
-        <table id='donation-table'>
-            
+            </table>
+        </div>
+    </section>
+    
+    <h2> Donation: </h2>
+    <section class="columns">
+        <div class="left">
+            <h4> Select Item to Donate: </h4>
+            <table id='existing-donation-table'>
             <tr>
-                <td> Select Previously Given Donation:</td>
                 <td>
-                    <select name="existing-donation">
+                    <select id="existing-donation" name="existing-donation">
                         <option value='create-new-donation'> Select... </option>
                         {% for dict in donation_list %}
-                            <option value={{dict.description}}> {{dict.description}} </option>
-                            <!-- Future fix: use dict.id as value, leverage it-->
+                            <option data-units="{{dict.units}}" data-category="{{dict.category}}" value="{{dict.description}}"> {{dict.description}} </option>
                         {% endfor %}
                     </select> 
                 </td>
-            </tr>
-            <!-- Item description text field -->
-            <tr>
-                <td> Or give for the first time: </td>
-            </tr>
-            <tr>
-                <td> Donation Description: </td>
-                <td> <input type="text" name="donation-description"> </td>
-            </tr>
-            
-            <!-- Amount number field -->
-            <tr>
-                <td> Amount: </td>
-                <td> <input type="number" required name="amount"> </td>
-            </tr>
-            
-            <!-- Units -->
-            <tr>
-                <td> Units: </td>
-                <td> <input type="text" required name="units" </td>
-            </tr>
-            
-            <!-- dropdown: donation category -->
-            <tr>
-                <td> Select donation category: </td>
                 <td>
-                   <select required name="donation-category">
-                        <option value="food"> Food </option>
-                        <option value="medical"> Medical </option>
-                        <option value="clothing"> Clothing </option>
-                        <option value="supplies"> Supplies </option>
-                        <option value="money"> Monetary </option>
-                        <option value="other"> Other </option>
-                    </select> 
+                    <button type="button" id="existing-donation-button">Select</button>
                 </td>
             </tr>
-        </table>
-        <br>
-        <input type="submit" value="Submit Donation"></p>
+            <tr>
+                    <td> Amount: </td>
+                    <td> <input type="number" min=0 name="left-amount"> </td>
+                </tr>
+            <tr> <td> Units: </td> <td id='existing-units'> </td> </tr>
+            <tr> <td> Category: </td> <td id='ex-category'> </td> </tr>
+            </table>
+        </div>
+        
+        <div class="right">
+            <h4> Create New Item: </h4>
+            <table id='create-donation-table'>
+                <tr>
+                    <td> Donation Description: </td>
+                    <td> <input type="text" name="donation-description"> </td>
+                </tr>
+                <!-- Amount number field -->
+                <tr>
+                    <td> Amount: </td>
+                    <td> <input type="number" min=0 name="amount"> </td>
+                </tr>
+                <!-- Units -->
+                <tr>
+                    <td> Units: </td>
+                    <td> <input type="text" name="units" </td>
+                </tr>
+                <!-- dropdown: donation category -->
+                <tr>
+                    <td> Select donation category: </td>
+                    <td>
+                       <select required name="donation-category">
+                            <option value="food"> Food </option>
+                            <option value="medical"> Medical </option>
+                            <option value="clothing"> Clothing </option>
+                            <option value="supplies"> Supplies </option>
+                            <option value="money"> Monetary </option>
+                            <option value="other"> Other </option>
+                        </select> 
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </section>
 
-    </form>
+            
+            
+        <br>
+        <input type="submit" class="center-submit" value="Submit Donation"></p>
+</form>
     
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="{{url_for('static', filename='donation_page.js')}}"></script>
 {% endblock %}
